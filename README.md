@@ -1,11 +1,19 @@
-# Whitelist Program
+# Hello World NCN Program
 
-## Whitelist Program
+## Core Components
 
-| Network | Program    | Address                                      | Version |
-| ------- | ---------- | -------------------------------------------- | ------- |
-| Testnet | NCN Portal | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
-| Devnet  | NCN Portal | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
+1. Program State Management
+    - An NCN Admin initializes the Configuration
+    - The program tracks epochs, requests, and fulfillments
+    - Operators register with the program
+2. R
+
+## Addresses
+
+| Network | Program         | Address                                      | Version |
+| ------- | --------------- | -------------------------------------------- | ------- |
+| Testnet | Hello World NCN | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
+| Devnet  | Hello World NCN | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
 
 ### Test
 
