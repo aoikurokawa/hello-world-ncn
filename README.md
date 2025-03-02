@@ -3,10 +3,27 @@
 ## Core Components
 
 1. Program State Management
+
     - An NCN Admin initializes the Configuration
     - The program tracks epochs, requests, and fulfillments
     - Operators register with the program
-2. R
+
+2. Epoch-Based Processing:
+
+    - Work is organized in epochs
+
+## Role
+
+### NCN Admin
+
+- Register on Jito Restaking Program
+- Request mmessages with keywords
+
+### Operator
+
+- Register on Jito Restaking Program
+- Process the admin-requested messages
+- Submit signed response
 
 ## Addresses
 
