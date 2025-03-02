@@ -1,7 +1,0 @@
-# placeholders for clippy and other tools
-# Program IDs may not be correct
-[env]
-HELLO_WORLD_NCN_PROGRAM_ID = "RouterBmuRBkPUbgEDMtdvTZ75GBdSREZR5uGUxxxpb"
-
-[build]
-target = "aarch64-apple-darwin"
