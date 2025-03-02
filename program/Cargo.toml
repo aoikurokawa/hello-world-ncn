@@ -1,13 +1,27 @@
 [package]
 name = "hello-world-ncn-program"
 description = "Hello World NCN Program"
-version = "0.1.0"
+version = "0.0.1"
 edition = "2024"
 
 [lib]
 crate-type = ["cdylib", "lib"]
 name = "hello_world_ncn_program"
 
+[features]
+no-entrypoint = []
+no-idl = []
+no-log-ix-name = []
+cpi = ["no-entrypoint"]
+default = []
+mainnet-beta = []
+testnet = []
+devnet = []
+localhost = []
+
 [dependencies]
+borsh = { workspace = true }
+hello-world-ncn-sdk = { workspace = true }
+jito-jsm-core = { workspace = true }
 solana-program = { workspace = true }
 solana-sdk = { workspace = true }

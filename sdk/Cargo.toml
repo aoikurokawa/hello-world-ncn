@@ -1,0 +1,9 @@
+[package]
+name = "hello-world-ncn-sdk"
+version = "0.0.1"
+edition = "2024"
+
+[dependencies]
+borsh = { workspace = true }
+shank = { workspace = true }
+shank_idl = { workspace = true }
