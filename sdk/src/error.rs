@@ -12,6 +12,12 @@ pub enum HelloWorldNcnError {
     #[error("NcnPortalWhitelistedInvalid")]
     NcnPortalWhitelistedInvalid,
 
+    #[error("ConsensusAlreadyReached")]
+    ConsensusAlreadyReached,
+
+    #[error("OperatorVotesFull")]
+    OperatorVotesFull,
+
     #[error("ArithmeticOverflow")]
     ArithmeticOverflow = 3000,
 

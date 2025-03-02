@@ -11,6 +11,7 @@ use solana_program::{
     account_info::AccountInfo, declare_id, entrypoint::ProgramResult, msg,
     program_error::ProgramError, pubkey::Pubkey,
 };
+use submit_message::process_submit_message;
 
 declare_id!(str_to_pubkey(env!("HELLO_WORLD_NCN_PROGRAM_ID")));
 
@@ -39,9 +40,9 @@ pub fn process_instruction(
             process_request_message(program_id, accounts, message)
         }
 
-        HelloWorldNcnInstruction::SubmitMessage => {
+        HelloWorldNcnInstruction::SubmitMessage { message } => {
             msg!("Instruction: InitializeWhitelist");
-            process_initialize_config(program_id, accounts)
+            process_submit_message(program_id, accounts, message)
         }
     }
 }
