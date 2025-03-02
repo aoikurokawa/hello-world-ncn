@@ -1,9 +1,9 @@
 use bytemuck::{Pod, Zeroable};
-use jito_bytemuck::Discriminator;
+use jito_bytemuck::{AccountDeserialize, Discriminator};
 use shank::ShankAccount;
 use solana_program::{account_info::AccountInfo, msg, program_error::ProgramError, pubkey::Pubkey};
 
-#[derive(Debug, Clone, Copy, Zeroable, ShankAccount, Pod)]
+#[derive(Debug, Clone, Copy, Zeroable, ShankAccount, Pod, AccountDeserialize)]
 #[repr(C)]
 pub struct Config {}
 

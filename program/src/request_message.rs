@@ -1,4 +1,4 @@
-use hello_world_ncn_core::message::Message;
+use hello_world_ncn_core::{config::Config, message::Message};
 use hello_world_ncn_sdk::error::HelloWorldNcnError;
 use jito_bytemuck::{AccountDeserialize, Discriminator};
 use jito_jsm_core::{
@@ -15,9 +15,12 @@ pub fn process_request_message(
     accounts: &[AccountInfo],
     message: String,
 ) -> ProgramResult {
-    let [message_info, ncn_admin_info, system_program_info] = accounts else {
+    let [config_info, message_info, ncn_admin_info, system_program_info] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
+
+    let mut config_data = config_info.try_borrow_data()?;
+    let _config = Config::try_from_slice_unchecked(&mut config_data)?;
 
     load_system_account(message_info, true)?;
     load_signer(ncn_admin_info, true)?;

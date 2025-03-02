@@ -19,7 +19,7 @@ pub enum HelloWorldNcnInstruction {
     /// Send Message
     #[account(0, writable, name = "config_info")]
     #[account(1, writable, name = "message_info")]
-    #[account(2, writable, signer, name = "operator_info")]
-    #[account(3, name = "system_program_info")]
+    #[account(2, writable, name = "operator_info")]
+    #[account(3, writable, signer, name = "operator_voter_info")]
     SubmitMessage,
 }
