@@ -1,0 +1,74 @@
+name: ci
+
+on:
+  push:
+    branches: [ master ]
+    tags:
+      - 'v*'
+  pull_request:
+    branches: [ master ]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  lint:
+    name: lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      - name: Install Protobuf Compiler
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y protobuf-compiler
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+        with:
+          components: rustfmt, clippy
+          toolchain: nightly-2024-07-25
+      - name: Install cargo-sort from crates.io
+        uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-sort
+      - run: cargo sort --workspace --check
+      - run: cargo fmt --all --check
+      - run: |
+          cargo clippy \
+            --all-features \
+            --workspace \
+            -- \
+            -D warnings \
+            -D clippy::all \
+            -D clippy::nursery \
+            -D clippy::integer_division \
+            -D clippy::arithmetic_side_effects \
+            -D clippy::style \
+            -D clippy::perf
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: aarcangeli/load-dotenv@v1.0.0
+        with:
+          path: .cargo
+          filenames: programs.env
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - name: install solana toolsuite
+        run: sh -c "$(curl -sSfL https://release.anza.xyz/v2.1.11/install)"
+      - name: add to path
+        run: echo "/home/runner/.local/share/solana/install/active_release/bin" >> $GITHUB_PATH
+      - name: Building programs
+        run: cargo-build-sbf
+        env:
+          HELLO_WORLD_NCN_PROGRAM_ID: ${{ env.HELLO_WORLD_NCN_PROGRAM_ID }}
+          SBF_OUT_DIR: ${{ github.workspace }}/target/sbf-solana-solana/release
+      - name: Upload HELLO WORLD NCN program
+        uses: actions/upload-artifact@v4
+        with:
+          name: hello_world_ncn.so
+          path: target/sbf-solana-solana/release/
+          if-no-files-found: error
