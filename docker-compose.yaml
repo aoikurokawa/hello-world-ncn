@@ -1,0 +1,12 @@
+services:
+  ncn-portal-engine:
+    build:
+      context: .
+      dockerfile: engine/Dockerfile
+    container_name: ncn-portal-engine
+    ports:
+      - "8080:8080"
+    environment:
+      - RUST_LOG=${RUST_LOG:-info}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+      - PROMPT_FILE_PATH=${PROMPT_FILE_PATH}

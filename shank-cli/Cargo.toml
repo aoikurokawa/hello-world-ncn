@@ -1,0 +1,13 @@
+[package]
+name = "shank-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+env_logger = { workspace = true }
+envfile = { workspace = true }
+log = { workspace = true }
+shank = { workspace = true }
+shank_idl = { workspace = true }
