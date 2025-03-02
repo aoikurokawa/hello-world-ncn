@@ -1,0 +1,13 @@
+[package]
+name = "hello-world-ncn-program"
+description = "Hello World NCN Program"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["cdylib", "lib"]
+name = "hello_world_ncn_program"
+
+[dependencies]
+solana-program = { workspace = true }
+solana-sdk = { workspace = true }
