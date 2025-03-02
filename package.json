@@ -1,0 +1,14 @@
+{
+  "name": "ncn-portal-engine",
+  "version": "0.1.0",
+  "dependencies": {
+    "@codama/nodes-from-anchor": "^1.0.1",
+    "@codama/renderers": "^1.0.4",
+    "codama": "^1.1.0",
+    "corepack": "^0.29.3",
+    "yarn": "2.4.3"
+  },
+  "scripts": {
+    "generate-clients": "node scripts/generate-clients.js"
+  }
+}

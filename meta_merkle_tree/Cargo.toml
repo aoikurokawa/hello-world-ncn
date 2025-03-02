@@ -1,0 +1,13 @@
+[package]
+name = "meta-merkle-tree"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+fast-math = { workspace = true }
+hex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+solana-program = { workspace = true }
+solana-sdk = { workspace = true }
+thiserror = { workspace = true }
