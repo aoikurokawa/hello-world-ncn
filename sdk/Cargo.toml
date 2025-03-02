@@ -1,9 +1,0 @@
-[package]
-name = "hello-world-ncn-sdk"
-version = { workspace = true }
-edition = { workspace = true }
-
-[dependencies]
-borsh = { workspace = true }
-shank = { workspace = true }
-shank_idl = { workspace = true }
