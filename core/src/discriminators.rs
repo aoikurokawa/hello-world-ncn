@@ -1,8 +1,14 @@
-#[repr(u8)]
-pub enum Discriminators {
-    // Whitelist
-    Config,
+use jito_bytemuck::Discriminator;
 
-    // Whitelist Entry
-    WhitelistEntry,
+use crate::message::Message;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum HelloWorldNcnDiscriminator {
+    Config = 1,
+
+    Message = 2,
+}
+
+impl Discriminator for Message {
+    const DISCRIMINATOR: u8 = HelloWorldNcnDiscriminator::Message as u8;
 }

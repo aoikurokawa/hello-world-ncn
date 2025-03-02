@@ -1,11 +1,11 @@
-# Whitelist Program
+# Hello World NCN Program
 
-## Whitelist Program
+## Addresses
 
-| Network | Program    | Address                                      | Version |
-| ------- | ---------- | -------------------------------------------- | ------- |
-| Testnet | NCN Portal | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
-| Devnet  | NCN Portal | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
+| Network | Program         | Address                                      | Version |
+| ------- | --------------- | -------------------------------------------- | ------- |
+| Testnet | Hello World NCN | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
+| Devnet  | Hello World NCN | DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr | 0.1.0   |
 
 ### Test
 
