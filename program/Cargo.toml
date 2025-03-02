@@ -1,8 +1,8 @@
 [package]
 name = "hello-world-ncn-program"
 description = "Hello World NCN Program"
-version = "0.0.1"
-edition = "2024"
+version = { workspace = true }
+edition = { workspace = true }
 
 [lib]
 crate-type = ["cdylib", "lib"]
@@ -10,14 +10,6 @@ name = "hello_world_ncn_program"
 
 [features]
 no-entrypoint = []
-no-idl = []
-no-log-ix-name = []
-cpi = ["no-entrypoint"]
-default = []
-mainnet-beta = []
-testnet = []
-devnet = []
-localhost = []
 
 [dependencies]
 borsh = { workspace = true }

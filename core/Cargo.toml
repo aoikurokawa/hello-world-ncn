@@ -1,6 +1,6 @@
 [package]
 name = "hello-world-core"
-version = "0.0.1"
-edition = "2024"
+version = { workspace = true }
+edition = { workspace = true }
 
 [dependencies]
