@@ -7,7 +7,7 @@ members = [
 
 resolver = "2"
 
-[dependencies]
+[workspace.dependencies]
 solana-program = "~2.1"
 solana-program-test = "~2.1"
 solana-sdk = "~2.1"
