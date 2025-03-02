@@ -1,6 +1,6 @@
 [workspace]
 members = [
-	"core",
+	"core", "integration_tests",
 	"program",
 	"sdk",
 	"shank-cli",
