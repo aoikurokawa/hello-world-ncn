@@ -1,6 +1,7 @@
 [workspace]
 members = [
 	"core",
+	"integration_tests",
 	"program",
 ]
 
