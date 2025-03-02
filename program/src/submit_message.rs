@@ -33,12 +33,16 @@ pub fn process_submit_message(
     }
 
     let mut message_data = message_info.try_borrow_mut_data()?;
-    let _message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
+    let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
 
     let mut ballot_box_data = ballot_box_info.try_borrow_mut_data()?;
     let ballot_box = BallotBox::try_from_slice_unchecked_mut(&mut ballot_box_data)?;
 
     load_signer(operator_voter_info, false)?;
+
+    if !message.starts_with(&message_acc.keyword()) {
+        return Err(ProgramError::InvalidAccountData);
+    }
 
     let clock = Clock::get()?;
     let current_slot = clock.slot;
