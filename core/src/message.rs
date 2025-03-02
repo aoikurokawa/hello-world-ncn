@@ -12,30 +12,21 @@ pub const MAX_MESSAGE_LENGTH: usize = 64;
 #[repr(C)]
 pub struct Message {
     /// Epoch
-    pub epoch: PodU64,
-
-    /// Length of the actual message content (to know how much of message_data is valid)
-    pub message_length: PodU32,
-
-    /// Fixed-size array to store the message content
-    /// Is this message fulfilled by an operator
-    pub is_fulfilled: PodBool,
+    epoch: PodU64,
 
     /// Message Data
-    pub message_data: [u8; 64],
+    keyword: [u8; 64],
 }
 
 impl Message {
     /// Initiallize a new Message
-    pub fn new(epoch: u64, message: &str) -> Self {
-        let mut message_data = [0; 64];
-        message_data.copy_from_slice(message.as_bytes());
+    pub fn new(epoch: u64, keyword: &str) -> Self {
+        let mut keyword_data = [0; 64];
+        keyword_data.copy_from_slice(keyword.as_bytes());
 
         Self {
             epoch: PodU64::from(epoch),
-            message_length: PodU32::from(message.len() as u32),
-            is_fulfilled: PodBool::from_bool(false),
-            message_data,
+            keyword: keyword_data,
         }
     }
 
@@ -83,5 +74,13 @@ impl Message {
             return Err(ProgramError::InvalidAccountData);
         }
         Ok(())
+    }
+
+    pub fn epoch(&self) -> u64 {
+        self.epoch.into()
+    }
+
+    pub fn keyword(&self) -> String {
+        String::from_utf8(self.keyword.to_vec()).unwrap()
     }
 }
