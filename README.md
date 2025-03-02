@@ -1,5 +1,13 @@
 # Hello World NCN Program
 
+## Core Components
+
+1. Program State Management
+    - An NCN Admin initializes the Configuration
+    - The program tracks epochs, requests, and fulfillments
+    - Operators register with the program
+2. R
+
 ## Addresses
 
 | Network | Program         | Address                                      | Version |
