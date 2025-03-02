@@ -14,6 +14,7 @@ edition = "2021"
 [workspace.dependencies]
 borsh = "0.10.3"
 curve25519-dalek = "^3.0.0"
+hello-world-ncn-program = { path = "./program" }
 hello-world-ncn-sdk = { path = "./sdk" }
 jito-jsm-core = { package = "jito-jsm-core", git = "https://github.com/jito-foundation/restaking", ref = "b096d1bf467813cde6f6f930ec2f6cc475324b28" }
 serde = { version = "^1.0", features = ["derive"] }
