@@ -1,9 +1,12 @@
 mod initialize_config;
+mod request_message;
+mod submit_message;
 
 use borsh::BorshDeserialize;
 use const_str_to_pubkey::str_to_pubkey;
 use hello_world_ncn_sdk::instruction::HelloWorldNcnInstruction;
 use initialize_config::process_initialize_config;
+use request_message::process_request_message;
 use solana_program::{
     account_info::AccountInfo, declare_id, entrypoint::ProgramResult, msg,
     program_error::ProgramError, pubkey::Pubkey,
@@ -27,6 +30,16 @@ pub fn process_instruction(
 
     match instruction {
         HelloWorldNcnInstruction::InitializeConfig => {
+            msg!("Instruction: InitializeWhitelist");
+            process_initialize_config(program_id, accounts)
+        }
+
+        HelloWorldNcnInstruction::RequestMessage { message } => {
+            msg!("Instruction: RequestMessage");
+            process_request_message(program_id, accounts, message)
+        }
+
+        HelloWorldNcnInstruction::SubmitMessage => {
             msg!("Instruction: InitializeWhitelist");
             process_initialize_config(program_id, accounts)
         }

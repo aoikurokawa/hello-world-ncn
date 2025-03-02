@@ -1,4 +1,5 @@
-use jito_bytemuck::{AccountDeserialize, Discriminator};
+use hello_world_ncn_core::config::Config;
+use hello_world_ncn_sdk::error::HelloWorldNcnError;
 use jito_jsm_core::{
     create_account,
     loader::{load_signer, load_system_account, load_system_program},
@@ -9,35 +10,34 @@ use solana_program::{
 };
 
 pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
-    let [whitelist, admin, system_program] = accounts else {
+    let [config_info, ncn_admin_info, system_program_info] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
-    load_system_account(whitelist, true)?;
-    load_signer(admin, true)?;
-    load_system_program(system_program)?;
+    load_system_account(config_info, true)?;
+    load_signer(ncn_admin_info, true)?;
+    load_system_program(system_program_info)?;
 
-    // The whitelist account shall be at the canonical PDA
-    // let (whitelist_pubkey, whitelist_bump, mut whitelist_seeds) =
-    //     Whitelist::find_program_address(program_id);
-    // whitelist_seeds.push(vec![whitelist_bump]);
-    // if whitelist_pubkey.ne(whitelist.key) {
-    //     msg!("Whitelist account is not at the correct PDA");
-    //     return Err(ProgramError::InvalidAccountData);
-    // }
+    // The Config account shall be at the canonical PDA
+    let (config_pubkey, config_bump, mut config_seeds) = Config::find_program_address(program_id);
+    config_seeds.push(vec![config_bump]);
+    if config_pubkey.ne(config_info.key) {
+        msg!("Config account is not at the correct PDA");
+        return Err(ProgramError::InvalidAccountData);
+    }
 
-    // msg!("Initializing whitelist at address {}", whitelist.key);
-    // create_account(
-    //     admin,
-    //     whitelist,
-    //     system_program,
-    //     program_id,
-    //     &Rent::get()?,
-    //     8_u64
-    //         .checked_add(std::mem::size_of::<Whitelist>() as u64)
-    //         .ok_or(NcnPortalError::ArithmeticOverflow)?,
-    //     &whitelist_seeds,
-    // )?;
+    msg!("Initializing Config at address {}", config_info.key);
+    create_account(
+        ncn_admin_info,
+        config_info,
+        system_program_info,
+        program_id,
+        &Rent::get()?,
+        8_u64
+            .checked_add(std::mem::size_of::<Config>() as u64)
+            .ok_or(HelloWorldNcnError::ArithmeticOverflow)?,
+        &config_seeds,
+    )?;
 
     // let mut whitelist_data = whitelist.try_borrow_mut_data()?;
     // whitelist_data[0] = Whitelist::DISCRIMINATOR;
