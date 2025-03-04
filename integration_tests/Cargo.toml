@@ -1,6 +1,21 @@
 [package]
-name = "integration_tests"
+name = "hello-world-ncn-integration-tests"
 version = "0.1.0"
 edition = "2021"
 
 [dependencies]
+borsh = { workspace = true }
+bytemuck = { workspace = true }
+hello-world-ncn-core = { workspace = true }
+hello-world-ncn-program = { workspace = true }
+hello-world-ncn-sdk = { workspace = true }
+jito-bytemuck = { workspace = true }
+jito-restaking-core = { workspace = true }
+jito-restaking-sdk = { workspace = true }
+jito-restaking-program = { workspace = true }
+jito-vault-program = { workspace = true }
+solana-program = { workspace = true }
+solana-program-test = { workspace = true }
+solana-sdk = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }

@@ -7,26 +7,21 @@ use solana_program::{
 
 use crate::instruction::HelloWorldNcnInstruction;
 
-// pub fn initialize_whitelist(
-//     program_id: &Pubkey,
-//     whitelist: &Pubkey,
-//     admin: &Pubkey,
-//     root: [u8; 32],
-// ) -> Instruction {
-//     let accounts = vec![
-//         AccountMeta::new(*whitelist, false),
-//         AccountMeta::new(*admin, true),
-//         AccountMeta::new_readonly(system_program::id(), false),
-//     ];
-//     Instruction {
-//         program_id: *program_id,
-//         accounts,
-//         data: NcnPortalInstruction::InitializeWhitelist { root }
-//             .try_to_vec()
-//             .unwrap(),
-//     }
-// }
-//
+pub fn initialize_config(program_id: &Pubkey, config: &Pubkey, ncn_admin: &Pubkey) -> Instruction {
+    let accounts = vec![
+        AccountMeta::new(*config, false),
+        AccountMeta::new(*ncn_admin, true),
+        AccountMeta::new_readonly(system_program::id(), false),
+    ];
+    Instruction {
+        program_id: *program_id,
+        accounts,
+        data: HelloWorldNcnInstruction::InitializeConfig
+            .try_to_vec()
+            .unwrap(),
+    }
+}
+
 // pub fn admin_update_merkle_tree(
 //     program_id: &Pubkey,
 //     whitelist: &Pubkey,
