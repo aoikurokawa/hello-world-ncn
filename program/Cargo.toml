@@ -21,9 +21,9 @@ localhost = []
 [dependencies]
 borsh = { workspace = true }
 const_str_to_pubkey = { workspace = true }
-jito-jsm-core = { workspace = true }
-jito-bytemuck = { workspace = true }
-jito-restaking-core = { workspace = true }
 hello-world-ncn-core = { workspace = true }
 hello-world-ncn-sdk = { workspace = true }
+jito-bytemuck = { workspace = true }
+jito-jsm-core = { workspace = true }
+jito-restaking-core = { workspace = true }
 solana-program = { workspace = true }
