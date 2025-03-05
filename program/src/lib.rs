@@ -1,3 +1,4 @@
+mod initialize_ballot_box;
 mod initialize_config;
 mod request_message;
 mod submit_message;
@@ -5,6 +6,7 @@ mod submit_message;
 use borsh::BorshDeserialize;
 use const_str_to_pubkey::str_to_pubkey;
 use hello_world_ncn_sdk::instruction::HelloWorldNcnInstruction;
+use initialize_ballot_box::process_initialize_ballot_box;
 use initialize_config::process_initialize_config;
 use request_message::process_request_message;
 use solana_program::{
@@ -31,18 +33,21 @@ pub fn process_instruction(
 
     match instruction {
         HelloWorldNcnInstruction::InitializeConfig => {
-            msg!("Instruction: InitializeWhitelist");
+            msg!("Instruction: InitializeConfig");
             process_initialize_config(program_id, accounts)
         }
 
-        HelloWorldNcnInstruction::RequestMessage { message } => {
-            msg!("Instruction: RequestMessage");
-            process_request_message(program_id, accounts, message)
+        HelloWorldNcnInstruction::InitializeBallotBox => {
+            msg!("Instruction: InitializeBallotBox");
+            process_initialize_ballot_box(program_id, accounts)
         }
 
-        HelloWorldNcnInstruction::SubmitMessage { message } => {
-            msg!("Instruction: InitializeWhitelist");
-            process_submit_message(program_id, accounts, message)
-        }
+        HelloWorldNcnInstruction::RequestMessage => {
+            msg!("Instruction: RequestMessage");
+            process_request_message(program_id, accounts)
+        } // HelloWorldNcnInstruction::SubmitMessage { message } => {
+          //     msg!("Instruction: InitializeWhitelist");
+          //     process_submit_message(program_id, accounts, message)
+          // }
     }
 }

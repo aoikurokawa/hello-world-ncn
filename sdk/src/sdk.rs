@@ -7,9 +7,15 @@ use solana_program::{
 
 use crate::instruction::HelloWorldNcnInstruction;
 
-pub fn initialize_config(program_id: &Pubkey, config: &Pubkey, ncn_admin: &Pubkey) -> Instruction {
+pub fn initialize_config(
+    program_id: &Pubkey,
+    config: &Pubkey,
+    ncn: &Pubkey,
+    ncn_admin: &Pubkey,
+) -> Instruction {
     let accounts = vec![
         AccountMeta::new(*config, false),
+        AccountMeta::new_readonly(*ncn, false),
         AccountMeta::new(*ncn_admin, true),
         AccountMeta::new_readonly(system_program::id(), false),
     ];
@@ -22,24 +28,52 @@ pub fn initialize_config(program_id: &Pubkey, config: &Pubkey, ncn_admin: &Pubke
     }
 }
 
-// pub fn admin_update_merkle_tree(
-//     program_id: &Pubkey,
-//     whitelist: &Pubkey,
-//     admin: &Pubkey,
-//     root: [u8; 32],
-// ) -> Instruction {
-//     let accounts = vec![
-//         AccountMeta::new(*whitelist, false),
-//         AccountMeta::new_readonly(*admin, true),
-//     ];
-//     Instruction {
-//         program_id: *program_id,
-//         accounts,
-//         data: NcnPortalInstruction::AdminUpdateMerkleRoot { root }
-//             .try_to_vec()
-//             .unwrap(),
-//     }
-// }
+pub fn initialize_ballot_box(
+    program_id: &Pubkey,
+    config: &Pubkey,
+    ncn: &Pubkey,
+    ballot_box: &Pubkey,
+    ncn_admin: &Pubkey,
+) -> Instruction {
+    let accounts = vec![
+        AccountMeta::new_readonly(*config, false),
+        AccountMeta::new_readonly(*ncn, false),
+        AccountMeta::new(*ballot_box, false),
+        AccountMeta::new(*ncn_admin, true),
+        AccountMeta::new_readonly(system_program::id(), false),
+    ];
+    Instruction {
+        program_id: *program_id,
+        accounts,
+        data: HelloWorldNcnInstruction::InitializeBallotBox
+            .try_to_vec()
+            .unwrap(),
+    }
+}
+
+pub fn request_message(
+    program_id: &Pubkey,
+    config: &Pubkey,
+    ncn: &Pubkey,
+    message: &Pubkey,
+    ncn_admin: &Pubkey,
+    _message_data: String,
+) -> Instruction {
+    let accounts = vec![
+        AccountMeta::new_readonly(*config, false),
+        AccountMeta::new_readonly(*ncn, false),
+        AccountMeta::new(*message, false),
+        AccountMeta::new(*ncn_admin, true),
+        AccountMeta::new_readonly(system_program::id(), false),
+    ];
+    Instruction {
+        program_id: *program_id,
+        accounts,
+        data: HelloWorldNcnInstruction::RequestMessage
+            .try_to_vec()
+            .unwrap(),
+    }
+}
 //
 // pub fn admin_set_new_admin(
 //     program_id: &Pubkey,

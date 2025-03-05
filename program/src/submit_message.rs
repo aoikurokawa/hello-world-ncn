@@ -18,8 +18,8 @@ pub fn process_submit_message(
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
-    let mut config_data = config_info.try_borrow_data()?;
-    let _config = Config::try_from_slice_unchecked(&mut config_data)?;
+    let config_data = config_info.try_borrow_data()?;
+    let _config = Config::try_from_slice_unchecked(&config_data)?;
 
     let ncn_data = ncn_info.try_borrow_data()?;
     let _ncn = Ncn::try_from_slice_unchecked(&ncn_data)?;
