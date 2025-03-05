@@ -1,8 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use jito_bytemuck::{
-    types::{PodBool, PodU32, PodU64},
-    AccountDeserialize, Discriminator,
-};
+use jito_bytemuck::{types::PodU64, AccountDeserialize, Discriminator};
 use shank::ShankAccount;
 use solana_program::{account_info::AccountInfo, msg, program_error::ProgramError, pubkey::Pubkey};
 
@@ -14,6 +11,9 @@ pub struct Message {
     /// Epoch
     epoch: PodU64,
 
+    /// The length of keyword
+    keyword_len: u8,
+
     /// Message Data
     keyword: [u8; 64],
 }
@@ -22,10 +22,16 @@ impl Message {
     /// Initiallize a new Message
     pub fn new(epoch: u64, keyword: &str) -> Self {
         let mut keyword_data = [0; 64];
-        keyword_data.copy_from_slice(keyword.as_bytes());
+
+        // Only copy up to min(keyword length, 64) bytes
+        let bytes_to_copy = keyword.as_bytes();
+        let copy_len = std::cmp::min(bytes_to_copy.len(), keyword_data.len());
+
+        keyword_data[..copy_len].copy_from_slice(&bytes_to_copy[..copy_len]);
 
         Self {
             epoch: PodU64::from(epoch),
+            keyword_len: keyword.len() as u8,
             keyword: keyword_data,
         }
     }
@@ -81,6 +87,6 @@ impl Message {
     }
 
     pub fn keyword(&self) -> String {
-        String::from_utf8(self.keyword.to_vec()).unwrap()
+        String::from_utf8(self.keyword[..self.keyword_len as usize].to_vec()).unwrap()
     }
 }

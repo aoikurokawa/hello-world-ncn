@@ -1,3 +1,5 @@
+use hello_world_ncn_core::{config::Config as NcnConfig, message::Message};
+use jito_bytemuck::AccountDeserialize;
 use solana_program_test::BanksClient;
 use solana_sdk::{
     commitment_config::CommitmentLevel, native_token::sol_to_lamports, pubkey::Pubkey,
@@ -66,6 +68,16 @@ impl HelloWorldNcnClient {
         Ok(())
     }
 
+    pub async fn get_ncn_config(&mut self, account: &Pubkey) -> TestResult<NcnConfig> {
+        let account = self.banks_client.get_account(*account).await?.unwrap();
+        Ok(*NcnConfig::try_from_slice_unchecked(account.data.as_slice()).unwrap())
+    }
+
+    pub async fn get_message(&mut self, account: &Pubkey) -> TestResult<Message> {
+        let account = self.banks_client.get_account(*account).await?.unwrap();
+        Ok(*Message::try_from_slice_unchecked(account.data.as_slice()).unwrap())
+    }
+
     pub async fn do_initialize_config(
         &mut self,
         ncn: &Pubkey,
@@ -101,61 +113,102 @@ impl HelloWorldNcnClient {
         .await
     }
 
-    // pub async fn do_request_message(
-    //     &mut self,
-    //     ncn: &Pubkey,
-    //     ncn_admin: &Keypair,
-    //     epoch: u64,
-    //     message_data: String,
-    // ) -> TestResult<()> {
-    //     // Setup Payer
-    //     self.airdrop(&self.payer.pubkey(), 1.0).await?;
+    pub async fn do_initialize_ballot_box(
+        &mut self,
+        ncn: &Pubkey,
+        ncn_admin: &Keypair,
+        epoch: u64,
+    ) -> TestResult<()> {
+        // Setup Payer
+        self.airdrop(&self.payer.pubkey(), 1.0).await?;
 
-    //     self.request_message(ncn, ncn_admin, epoch, message_data)
-    //         .await
-    // }
+        self.initialize_ballot_box(ncn, ncn_admin, epoch).await
+    }
 
-    // pub async fn request_message(
-    //     &mut self,
-    //     ncn: &Pubkey,
-    //     ncn_admin: &Keypair,
-    //     epoch: u64,
-    //     message_data: String,
-    // ) -> TestResult<()> {
-    //     let ncn_config = hello_world_ncn_core::config::Config::find_program_address(
-    //         &hello_world_ncn_program::id(),
-    //         ncn,
-    //     )
-    //     .0;
-    //     let message = hello_world_ncn_core::message::Message::find_program_address(
-    //         &hello_world_ncn_program::id(),
-    //         epoch,
-    //     )
-    //     .0;
-    //     let ballot_box = hello_world_ncn_core::ballot_box::BallotBox::find_program_address(
-    //         &hello_world_ncn_program::id(),
-    //         ncn,
-    //         epoch,
-    //     )
-    //     .0;
+    pub async fn initialize_ballot_box(
+        &mut self,
+        ncn: &Pubkey,
+        ncn_admin: &Keypair,
+        epoch: u64,
+    ) -> TestResult<()> {
+        let config = hello_world_ncn_core::config::Config::find_program_address(
+            &hello_world_ncn_program::id(),
+            ncn,
+        )
+        .0;
+        let ballot_box = hello_world_ncn_core::ballot_box::BallotBox::find_program_address(
+            &hello_world_ncn_program::id(),
+            ncn,
+            epoch,
+        )
+        .0;
 
-    //     let ix = hello_world_ncn_sdk::sdk::request_message(
-    //         &hello_world_ncn_program::id(),
-    //         &ncn_config,
-    //         &ncn,
-    //         &message,
-    //         &ballot_box,
-    //         &ncn_admin.pubkey(),
-    //         message_data,
-    //     );
+        let ix = hello_world_ncn_sdk::sdk::initialize_ballot_box(
+            &hello_world_ncn_program::id(),
+            &config,
+            ncn,
+            &ballot_box,
+            &ncn_admin.pubkey(),
+        );
 
-    //     let blockhash = self.banks_client.get_latest_blockhash().await?;
-    //     self.process_transaction(&Transaction::new_signed_with_payer(
-    //         &[ix],
-    //         Some(&ncn_admin.pubkey()),
-    //         &[&ncn_admin],
-    //         blockhash,
-    //     ))
-    //     .await
-    // }
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[ix],
+            Some(&ncn_admin.pubkey()),
+            &[&ncn_admin],
+            blockhash,
+        ))
+        .await
+    }
+
+    pub async fn do_request_message(
+        &mut self,
+        ncn: &Pubkey,
+        ncn_admin: &Keypair,
+        epoch: u64,
+        message_data: String,
+    ) -> TestResult<()> {
+        // Setup Payer
+        self.airdrop(&self.payer.pubkey(), 1.0).await?;
+
+        self.request_message(ncn, ncn_admin, epoch, message_data)
+            .await
+    }
+
+    pub async fn request_message(
+        &mut self,
+        ncn: &Pubkey,
+        ncn_admin: &Keypair,
+        epoch: u64,
+        message_data: String,
+    ) -> TestResult<()> {
+        let ncn_config = hello_world_ncn_core::config::Config::find_program_address(
+            &hello_world_ncn_program::id(),
+            ncn,
+        )
+        .0;
+        let message = hello_world_ncn_core::message::Message::find_program_address(
+            &hello_world_ncn_program::id(),
+            epoch,
+        )
+        .0;
+
+        let ix = hello_world_ncn_sdk::sdk::request_message(
+            &hello_world_ncn_program::id(),
+            &ncn_config,
+            &ncn,
+            &message,
+            &ncn_admin.pubkey(),
+            message_data,
+        );
+
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[ix],
+            Some(&ncn_admin.pubkey()),
+            &[&ncn_admin],
+            blockhash,
+        ))
+        .await
+    }
 }

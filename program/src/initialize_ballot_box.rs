@@ -1,4 +1,4 @@
-use hello_world_ncn_core::{config::Config, message::Message};
+use hello_world_ncn_core::{ballot_box::BallotBox, config::Config};
 use hello_world_ncn_sdk::error::HelloWorldNcnError;
 use jito_bytemuck::{AccountDeserialize, Discriminator};
 use jito_jsm_core::{
@@ -11,11 +11,14 @@ use solana_program::{
     program_error::ProgramError, pubkey::Pubkey, rent::Rent, sysvar::Sysvar,
 };
 
-/// Request Message
+/// Initialize BallotBox
 ///
-/// Initialize Messae Account
-pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
-    let [config_info, ncn_info, message_info, ncn_admin_info, system_program_info] = accounts
+/// Initialize Ballot Box account
+pub fn process_initialize_ballot_box(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+) -> ProgramResult {
+    let [config_info, ncn_info, ballot_box_info, ncn_admin_info, system_program_info] = accounts
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
@@ -31,41 +34,40 @@ pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) ->
         return Err(ProgramError::InvalidAccountData);
     }
 
-    load_system_account(message_info, true)?;
+    load_system_account(ballot_box_info, true)?;
     load_signer(ncn_admin_info, true)?;
     load_system_program(system_program_info)?;
 
     let clock = Clock::get()?;
     let epoch = clock.epoch;
+    let slot = clock.slot;
 
-    // The Message account shall be at the canonical PDA
-    let (message_pubkey, message_bump, mut message_seeds) =
-        Message::find_program_address(program_id, epoch);
-    message_seeds.push(vec![message_bump]);
-    if message_pubkey.ne(message_info.key) {
-        msg!("Message account is not at the correct PDA");
+    // The BallotBox account shall be at the canonical PDA
+    let (ballot_box_pubkey, ballot_box_bump, mut ballot_box_seeds) =
+        BallotBox::find_program_address(program_id, ncn_info.key, epoch);
+    ballot_box_seeds.push(vec![ballot_box_bump]);
+    if ballot_box_pubkey.ne(ballot_box_info.key) {
+        msg!("BallotBox account is not at the correct PDA");
         return Err(ProgramError::InvalidAccountData);
     }
 
-    msg!("Initialize Message at address {}", message_info.key);
+    msg!("Initialize BallotBox at address {}", ballot_box_info.key);
     create_account(
         ncn_admin_info,
-        message_info,
+        ballot_box_info,
         system_program_info,
         program_id,
         &Rent::get()?,
         8_u64
-            .checked_add(std::mem::size_of::<Message>() as u64)
+            .checked_add(std::mem::size_of::<BallotBox>() as u64)
             .ok_or(HelloWorldNcnError::ArithmeticOverflow)?,
-        &message_seeds,
+        &ballot_box_seeds,
     )?;
 
-    let mut message_data = message_info.try_borrow_mut_data()?;
-    message_data[0] = Message::DISCRIMINATOR;
-    let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
-
-    // TODO: Change message data
-    *message_acc = Message::new(epoch, "Hello");
+    let mut ballot_box_data = ballot_box_info.try_borrow_mut_data()?;
+    ballot_box_data[0] = BallotBox::DISCRIMINATOR;
+    let ballot_box_acc = BallotBox::try_from_slice_unchecked_mut(&mut ballot_box_data)?;
+    *ballot_box_acc = BallotBox::new(*ncn_info.key, epoch, slot);
 
     Ok(())
 }

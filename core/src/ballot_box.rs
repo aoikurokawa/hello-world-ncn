@@ -66,8 +66,6 @@ impl BallotBox {
         epoch: u64,
         expect_writable: bool,
     ) -> Result<(), ProgramError> {
-        let expected_pda = Self::find_program_address(program_id, ncn, epoch).0;
-
         if account.owner.ne(program_id) {
             msg!("Config account has an invalid owner");
             return Err(ProgramError::InvalidAccountOwner);

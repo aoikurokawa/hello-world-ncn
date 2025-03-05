@@ -1,18 +1,13 @@
 #[cfg(test)]
 mod tests {
-    use hello_world_ncn_core::message::Message;
-
     use crate::fixtures::test_builder::TestBuilder;
 
     #[tokio::test]
-    async fn test_request_message_ok() {
+    async fn test_initialize_ballot_box_ok() {
         let mut fixture = TestBuilder::new().await;
-        let mut restaking_program_client = fixture.restaking_program_client();
         let mut hello_world_ncn_client = fixture.hello_world_ncn_client();
-
+        let mut restaking_program_client = fixture.restaking_program_client();
         let ncn_root = fixture.setup_ncn().await.unwrap();
-
-        let message_data = "Hello,";
 
         let config = jito_restaking_core::config::Config::find_program_address(
             &jito_restaking_program::id(),
@@ -28,21 +23,8 @@ mod tests {
             .unwrap();
 
         hello_world_ncn_client
-            .do_request_message(
-                &ncn_root.ncn_pubkey,
-                &ncn_root.ncn_admin,
-                epoch,
-                message_data.to_string(),
-            )
+            .do_initialize_ballot_box(&ncn_root.ncn_pubkey, &ncn_root.ncn_admin, epoch)
             .await
             .unwrap();
-
-        let message_pubkey = Message::find_program_address(&hello_world_ncn_program::id(), epoch).0;
-        let message = hello_world_ncn_client
-            .get_message(&message_pubkey)
-            .await
-            .unwrap();
-        assert_eq!(message.epoch(), epoch);
-        assert_eq!(message.keyword(), "Hello".to_string());
     }
 }
