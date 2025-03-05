@@ -25,7 +25,7 @@ pub struct BallotBox {
     operators_voted: PodU64,
 
     /// Operator votes
-    operator_votes: [OperatorVote; 5],
+    operator_votes: [OperatorVote; 3],
 }
 
 impl BallotBox {
@@ -36,7 +36,7 @@ impl BallotBox {
             slot_created: PodU64::from(current_slot),
             slot_consensus_reached: PodU64::from(u64::MAX),
             operators_voted: PodU64::from(0),
-            operator_votes: [OperatorVote::default(); 5],
+            operator_votes: [OperatorVote::default(); 3],
         }
     }
 
@@ -97,8 +97,16 @@ impl BallotBox {
         self.slot_consensus_reached.into()
     }
 
+    pub fn set_slot_consensus_reached(&mut self, slot: u64) {
+        self.slot_consensus_reached = PodU64::from(slot);
+    }
+
     pub fn is_consensus_reached(&self) -> bool {
         self.slot_consensus_reached() != u64::MAX
+    }
+
+    pub fn operators_voted(&self) -> u64 {
+        self.operators_voted.into()
     }
 
     /// Determines if an operator can still cast their vote.
@@ -169,47 +177,51 @@ impl BallotBox {
         // let ballot_index = self.increment_or_create_ballot_tally(ballot, stake_weights)?;
 
         // let unique_ballots = self.unique_ballots();
-        let consensus_reached = self.is_consensus_reached();
+        // let consensus_reached = self.is_consensus_reached();
 
         for vote in self.operator_votes.iter_mut() {
-            if vote.operator().eq(operator) {
-                if consensus_reached {
-                    return Err(HelloWorldNcnError::ConsensusAlreadyReached);
-                }
+            // if vote.operator().eq(operator) {
+            //     if consensus_reached {
+            //         return Err(HelloWorldNcnError::ConsensusAlreadyReached);
+            //     }
 
-                // If the operator has already voted, we need to decrement their vote from the previous ballot
-                let prev_ballot_index = vote.vote_index();
-                // if let Some(prev_tally) = self.ballot_tallies.get_mut(prev_ballot_index as usize) {
-                // prev_tally.decrement_tally(vote.stake_weights())?;
+            //     // If the operator has already voted, we need to decrement their vote from the previous ballot
+            //     let prev_ballot_index = vote.vote_index();
+            //     // if let Some(prev_tally) = self.ballot_tallies.get_mut(prev_ballot_index as usize) {
+            //     // prev_tally.decrement_tally(vote.stake_weights())?;
 
-                // If no more operators voting for the previous ballot, wipe and decrement the unique ballots
-                // if prev_tally.tally() == 0 {
-                //     *prev_tally = BallotTally::default();
-                //     self.unique_ballots = PodU64::from(
-                //         unique_ballots
-                //             .checked_sub(1)
-                //             .ok_or(TipRouterError::ArithmeticOverflow)?,
-                //     );
-                // }
-                // }
+            //     // If no more operators voting for the previous ballot, wipe and decrement the unique ballots
+            //     // if prev_tally.tally() == 0 {
+            //     //     *prev_tally = BallotTally::default();
+            //     //     self.unique_ballots = PodU64::from(
+            //     //         unique_ballots
+            //     //             .checked_sub(1)
+            //     //             .ok_or(TipRouterError::ArithmeticOverflow)?,
+            //     //     );
+            //     // }
+            //     // }
 
-                let operator_vote = OperatorVote::new(*operator, current_slot, message_data);
-                *vote = operator_vote;
-                return Ok(());
-            }
-
-            // if vote.is_empty() {
-            //     let operator_vote =
-            //         OperatorVote::new(ballot_index, operator, current_slot, stake_weights);
+            //     let operator_vote = OperatorVote::new(*operator, current_slot, message_data);
             //     *vote = operator_vote;
-
-            //     self.operators_voted = PodU64::from(
-            //         self.operators_voted()
-            //             .checked_add(1)
-            //             .ok_or(TipRouterError::ArithmeticOverflow)?,
-            //     );
             //     return Ok(());
             // }
+
+            if vote.is_empty() {
+                let operator_vote = OperatorVote::new(*operator, current_slot, message_data);
+                *vote = operator_vote;
+
+                self.operators_voted = PodU64::from(
+                    self.operators_voted()
+                        .checked_add(1)
+                        .ok_or(HelloWorldNcnError::ArithmeticOverflow)?,
+                );
+
+                if self.operators_voted() > 1 {
+                    self.set_slot_consensus_reached(current_slot);
+                }
+
+                return Ok(());
+            }
         }
 
         Err(HelloWorldNcnError::OperatorVotesFull)

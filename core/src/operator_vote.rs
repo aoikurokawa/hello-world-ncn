@@ -24,7 +24,7 @@ impl Default for OperatorVote {
         Self {
             operator: Pubkey::default(),
             slot_voted: PodU64::from(0),
-            vote_index: PodU16::from(0),
+            vote_index: PodU16::from(u16::MAX),
             message_data: [0; 64],
         }
     }
@@ -57,5 +57,9 @@ impl OperatorVote {
 
     pub fn message_data(&self) -> String {
         String::from_utf8(self.message_data.to_vec()).unwrap()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.vote_index() == u16::MAX
     }
 }

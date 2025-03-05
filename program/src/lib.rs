@@ -45,9 +45,11 @@ pub fn process_instruction(
         HelloWorldNcnInstruction::RequestMessage => {
             msg!("Instruction: RequestMessage");
             process_request_message(program_id, accounts)
-        } // HelloWorldNcnInstruction::SubmitMessage { message } => {
-          //     msg!("Instruction: InitializeWhitelist");
-          //     process_submit_message(program_id, accounts, message)
-          // }
+        }
+
+        HelloWorldNcnInstruction::SubmitMessage { message } => {
+            msg!("Instruction: InitializeWhitelist");
+            process_submit_message(program_id, accounts, message)
+        }
     }
 }
