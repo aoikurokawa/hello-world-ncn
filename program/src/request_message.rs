@@ -1,4 +1,4 @@
-use hello_world_ncn_core::{ballot_box::BallotBox, config::Config, message::Message};
+use hello_world_ncn_core::{config::Config, message::Message};
 use hello_world_ncn_sdk::error::HelloWorldNcnError;
 use jito_bytemuck::{AccountDeserialize, Discriminator};
 use jito_jsm_core::{
@@ -13,16 +13,9 @@ use solana_program::{
 
 /// Request Message
 ///
-/// Initialize two accounts
-/// - Message
-/// - Ballot Box
-pub fn process_request_message(
-    program_id: &Pubkey,
-    accounts: &[AccountInfo],
-    message: String,
-) -> ProgramResult {
-    let [config_info, ncn_info, message_info, ballot_box_info, ncn_admin_info, system_program_info] =
-        accounts
+/// Initialize Messae Account
+pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
+    let [config_info, ncn_info, message_info, ncn_admin_info, system_program_info] = accounts
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
@@ -55,15 +48,6 @@ pub fn process_request_message(
         return Err(ProgramError::InvalidAccountData);
     }
 
-    // The BallotBox account shall be at the canonical PDA
-    let (ballot_box_pubkey, ballot_box_bump, mut ballot_box_seeds) =
-        BallotBox::find_program_address(program_id, ncn_info.key, epoch);
-    ballot_box_seeds.push(vec![ballot_box_bump]);
-    if ballot_box_pubkey.ne(ballot_box_info.key) {
-        msg!("BallotBox account is not at the correct PDA");
-        return Err(ProgramError::InvalidAccountData);
-    }
-
     msg!("Initialize Message at address {}", message_info.key);
     create_account(
         ncn_admin_info,
@@ -80,25 +64,9 @@ pub fn process_request_message(
     let mut message_data = message_info.try_borrow_mut_data()?;
     message_data[0] = Message::DISCRIMINATOR;
     let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
-    *message_acc = Message::new(epoch, &message);
 
-    msg!("Initialize BallotBox at address {}", ballot_box_info.key);
-    create_account(
-        ncn_admin_info,
-        message_info,
-        system_program_info,
-        program_id,
-        &Rent::get()?,
-        8_u64
-            .checked_add(std::mem::size_of::<BallotBox>() as u64)
-            .ok_or(HelloWorldNcnError::ArithmeticOverflow)?,
-        &message_seeds,
-    )?;
-
-    let mut ballot_box_data = ballot_box_info.try_borrow_mut_data()?;
-    ballot_box_data[0] = BallotBox::DISCRIMINATOR;
-    let ballot_box_acc = BallotBox::try_from_slice_unchecked_mut(&mut ballot_box_data)?;
-    *ballot_box_acc = BallotBox::new(*ncn_info.key, epoch, slot);
+    // TODO: Change message data
+    *message_acc = Message::new(epoch, "Hello");
 
     Ok(())
 }

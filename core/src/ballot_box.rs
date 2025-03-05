@@ -25,7 +25,7 @@ pub struct BallotBox {
     operators_voted: PodU64,
 
     /// Operator votes
-    operator_votes: [OperatorVote; 256],
+    operator_votes: [OperatorVote; 5],
 }
 
 impl BallotBox {
@@ -36,7 +36,7 @@ impl BallotBox {
             slot_created: PodU64::from(current_slot),
             slot_consensus_reached: PodU64::from(u64::MAX),
             operators_voted: PodU64::from(0),
-            operator_votes: [OperatorVote::default(); 256],
+            operator_votes: [OperatorVote::default(); 5],
         }
     }
 

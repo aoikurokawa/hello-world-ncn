@@ -9,15 +9,22 @@ pub enum HelloWorldNcnInstruction {
     #[account(2, writable, signer, name = "ncn_admin_info")]
     #[account(3, name = "system_program_info")]
     InitializeConfig,
-    // Request Message
-    //#[account(0, name = "config_info")]
-    //#[account(1, name = "ncn_info")]
-    //#[account(2, writable, name = "message_info")]
-    //#[account(3, writable, name = "ballot_box_info")]
-    //#[account(4, writable, signer, name = "ncn_admin_info")]
-    //#[account(5, name = "system_program_info")]
-    //RequestMessage,
 
+    /// Initializes NCN Ballot Box
+    #[account(0, name = "config_info")]
+    #[account(1, name = "ncn_info")]
+    #[account(2, writable, name = "ballot_box_info")]
+    #[account(3, writable, signer, name = "ncn_admin_info")]
+    #[account(4, name = "system_program_info")]
+    InitializeBallotBox,
+
+    /// Request Message
+    #[account(0, name = "config_info")]
+    #[account(1, name = "ncn_info")]
+    #[account(2, writable, name = "message_info")]
+    #[account(3, writable, signer, name = "ncn_admin_info")]
+    #[account(4, name = "system_program_info")]
+    RequestMessage,
     // Send Message
     // #[account(0, writable, name = "config_info")]
     // #[account(1, name = "ncn_info")]
