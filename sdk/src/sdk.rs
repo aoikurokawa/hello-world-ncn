@@ -7,9 +7,15 @@ use solana_program::{
 
 use crate::instruction::HelloWorldNcnInstruction;
 
-pub fn initialize_config(program_id: &Pubkey, config: &Pubkey, ncn_admin: &Pubkey) -> Instruction {
+pub fn initialize_config(
+    program_id: &Pubkey,
+    config: &Pubkey,
+    ncn: &Pubkey,
+    ncn_admin: &Pubkey,
+) -> Instruction {
     let accounts = vec![
         AccountMeta::new(*config, false),
+        AccountMeta::new_readonly(*ncn, false),
         AccountMeta::new(*ncn_admin, true),
         AccountMeta::new_readonly(system_program::id(), false),
     ];
@@ -22,20 +28,27 @@ pub fn initialize_config(program_id: &Pubkey, config: &Pubkey, ncn_admin: &Pubke
     }
 }
 
-// pub fn admin_update_merkle_tree(
+// pub fn request_message(
 //     program_id: &Pubkey,
-//     whitelist: &Pubkey,
-//     admin: &Pubkey,
-//     root: [u8; 32],
+//     config: &Pubkey,
+//     ncn: &Pubkey,
+//     message: &Pubkey,
+//     ballot_box: &Pubkey,
+//     ncn_admin: &Pubkey,
+//     _message_data: String,
 // ) -> Instruction {
 //     let accounts = vec![
-//         AccountMeta::new(*whitelist, false),
-//         AccountMeta::new_readonly(*admin, true),
+//         AccountMeta::new_readonly(*config, false),
+//         AccountMeta::new_readonly(*ncn, false),
+//         AccountMeta::new(*message, false),
+//         AccountMeta::new(*ballot_box, false),
+//         AccountMeta::new(*ncn_admin, true),
+//         AccountMeta::new_readonly(system_program::id(), false),
 //     ];
 //     Instruction {
 //         program_id: *program_id,
 //         accounts,
-//         data: NcnPortalInstruction::AdminUpdateMerkleRoot { root }
+//         data: HelloWorldNcnInstruction::RequestMessage
 //             .try_to_vec()
 //             .unwrap(),
 //     }

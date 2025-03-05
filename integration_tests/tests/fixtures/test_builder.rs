@@ -1,4 +1,5 @@
-use solana_program_test::{ProgramTest, ProgramTestContext};
+use solana_program_test::{processor, ProgramTest, ProgramTestContext};
+use solana_sdk::clock::Clock;
 
 use super::{
     hello_world_ncn_client::HelloWorldNcnClient,
@@ -25,12 +26,6 @@ pub struct TestBuilder {
     context: ProgramTestContext,
 }
 
-// impl Debug for TestBuilder {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(f, "TestBuilder",)
-//     }
-// }
-
 impl TestBuilder {
     pub async fn new() -> Self {
         // let run_as_bpf = std::env::vars().any(|(key, _)| key.eq("SBF_OUT_DIR"));
@@ -39,9 +34,13 @@ impl TestBuilder {
             let mut program_test = ProgramTest::new(
                 "hello_world_ncn_program",
                 hello_world_ncn_program::id(),
-                None,
+                processor!(hello_world_ncn_program::process_instruction),
             );
-            program_test.add_program("jito_restaking_program", jito_restaking_program::id(), None);
+            program_test.add_program(
+                "jito_restaking_program",
+                jito_restaking_program::id(),
+                processor!(jito_restaking_program::process_instruction),
+            );
 
             // Tests that invoke this program should be in the "bpf" module so we can run them separately with the bpf vm.
             // Anchor programs do not expose a compatible entrypoint for solana_program_test::processor!
@@ -120,5 +119,10 @@ impl TestBuilder {
             .await?;
 
         Ok(ncn_root)
+    }
+
+    pub async fn get_current_slot(&mut self) -> TestResult<u64> {
+        let clock: Clock = self.context.banks_client.get_sysvar().await?;
+        Ok(clock.slot)
     }
 }

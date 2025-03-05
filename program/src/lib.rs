@@ -31,18 +31,16 @@ pub fn process_instruction(
 
     match instruction {
         HelloWorldNcnInstruction::InitializeConfig => {
-            msg!("Instruction: InitializeWhitelist");
+            msg!("Instruction: InitializeConfig");
             process_initialize_config(program_id, accounts)
-        }
+        } // HelloWorldNcnInstruction::RequestMessage => {
+          //     msg!("Instruction: RequestMessage");
+          //     process_request_message(program_id, accounts)
+          // }
 
-        HelloWorldNcnInstruction::RequestMessage { message } => {
-            msg!("Instruction: RequestMessage");
-            process_request_message(program_id, accounts, message)
-        }
-
-        HelloWorldNcnInstruction::SubmitMessage { message } => {
-            msg!("Instruction: InitializeWhitelist");
-            process_submit_message(program_id, accounts, message)
-        }
+          // HelloWorldNcnInstruction::SubmitMessage { message } => {
+          //     msg!("Instruction: InitializeWhitelist");
+          //     process_submit_message(program_id, accounts, message)
+          // }
     }
 }
