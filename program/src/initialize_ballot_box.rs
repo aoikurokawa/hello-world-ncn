@@ -23,8 +23,8 @@ pub fn process_initialize_ballot_box(
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
-    let mut config_data = config_info.try_borrow_data()?;
-    let _config = Config::try_from_slice_unchecked(&mut config_data)?;
+    let config_data = config_info.try_borrow_data()?;
+    let _config = Config::try_from_slice_unchecked(&config_data)?;
 
     let ncn_data = ncn_info.try_borrow_data()?;
     let ncn = Ncn::try_from_slice_unchecked(&ncn_data)?;
