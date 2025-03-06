@@ -11,8 +11,8 @@ pub struct Config {
 }
 
 impl Config {
-    /// Initiallize a new Message
-    pub fn new(ncn: Pubkey) -> Self {
+    /// Initiallize Config
+    pub const fn new(ncn: Pubkey) -> Self {
         Self { ncn }
     }
 
@@ -29,7 +29,7 @@ impl Config {
         (pda, bump, seeds)
     }
 
-    /// Load Message Account
+    /// Load Config Account
     pub fn load(
         program_id: &Pubkey,
         account: &AccountInfo,

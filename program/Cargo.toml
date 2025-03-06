@@ -9,14 +9,7 @@ name = "hello_world_ncn_program"
 
 [features]
 no-entrypoint = []
-no-idl = []
-no-log-ix-name = []
-cpi = ["no-entrypoint"]
-default = []
-mainnet-beta = []
-testnet = []
-devnet = []
-localhost = []
+test-sbf = []
 
 [dependencies]
 borsh = { workspace = true }
@@ -27,3 +20,6 @@ jito-bytemuck = { workspace = true }
 jito-jsm-core = { workspace = true }
 jito-restaking-core = { workspace = true }
 solana-program = { workspace = true }
+
+[lints]
+workspace = true

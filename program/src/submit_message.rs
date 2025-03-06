@@ -27,7 +27,7 @@ pub fn process_submit_message(
     let operator_data = operator_info.try_borrow_data()?;
     let operator = Operator::try_from_slice_unchecked(&operator_data)?;
 
-    if operator.voter.ne(&operator_voter_info.key) {
+    if operator.voter.ne(operator_voter_info.key) {
         msg!("Invalid Operator Voter Key");
         return Err(ProgramError::InvalidAccountData);
     }

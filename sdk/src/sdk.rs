@@ -75,6 +75,7 @@ pub fn request_message(
     }
 }
 
+#[allow(clippy::too_many_arguments)]
 pub fn submit_message(
     program_id: &Pubkey,
     config_info: &Pubkey,
@@ -103,22 +104,3 @@ pub fn submit_message(
         .unwrap(),
     }
 }
-//
-// pub fn check_whitelisted(
-//     program_id: &Pubkey,
-//     whitelist: &Pubkey,
-//     whitelisted: &Pubkey,
-//     proof: Vec<[u8; 32]>,
-// ) -> Instruction {
-//     let accounts = vec![
-//         AccountMeta::new_readonly(*whitelist, false),
-//         AccountMeta::new_readonly(*whitelisted, true),
-//     ];
-//     Instruction {
-//         program_id: *program_id,
-//         accounts,
-//         data: NcnPortalInstruction::CheckWhitelisted { proof }
-//             .try_to_vec()
-//             .unwrap(),
-//     }
-// }

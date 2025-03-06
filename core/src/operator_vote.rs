@@ -53,7 +53,7 @@ impl OperatorVote {
         }
     }
 
-    pub fn operator(&self) -> Pubkey {
+    pub const fn operator(&self) -> Pubkey {
         self.operator
     }
 

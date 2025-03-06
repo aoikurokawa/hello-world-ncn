@@ -112,7 +112,7 @@ impl BallotBox {
     /// Determines if an operator can still cast their vote.
     /// Returns true when:
     /// Consensus is not reached OR the voting window is still valid, assuming set_tie_breaker was not invoked
-    pub fn is_voting_valid(&self, current_slot: u64) -> Result<bool, HelloWorldNcnError> {
+    pub const fn is_voting_valid(&self, _current_slot: u64) -> Result<bool, HelloWorldNcnError> {
         // if self.tie_breaker_set() {
         //     return Ok(false);
         // }
