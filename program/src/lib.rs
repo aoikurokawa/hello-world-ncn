@@ -48,7 +48,7 @@ pub fn process_instruction(
         }
 
         HelloWorldNcnInstruction::SubmitMessage { message } => {
-            msg!("Instruction: InitializeWhitelist");
+            msg!("Instruction: SubmitMessage");
             process_submit_message(program_id, accounts, message)
         }
     }

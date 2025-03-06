@@ -15,6 +15,9 @@ pub struct OperatorVote {
     /// The index of the ballot in the ballot_tallies
     vote_index: PodU16,
 
+    /// The length of message
+    message_len: u8,
+
     /// The message operator submitted
     message_data: [u8; 64],
 }
@@ -25,21 +28,28 @@ impl Default for OperatorVote {
             operator: Pubkey::default(),
             slot_voted: PodU64::from(0),
             vote_index: PodU16::from(u16::MAX),
+            message_len: 64,
             message_data: [0; 64],
         }
     }
 }
 
 impl OperatorVote {
-    pub fn new(operator: Pubkey, current_slot: u64, message_data: &str) -> Self {
-        let mut message_slice = [0u8; 64];
-        message_slice.copy_from_slice(message_data.as_bytes());
+    pub fn new(operator: Pubkey, current_slot: u64, message: &str) -> Self {
+        let mut message_data = [0; 64];
+
+        // Only copy up to min(keyword length, 64) bytes
+        let bytes_to_copy = message.as_bytes();
+        let copy_len = std::cmp::min(bytes_to_copy.len(), message_data.len());
+
+        message_data[..copy_len].copy_from_slice(&bytes_to_copy[..copy_len]);
 
         Self {
             operator,
             slot_voted: PodU64::from(current_slot),
             vote_index: PodU16::from(0),
-            message_data: message_slice,
+            message_len: message.len() as u8,
+            message_data,
         }
     }
 
@@ -56,7 +66,7 @@ impl OperatorVote {
     }
 
     pub fn message_data(&self) -> String {
-        String::from_utf8(self.message_data.to_vec()).unwrap()
+        String::from_utf8(self.message_data[..self.message_len as usize].to_vec()).unwrap()
     }
 
     pub fn is_empty(&self) -> bool {

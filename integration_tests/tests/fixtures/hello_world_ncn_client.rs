@@ -1,4 +1,4 @@
-use hello_world_ncn_core::{config::Config as NcnConfig, message::Message};
+use hello_world_ncn_core::{ballot_box::BallotBox, config::Config as NcnConfig, message::Message};
 use jito_bytemuck::AccountDeserialize;
 use solana_program_test::BanksClient;
 use solana_sdk::{
@@ -6,7 +6,10 @@ use solana_sdk::{
     signature::Keypair, signer::Signer, system_instruction::transfer, transaction::Transaction,
 };
 
-use super::{restaking_client::NcnRoot, TestResult};
+use super::{
+    restaking_client::{NcnRoot, OperatorRoot},
+    TestResult,
+};
 
 pub struct HelloWorldNcnClient {
     banks_client: BanksClient,
@@ -76,6 +79,11 @@ impl HelloWorldNcnClient {
     pub async fn get_message(&mut self, account: &Pubkey) -> TestResult<Message> {
         let account = self.banks_client.get_account(*account).await?.unwrap();
         Ok(*Message::try_from_slice_unchecked(account.data.as_slice()).unwrap())
+    }
+
+    pub async fn get_ballot_box(&mut self, account: &Pubkey) -> TestResult<BallotBox> {
+        let account = self.banks_client.get_account(*account).await?.unwrap();
+        Ok(*BallotBox::try_from_slice_unchecked(account.data.as_slice()).unwrap())
     }
 
     pub async fn do_initialize_config(
@@ -207,6 +215,65 @@ impl HelloWorldNcnClient {
             &[ix],
             Some(&ncn_admin.pubkey()),
             &[&ncn_admin],
+            blockhash,
+        ))
+        .await
+    }
+
+    pub async fn do_submit_message(
+        &mut self,
+        ncn: &Pubkey,
+        operator_root: &OperatorRoot,
+        epoch: u64,
+        message_data: String,
+    ) -> TestResult<()> {
+        // Setup Payer
+        self.airdrop(&self.payer.pubkey(), 1.0).await?;
+
+        self.submit_message(ncn, operator_root, epoch, message_data)
+            .await
+    }
+
+    pub async fn submit_message(
+        &mut self,
+        ncn: &Pubkey,
+        operator_root: &OperatorRoot,
+        epoch: u64,
+        message_data: String,
+    ) -> TestResult<()> {
+        let ncn_config = hello_world_ncn_core::config::Config::find_program_address(
+            &hello_world_ncn_program::id(),
+            ncn,
+        )
+        .0;
+        let message = hello_world_ncn_core::message::Message::find_program_address(
+            &hello_world_ncn_program::id(),
+            epoch,
+        )
+        .0;
+        let ballot_box = hello_world_ncn_core::ballot_box::BallotBox::find_program_address(
+            &hello_world_ncn_program::id(),
+            ncn,
+            epoch,
+        )
+        .0;
+
+        let ix = hello_world_ncn_sdk::sdk::submit_message(
+            &hello_world_ncn_program::id(),
+            &ncn_config,
+            &ncn,
+            &operator_root.operator_pubkey,
+            &message,
+            &ballot_box,
+            &operator_root.operator_admin.pubkey(),
+            message_data,
+        );
+
+        let blockhash = self.banks_client.get_latest_blockhash().await?;
+        self.process_transaction(&Transaction::new_signed_with_payer(
+            &[ix],
+            Some(&operator_root.operator_admin.pubkey()),
+            &[&operator_root.operator_admin],
             blockhash,
         ))
         .await

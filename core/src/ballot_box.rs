@@ -25,7 +25,7 @@ pub struct BallotBox {
     operators_voted: PodU64,
 
     /// Operator votes
-    operator_votes: [OperatorVote; 3],
+    pub operator_votes: [OperatorVote; 3],
 }
 
 impl BallotBox {

@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use hello_world_ncn_core::message::Message;
+    use hello_world_ncn_core::{ballot_box::BallotBox, message::Message};
 
     use crate::fixtures::test_builder::TestBuilder;
 
@@ -10,7 +10,12 @@ mod tests {
         let mut restaking_program_client = fixture.restaking_program_client();
         let mut hello_world_ncn_client = fixture.hello_world_ncn_client();
 
-        let ncn_root = fixture.setup_ncn().await.unwrap();
+        let mut test_ncn = fixture.create_test_ncn().await.unwrap();
+        // let ncn_root = fixture.setup_ncn().await.unwrap();
+        fixture
+            .add_operators_to_test_ncn(&mut test_ncn, 1, None)
+            .await
+            .unwrap();
 
         let message_data = "Hello,";
 
@@ -23,26 +28,50 @@ mod tests {
         let epoch = slot / restaking_config.epoch_length();
 
         hello_world_ncn_client
-            .do_initialize_config(&ncn_root.ncn_pubkey, &ncn_root.ncn_admin)
+            .do_initialize_config(&test_ncn.ncn_root.ncn_pubkey, &test_ncn.ncn_root.ncn_admin)
+            .await
+            .unwrap();
+        hello_world_ncn_client
+            .do_initialize_ballot_box(
+                &test_ncn.ncn_root.ncn_pubkey,
+                &test_ncn.ncn_root.ncn_admin,
+                epoch,
+            )
             .await
             .unwrap();
 
         hello_world_ncn_client
             .do_request_message(
-                &ncn_root.ncn_pubkey,
-                &ncn_root.ncn_admin,
+                &test_ncn.ncn_root.ncn_pubkey,
+                &test_ncn.ncn_root.ncn_admin,
                 epoch,
                 message_data.to_string(),
             )
             .await
             .unwrap();
 
-        let message_pubkey = Message::find_program_address(&hello_world_ncn_program::id(), epoch).0;
-        let message = hello_world_ncn_client
-            .get_message(&message_pubkey)
+        let message_data = format!("{message_data} World");
+
+        hello_world_ncn_client
+            .do_submit_message(
+                &test_ncn.ncn_root.ncn_pubkey,
+                &test_ncn.operators[0],
+                epoch,
+                message_data.clone(),
+            )
             .await
             .unwrap();
-        assert_eq!(message.epoch(), epoch);
-        assert_eq!(message.keyword(), "Hello".to_string());
+
+        let ballot_box_pubkey = BallotBox::find_program_address(
+            &hello_world_ncn_program::id(),
+            &test_ncn.ncn_root.ncn_pubkey,
+            epoch,
+        )
+        .0;
+        let ballot_box = hello_world_ncn_client
+            .get_ballot_box(&ballot_box_pubkey)
+            .await
+            .unwrap();
+        assert_eq!(ballot_box.operator_votes[0].message_data(), message_data);
     }
 }

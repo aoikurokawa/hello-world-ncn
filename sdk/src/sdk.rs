@@ -74,24 +74,35 @@ pub fn request_message(
             .unwrap(),
     }
 }
-//
-// pub fn admin_set_new_admin(
-//     program_id: &Pubkey,
-//     whitelist: &Pubkey,
-//     admin: &Pubkey,
-//     new_admin: &Pubkey,
-// ) -> Instruction {
-//     let accounts = vec![
-//         AccountMeta::new(*whitelist, false),
-//         AccountMeta::new(*admin, true),
-//         AccountMeta::new_readonly(*new_admin, false),
-//     ];
-//     Instruction {
-//         program_id: *program_id,
-//         accounts,
-//         data: NcnPortalInstruction::AdminSetNewAdmin.try_to_vec().unwrap(),
-//     }
-// }
+
+pub fn submit_message(
+    program_id: &Pubkey,
+    config_info: &Pubkey,
+    ncn_info: &Pubkey,
+    operator_info: &Pubkey,
+    message_info: &Pubkey,
+    ballot_box_info: &Pubkey,
+    operator_voter_info: &Pubkey,
+    message_data: String,
+) -> Instruction {
+    let accounts = vec![
+        AccountMeta::new_readonly(*config_info, false),
+        AccountMeta::new_readonly(*ncn_info, false),
+        AccountMeta::new_readonly(*operator_info, false),
+        AccountMeta::new_readonly(*message_info, false),
+        AccountMeta::new(*ballot_box_info, false),
+        AccountMeta::new_readonly(*operator_voter_info, true),
+    ];
+    Instruction {
+        program_id: *program_id,
+        accounts,
+        data: HelloWorldNcnInstruction::SubmitMessage {
+            message: message_data,
+        }
+        .try_to_vec()
+        .unwrap(),
+    }
+}
 //
 // pub fn check_whitelisted(
 //     program_id: &Pubkey,
