@@ -1,6 +1,6 @@
 [workspace]
 members = [
-	"clients/rust/hello_world_ncn",
+	"clients/rust/hello_world_ncn_client",
 	"core",
 	"integration_tests",
 	"program",
