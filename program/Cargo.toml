@@ -20,3 +20,6 @@ jito-bytemuck = { workspace = true }
 jito-jsm-core = { workspace = true }
 jito-restaking-core = { workspace = true }
 solana-program = { workspace = true }
+
+[lints]
+workspace = true
