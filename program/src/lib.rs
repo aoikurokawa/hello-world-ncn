@@ -17,7 +17,6 @@ use submit_message::process_submit_message;
 
 declare_id!(str_to_pubkey(env!("HELLO_WORLD_NCN_PROGRAM_ID")));
 
-#[cfg(not(feature = "no-entrypoint"))]
 solana_program::entrypoint!(process_instruction);
 
 pub fn process_instruction(
