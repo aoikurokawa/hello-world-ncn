@@ -1,6 +1,8 @@
 [workspace]
 members = [
-	"core", "integration_tests",
+	"clients/rust/hello_world_ncn",
+	"core",
+	"integration_tests",
 	"program",
 	"sdk",
 	"shank-cli",
@@ -42,6 +44,7 @@ num-traits = "0.2.19"
 reqwest = { version = "0.10.10", features = ["json"] }
 rig-core = "0.5.0"
 serde = { version = "1.0.216", features = ["derive"] }
+serde-big-array = "0.5.1"
 serde_json = "1.0.133"
 serde_with = "3.9.0"
 shank = "0.4.2"
