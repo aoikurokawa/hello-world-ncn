@@ -4,3 +4,5 @@ node_modules
 
 integration_tests/tests/fixtures/hello_world_ncn_program-keypair.json
 integration_tests/tests/fixtures/hello_world_ncn_program.so
+
+credentials
