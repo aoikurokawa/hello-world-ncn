@@ -10,381 +10,449 @@ use borsh::BorshSerialize;
 
 /// Accounts.
 pub struct InitializeBallotBox {
-      
-              
-          pub config_info: solana_program::pubkey::Pubkey,
-          
-              
-          pub ncn_info: solana_program::pubkey::Pubkey,
-          
-              
-          pub ballot_box_info: solana_program::pubkey::Pubkey,
-          
-              
-          pub ncn_admin_info: solana_program::pubkey::Pubkey,
-          
-              
-          pub system_program_info: solana_program::pubkey::Pubkey,
-      }
+    pub config_info: solana_program::pubkey::Pubkey,
+
+    pub ncn_info: solana_program::pubkey::Pubkey,
+
+    pub ballot_box_info: solana_program::pubkey::Pubkey,
+
+    pub ncn_admin_info: solana_program::pubkey::Pubkey,
+
+    pub system_program_info: solana_program::pubkey::Pubkey,
+}
 
 impl InitializeBallotBox {
-  pub fn instruction(&self) -> solana_program::instruction::Instruction {
-    self.instruction_with_remaining_accounts(&[])
-  }
-  #[allow(clippy::vec_init_then_push)]
-  pub fn instruction_with_remaining_accounts(&self, remaining_accounts: &[solana_program::instruction::AccountMeta]) -> solana_program::instruction::Instruction {
-    let mut accounts = Vec::with_capacity(5+ remaining_accounts.len());
-                            accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            self.config_info,
-            false
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            self.ncn_info,
-            false
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new(
-            self.ballot_box_info,
-            false
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new(
-            self.ncn_admin_info,
-            true
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            self.system_program_info,
-            false
-          ));
-                      accounts.extend_from_slice(remaining_accounts);
-    let data = InitializeBallotBoxInstructionData::new().try_to_vec().unwrap();
-    
-    solana_program::instruction::Instruction {
-      program_id: crate::HELLO_WORLD_NCN_ID,
-      accounts,
-      data,
+    pub fn instruction(&self) -> solana_program::instruction::Instruction {
+        self.instruction_with_remaining_accounts(&[])
     }
-  }
+    #[allow(clippy::vec_init_then_push)]
+    pub fn instruction_with_remaining_accounts(
+        &self,
+        remaining_accounts: &[solana_program::instruction::AccountMeta],
+    ) -> solana_program::instruction::Instruction {
+        let mut accounts = Vec::with_capacity(5 + remaining_accounts.len());
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            self.config_info,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            self.ncn_info,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new(
+            self.ballot_box_info,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new(
+            self.ncn_admin_info,
+            true,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            self.system_program_info,
+            false,
+        ));
+        accounts.extend_from_slice(remaining_accounts);
+        let data = InitializeBallotBoxInstructionData::new()
+            .try_to_vec()
+            .unwrap();
+
+        solana_program::instruction::Instruction {
+            program_id: crate::HELLO_WORLD_NCN_ID,
+            accounts,
+            data,
+        }
+    }
 }
 
 #[derive(BorshDeserialize, BorshSerialize)]
 pub struct InitializeBallotBoxInstructionData {
-            discriminator: u8,
-      }
+    discriminator: u8,
+}
 
 impl InitializeBallotBoxInstructionData {
-  pub fn new() -> Self {
-    Self {
-                        discriminator: 1,
-                  }
-  }
+    pub fn new() -> Self {
+        Self { discriminator: 1 }
+    }
 }
 
 impl Default for InitializeBallotBoxInstructionData {
-  fn default() -> Self {
-    Self::new()
-  }
+    fn default() -> Self {
+        Self::new()
+    }
 }
-
-
 
 /// Instruction builder for `InitializeBallotBox`.
 ///
 /// ### Accounts:
 ///
-          ///   0. `[]` config_info
-          ///   1. `[]` ncn_info
-                ///   2. `[writable]` ballot_box_info
-                      ///   3. `[writable, signer]` ncn_admin_info
-          ///   4. `[]` system_program_info
+///   0. `[]` config_info
+///   1. `[]` ncn_info
+///   2. `[writable]` ballot_box_info
+///   3. `[writable, signer]` ncn_admin_info
+///   4. `[]` system_program_info
 #[derive(Clone, Debug, Default)]
 pub struct InitializeBallotBoxBuilder {
-            config_info: Option<solana_program::pubkey::Pubkey>,
-                ncn_info: Option<solana_program::pubkey::Pubkey>,
-                ballot_box_info: Option<solana_program::pubkey::Pubkey>,
-                ncn_admin_info: Option<solana_program::pubkey::Pubkey>,
-                system_program_info: Option<solana_program::pubkey::Pubkey>,
-                __remaining_accounts: Vec<solana_program::instruction::AccountMeta>,
+    config_info: Option<solana_program::pubkey::Pubkey>,
+    ncn_info: Option<solana_program::pubkey::Pubkey>,
+    ballot_box_info: Option<solana_program::pubkey::Pubkey>,
+    ncn_admin_info: Option<solana_program::pubkey::Pubkey>,
+    system_program_info: Option<solana_program::pubkey::Pubkey>,
+    __remaining_accounts: Vec<solana_program::instruction::AccountMeta>,
 }
 
 impl InitializeBallotBoxBuilder {
-  pub fn new() -> Self {
-    Self::default()
-  }
-            #[inline(always)]
+    pub fn new() -> Self {
+        Self::default()
+    }
+    #[inline(always)]
     pub fn config_info(&mut self, config_info: solana_program::pubkey::Pubkey) -> &mut Self {
-                        self.config_info = Some(config_info);
-                    self
+        self.config_info = Some(config_info);
+        self
     }
-            #[inline(always)]
+    #[inline(always)]
     pub fn ncn_info(&mut self, ncn_info: solana_program::pubkey::Pubkey) -> &mut Self {
-                        self.ncn_info = Some(ncn_info);
-                    self
+        self.ncn_info = Some(ncn_info);
+        self
     }
-            #[inline(always)]
-    pub fn ballot_box_info(&mut self, ballot_box_info: solana_program::pubkey::Pubkey) -> &mut Self {
-                        self.ballot_box_info = Some(ballot_box_info);
-                    self
+    #[inline(always)]
+    pub fn ballot_box_info(
+        &mut self,
+        ballot_box_info: solana_program::pubkey::Pubkey,
+    ) -> &mut Self {
+        self.ballot_box_info = Some(ballot_box_info);
+        self
     }
-            #[inline(always)]
+    #[inline(always)]
     pub fn ncn_admin_info(&mut self, ncn_admin_info: solana_program::pubkey::Pubkey) -> &mut Self {
-                        self.ncn_admin_info = Some(ncn_admin_info);
-                    self
+        self.ncn_admin_info = Some(ncn_admin_info);
+        self
     }
-            #[inline(always)]
-    pub fn system_program_info(&mut self, system_program_info: solana_program::pubkey::Pubkey) -> &mut Self {
-                        self.system_program_info = Some(system_program_info);
-                    self
+    #[inline(always)]
+    pub fn system_program_info(
+        &mut self,
+        system_program_info: solana_program::pubkey::Pubkey,
+    ) -> &mut Self {
+        self.system_program_info = Some(system_program_info);
+        self
     }
-            /// Add an additional account to the instruction.
-  #[inline(always)]
-  pub fn add_remaining_account(&mut self, account: solana_program::instruction::AccountMeta) -> &mut Self {
-    self.__remaining_accounts.push(account);
-    self
-  }
-  /// Add additional accounts to the instruction.
-  #[inline(always)]
-  pub fn add_remaining_accounts(&mut self, accounts: &[solana_program::instruction::AccountMeta]) -> &mut Self {
-    self.__remaining_accounts.extend_from_slice(accounts);
-    self
-  }
-  #[allow(clippy::clone_on_copy)]
-  pub fn instruction(&self) -> solana_program::instruction::Instruction {
-    let accounts = InitializeBallotBox {
-                              config_info: self.config_info.expect("config_info is not set"),
-                                        ncn_info: self.ncn_info.expect("ncn_info is not set"),
-                                        ballot_box_info: self.ballot_box_info.expect("ballot_box_info is not set"),
-                                        ncn_admin_info: self.ncn_admin_info.expect("ncn_admin_info is not set"),
-                                        system_program_info: self.system_program_info.expect("system_program_info is not set"),
-                      };
-    
-    accounts.instruction_with_remaining_accounts(&self.__remaining_accounts)
-  }
+    /// Add an additional account to the instruction.
+    #[inline(always)]
+    pub fn add_remaining_account(
+        &mut self,
+        account: solana_program::instruction::AccountMeta,
+    ) -> &mut Self {
+        self.__remaining_accounts.push(account);
+        self
+    }
+    /// Add additional accounts to the instruction.
+    #[inline(always)]
+    pub fn add_remaining_accounts(
+        &mut self,
+        accounts: &[solana_program::instruction::AccountMeta],
+    ) -> &mut Self {
+        self.__remaining_accounts.extend_from_slice(accounts);
+        self
+    }
+    #[allow(clippy::clone_on_copy)]
+    pub fn instruction(&self) -> solana_program::instruction::Instruction {
+        let accounts = InitializeBallotBox {
+            config_info: self.config_info.expect("config_info is not set"),
+            ncn_info: self.ncn_info.expect("ncn_info is not set"),
+            ballot_box_info: self.ballot_box_info.expect("ballot_box_info is not set"),
+            ncn_admin_info: self.ncn_admin_info.expect("ncn_admin_info is not set"),
+            system_program_info: self
+                .system_program_info
+                .expect("system_program_info is not set"),
+        };
+
+        accounts.instruction_with_remaining_accounts(&self.__remaining_accounts)
+    }
 }
 
-  /// `initialize_ballot_box` CPI accounts.
-  pub struct InitializeBallotBoxCpiAccounts<'a, 'b> {
-          
-                    
-              pub config_info: &'b solana_program::account_info::AccountInfo<'a>,
-                
-                    
-              pub ncn_info: &'b solana_program::account_info::AccountInfo<'a>,
-                
-                    
-              pub ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
-                
-                    
-              pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
-                
-                    
-              pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
-            }
+/// `initialize_ballot_box` CPI accounts.
+pub struct InitializeBallotBoxCpiAccounts<'a, 'b> {
+    pub config_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub ncn_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+}
 
 /// `initialize_ballot_box` CPI instruction.
 pub struct InitializeBallotBoxCpi<'a, 'b> {
-  /// The program to invoke.
-  pub __program: &'b solana_program::account_info::AccountInfo<'a>,
-      
-              
-          pub config_info: &'b solana_program::account_info::AccountInfo<'a>,
-          
-              
-          pub ncn_info: &'b solana_program::account_info::AccountInfo<'a>,
-          
-              
-          pub ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
-          
-              
-          pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
-          
-              
-          pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
-        }
+    /// The program to invoke.
+    pub __program: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub config_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub ncn_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
+
+    pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+}
 
 impl<'a, 'b> InitializeBallotBoxCpi<'a, 'b> {
-  pub fn new(
-    program: &'b solana_program::account_info::AccountInfo<'a>,
-          accounts: InitializeBallotBoxCpiAccounts<'a, 'b>,
-          ) -> Self {
-    Self {
-      __program: program,
-              config_info: accounts.config_info,
-              ncn_info: accounts.ncn_info,
-              ballot_box_info: accounts.ballot_box_info,
-              ncn_admin_info: accounts.ncn_admin_info,
-              system_program_info: accounts.system_program_info,
-                }
-  }
-  #[inline(always)]
-  pub fn invoke(&self) -> solana_program::entrypoint::ProgramResult {
-    self.invoke_signed_with_remaining_accounts(&[], &[])
-  }
-  #[inline(always)]
-  pub fn invoke_with_remaining_accounts(&self, remaining_accounts: &[(&'b solana_program::account_info::AccountInfo<'a>, bool, bool)]) -> solana_program::entrypoint::ProgramResult {
-    self.invoke_signed_with_remaining_accounts(&[], remaining_accounts)
-  }
-  #[inline(always)]
-  pub fn invoke_signed(&self, signers_seeds: &[&[&[u8]]]) -> solana_program::entrypoint::ProgramResult {
-    self.invoke_signed_with_remaining_accounts(signers_seeds, &[])
-  }
-  #[allow(clippy::clone_on_copy)]
-  #[allow(clippy::vec_init_then_push)]
-  pub fn invoke_signed_with_remaining_accounts(
-    &self,
-    signers_seeds: &[&[&[u8]]],
-    remaining_accounts: &[(&'b solana_program::account_info::AccountInfo<'a>, bool, bool)]
-  ) -> solana_program::entrypoint::ProgramResult {
-    let mut accounts = Vec::with_capacity(5+ remaining_accounts.len());
-                            accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            *self.config_info.key,
-            false
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            *self.ncn_info.key,
-            false
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new(
-            *self.ballot_box_info.key,
-            false
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new(
-            *self.ncn_admin_info.key,
-            true
-          ));
-                                          accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            *self.system_program_info.key,
-            false
-          ));
-                      remaining_accounts.iter().for_each(|remaining_account| {
-      accounts.push(solana_program::instruction::AccountMeta {
-          pubkey: *remaining_account.0.key,
-          is_signer: remaining_account.1,
-          is_writable: remaining_account.2,
-      })
-    });
-    let data = InitializeBallotBoxInstructionData::new().try_to_vec().unwrap();
-    
-    let instruction = solana_program::instruction::Instruction {
-      program_id: crate::HELLO_WORLD_NCN_ID,
-      accounts,
-      data,
-    };
-    let mut account_infos = Vec::with_capacity(6 + remaining_accounts.len());
-    account_infos.push(self.__program.clone());
-                  account_infos.push(self.config_info.clone());
-                        account_infos.push(self.ncn_info.clone());
-                        account_infos.push(self.ballot_box_info.clone());
-                        account_infos.push(self.ncn_admin_info.clone());
-                        account_infos.push(self.system_program_info.clone());
-              remaining_accounts.iter().for_each(|remaining_account| account_infos.push(remaining_account.0.clone()));
-
-    if signers_seeds.is_empty() {
-      solana_program::program::invoke(&instruction, &account_infos)
-    } else {
-      solana_program::program::invoke_signed(&instruction, &account_infos, signers_seeds)
+    pub fn new(
+        program: &'b solana_program::account_info::AccountInfo<'a>,
+        accounts: InitializeBallotBoxCpiAccounts<'a, 'b>,
+    ) -> Self {
+        Self {
+            __program: program,
+            config_info: accounts.config_info,
+            ncn_info: accounts.ncn_info,
+            ballot_box_info: accounts.ballot_box_info,
+            ncn_admin_info: accounts.ncn_admin_info,
+            system_program_info: accounts.system_program_info,
+        }
     }
-  }
+    #[inline(always)]
+    pub fn invoke(&self) -> solana_program::entrypoint::ProgramResult {
+        self.invoke_signed_with_remaining_accounts(&[], &[])
+    }
+    #[inline(always)]
+    pub fn invoke_with_remaining_accounts(
+        &self,
+        remaining_accounts: &[(
+            &'b solana_program::account_info::AccountInfo<'a>,
+            bool,
+            bool,
+        )],
+    ) -> solana_program::entrypoint::ProgramResult {
+        self.invoke_signed_with_remaining_accounts(&[], remaining_accounts)
+    }
+    #[inline(always)]
+    pub fn invoke_signed(
+        &self,
+        signers_seeds: &[&[&[u8]]],
+    ) -> solana_program::entrypoint::ProgramResult {
+        self.invoke_signed_with_remaining_accounts(signers_seeds, &[])
+    }
+    #[allow(clippy::clone_on_copy)]
+    #[allow(clippy::vec_init_then_push)]
+    pub fn invoke_signed_with_remaining_accounts(
+        &self,
+        signers_seeds: &[&[&[u8]]],
+        remaining_accounts: &[(
+            &'b solana_program::account_info::AccountInfo<'a>,
+            bool,
+            bool,
+        )],
+    ) -> solana_program::entrypoint::ProgramResult {
+        let mut accounts = Vec::with_capacity(5 + remaining_accounts.len());
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            *self.config_info.key,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            *self.ncn_info.key,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new(
+            *self.ballot_box_info.key,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new(
+            *self.ncn_admin_info.key,
+            true,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            *self.system_program_info.key,
+            false,
+        ));
+        remaining_accounts.iter().for_each(|remaining_account| {
+            accounts.push(solana_program::instruction::AccountMeta {
+                pubkey: *remaining_account.0.key,
+                is_signer: remaining_account.1,
+                is_writable: remaining_account.2,
+            })
+        });
+        let data = InitializeBallotBoxInstructionData::new()
+            .try_to_vec()
+            .unwrap();
+
+        let instruction = solana_program::instruction::Instruction {
+            program_id: crate::HELLO_WORLD_NCN_ID,
+            accounts,
+            data,
+        };
+        let mut account_infos = Vec::with_capacity(6 + remaining_accounts.len());
+        account_infos.push(self.__program.clone());
+        account_infos.push(self.config_info.clone());
+        account_infos.push(self.ncn_info.clone());
+        account_infos.push(self.ballot_box_info.clone());
+        account_infos.push(self.ncn_admin_info.clone());
+        account_infos.push(self.system_program_info.clone());
+        remaining_accounts
+            .iter()
+            .for_each(|remaining_account| account_infos.push(remaining_account.0.clone()));
+
+        if signers_seeds.is_empty() {
+            solana_program::program::invoke(&instruction, &account_infos)
+        } else {
+            solana_program::program::invoke_signed(&instruction, &account_infos, signers_seeds)
+        }
+    }
 }
 
 /// Instruction builder for `InitializeBallotBox` via CPI.
 ///
 /// ### Accounts:
 ///
-          ///   0. `[]` config_info
-          ///   1. `[]` ncn_info
-                ///   2. `[writable]` ballot_box_info
-                      ///   3. `[writable, signer]` ncn_admin_info
-          ///   4. `[]` system_program_info
+///   0. `[]` config_info
+///   1. `[]` ncn_info
+///   2. `[writable]` ballot_box_info
+///   3. `[writable, signer]` ncn_admin_info
+///   4. `[]` system_program_info
 #[derive(Clone, Debug)]
 pub struct InitializeBallotBoxCpiBuilder<'a, 'b> {
-  instruction: Box<InitializeBallotBoxCpiBuilderInstruction<'a, 'b>>,
+    instruction: Box<InitializeBallotBoxCpiBuilderInstruction<'a, 'b>>,
 }
 
 impl<'a, 'b> InitializeBallotBoxCpiBuilder<'a, 'b> {
-  pub fn new(program: &'b solana_program::account_info::AccountInfo<'a>) -> Self {
-    let instruction = Box::new(InitializeBallotBoxCpiBuilderInstruction {
-      __program: program,
-              config_info: None,
-              ncn_info: None,
-              ballot_box_info: None,
-              ncn_admin_info: None,
-              system_program_info: None,
-                                __remaining_accounts: Vec::new(),
-    });
-    Self { instruction }
-  }
-      #[inline(always)]
-    pub fn config_info(&mut self, config_info: &'b solana_program::account_info::AccountInfo<'a>) -> &mut Self {
-                        self.instruction.config_info = Some(config_info);
-                    self
+    pub fn new(program: &'b solana_program::account_info::AccountInfo<'a>) -> Self {
+        let instruction = Box::new(InitializeBallotBoxCpiBuilderInstruction {
+            __program: program,
+            config_info: None,
+            ncn_info: None,
+            ballot_box_info: None,
+            ncn_admin_info: None,
+            system_program_info: None,
+            __remaining_accounts: Vec::new(),
+        });
+        Self { instruction }
     }
-      #[inline(always)]
-    pub fn ncn_info(&mut self, ncn_info: &'b solana_program::account_info::AccountInfo<'a>) -> &mut Self {
-                        self.instruction.ncn_info = Some(ncn_info);
-                    self
+    #[inline(always)]
+    pub fn config_info(
+        &mut self,
+        config_info: &'b solana_program::account_info::AccountInfo<'a>,
+    ) -> &mut Self {
+        self.instruction.config_info = Some(config_info);
+        self
     }
-      #[inline(always)]
-    pub fn ballot_box_info(&mut self, ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>) -> &mut Self {
-                        self.instruction.ballot_box_info = Some(ballot_box_info);
-                    self
+    #[inline(always)]
+    pub fn ncn_info(
+        &mut self,
+        ncn_info: &'b solana_program::account_info::AccountInfo<'a>,
+    ) -> &mut Self {
+        self.instruction.ncn_info = Some(ncn_info);
+        self
     }
-      #[inline(always)]
-    pub fn ncn_admin_info(&mut self, ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>) -> &mut Self {
-                        self.instruction.ncn_admin_info = Some(ncn_admin_info);
-                    self
+    #[inline(always)]
+    pub fn ballot_box_info(
+        &mut self,
+        ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
+    ) -> &mut Self {
+        self.instruction.ballot_box_info = Some(ballot_box_info);
+        self
     }
-      #[inline(always)]
-    pub fn system_program_info(&mut self, system_program_info: &'b solana_program::account_info::AccountInfo<'a>) -> &mut Self {
-                        self.instruction.system_program_info = Some(system_program_info);
-                    self
+    #[inline(always)]
+    pub fn ncn_admin_info(
+        &mut self,
+        ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
+    ) -> &mut Self {
+        self.instruction.ncn_admin_info = Some(ncn_admin_info);
+        self
     }
-            /// Add an additional account to the instruction.
-  #[inline(always)]
-  pub fn add_remaining_account(&mut self, account: &'b solana_program::account_info::AccountInfo<'a>, is_writable: bool, is_signer: bool) -> &mut Self {
-    self.instruction.__remaining_accounts.push((account, is_writable, is_signer));
-    self
-  }
-  /// Add additional accounts to the instruction.
-  ///
-  /// Each account is represented by a tuple of the `AccountInfo`, a `bool` indicating whether the account is writable or not,
-  /// and a `bool` indicating whether the account is a signer or not.
-  #[inline(always)]
-  pub fn add_remaining_accounts(&mut self, accounts: &[(&'b solana_program::account_info::AccountInfo<'a>, bool, bool)]) -> &mut Self {
-    self.instruction.__remaining_accounts.extend_from_slice(accounts);
-    self
-  }
-  #[inline(always)]
-  pub fn invoke(&self) -> solana_program::entrypoint::ProgramResult {
-    self.invoke_signed(&[])
-  }
-  #[allow(clippy::clone_on_copy)]
-  #[allow(clippy::vec_init_then_push)]
-  pub fn invoke_signed(&self, signers_seeds: &[&[&[u8]]]) -> solana_program::entrypoint::ProgramResult {
+    #[inline(always)]
+    pub fn system_program_info(
+        &mut self,
+        system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+    ) -> &mut Self {
+        self.instruction.system_program_info = Some(system_program_info);
+        self
+    }
+    /// Add an additional account to the instruction.
+    #[inline(always)]
+    pub fn add_remaining_account(
+        &mut self,
+        account: &'b solana_program::account_info::AccountInfo<'a>,
+        is_writable: bool,
+        is_signer: bool,
+    ) -> &mut Self {
+        self.instruction
+            .__remaining_accounts
+            .push((account, is_writable, is_signer));
+        self
+    }
+    /// Add additional accounts to the instruction.
+    ///
+    /// Each account is represented by a tuple of the `AccountInfo`, a `bool` indicating whether the account is writable or not,
+    /// and a `bool` indicating whether the account is a signer or not.
+    #[inline(always)]
+    pub fn add_remaining_accounts(
+        &mut self,
+        accounts: &[(
+            &'b solana_program::account_info::AccountInfo<'a>,
+            bool,
+            bool,
+        )],
+    ) -> &mut Self {
+        self.instruction
+            .__remaining_accounts
+            .extend_from_slice(accounts);
+        self
+    }
+    #[inline(always)]
+    pub fn invoke(&self) -> solana_program::entrypoint::ProgramResult {
+        self.invoke_signed(&[])
+    }
+    #[allow(clippy::clone_on_copy)]
+    #[allow(clippy::vec_init_then_push)]
+    pub fn invoke_signed(
+        &self,
+        signers_seeds: &[&[&[u8]]],
+    ) -> solana_program::entrypoint::ProgramResult {
         let instruction = InitializeBallotBoxCpi {
-        __program: self.instruction.__program,
-                  
-          config_info: self.instruction.config_info.expect("config_info is not set"),
-                  
-          ncn_info: self.instruction.ncn_info.expect("ncn_info is not set"),
-                  
-          ballot_box_info: self.instruction.ballot_box_info.expect("ballot_box_info is not set"),
-                  
-          ncn_admin_info: self.instruction.ncn_admin_info.expect("ncn_admin_info is not set"),
-                  
-          system_program_info: self.instruction.system_program_info.expect("system_program_info is not set"),
-                    };
-    instruction.invoke_signed_with_remaining_accounts(signers_seeds, &self.instruction.__remaining_accounts)
-  }
+            __program: self.instruction.__program,
+
+            config_info: self
+                .instruction
+                .config_info
+                .expect("config_info is not set"),
+
+            ncn_info: self.instruction.ncn_info.expect("ncn_info is not set"),
+
+            ballot_box_info: self
+                .instruction
+                .ballot_box_info
+                .expect("ballot_box_info is not set"),
+
+            ncn_admin_info: self
+                .instruction
+                .ncn_admin_info
+                .expect("ncn_admin_info is not set"),
+
+            system_program_info: self
+                .instruction
+                .system_program_info
+                .expect("system_program_info is not set"),
+        };
+        instruction.invoke_signed_with_remaining_accounts(
+            signers_seeds,
+            &self.instruction.__remaining_accounts,
+        )
+    }
 }
 
 #[derive(Clone, Debug)]
 struct InitializeBallotBoxCpiBuilderInstruction<'a, 'b> {
-  __program: &'b solana_program::account_info::AccountInfo<'a>,
-            config_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-                ncn_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-                ballot_box_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-                ncn_admin_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-                system_program_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-                /// Additional instruction accounts `(AccountInfo, is_writable, is_signer)`.
-  __remaining_accounts: Vec<(&'b solana_program::account_info::AccountInfo<'a>, bool, bool)>,
+    __program: &'b solana_program::account_info::AccountInfo<'a>,
+    config_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    ncn_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    ballot_box_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    ncn_admin_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    system_program_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    /// Additional instruction accounts `(AccountInfo, is_writable, is_signer)`.
+    __remaining_accounts: Vec<(
+        &'b solana_program::account_info::AccountInfo<'a>,
+        bool,
+        bool,
+    )>,
 }
-
