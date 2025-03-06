@@ -1,0 +1,324 @@
+{
+  "version": "0.1.0",
+  "name": "hello_world_ncn",
+  "instructions": [
+    {
+      "name": "InitializeConfig",
+      "accounts": [
+        {
+          "name": "configInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ncnInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ncnAdminInfo",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgramInfo",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "discriminant": {
+        "type": "u8",
+        "value": 0
+      }
+    },
+    {
+      "name": "InitializeBallotBox",
+      "accounts": [
+        {
+          "name": "configInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ncnInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ballotBoxInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ncnAdminInfo",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgramInfo",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "discriminant": {
+        "type": "u8",
+        "value": 1
+      }
+    },
+    {
+      "name": "RequestMessage",
+      "accounts": [
+        {
+          "name": "configInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ncnInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "messageInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ncnAdminInfo",
+          "isMut": true,
+          "isSigner": true
+        },
+        {
+          "name": "systemProgramInfo",
+          "isMut": false,
+          "isSigner": false
+        }
+      ],
+      "args": [],
+      "discriminant": {
+        "type": "u8",
+        "value": 2
+      }
+    },
+    {
+      "name": "SubmitMessage",
+      "accounts": [
+        {
+          "name": "configInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "ncnInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "operatorInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "messageInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ballotBoxInfo",
+          "isMut": true,
+          "isSigner": false
+        },
+        {
+          "name": "operatorVoterInfo",
+          "isMut": true,
+          "isSigner": true
+        }
+      ],
+      "args": [
+        {
+          "name": "message",
+          "type": "string"
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 3
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "BallotBox",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ncn",
+            "type": "publicKey"
+          },
+          {
+            "name": "epoch",
+            "type": {
+              "defined": "PodU64"
+            }
+          },
+          {
+            "name": "slotCreated",
+            "type": {
+              "defined": "PodU64"
+            }
+          },
+          {
+            "name": "slotConsensusReached",
+            "type": {
+              "defined": "PodU64"
+            }
+          },
+          {
+            "name": "operatorsVoted",
+            "type": {
+              "defined": "PodU64"
+            }
+          },
+          {
+            "name": "operatorVotes",
+            "type": {
+              "array": [
+                {
+                  "defined": "OperatorVote"
+                },
+                3
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "name": "Config",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "ncn",
+            "type": "publicKey"
+          }
+        ]
+      }
+    },
+    {
+      "name": "Message",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "epoch",
+            "type": {
+              "defined": "PodU64"
+            }
+          },
+          {
+            "name": "keywordLen",
+            "type": "u8"
+          },
+          {
+            "name": "keyword",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "OperatorVote",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "operator",
+            "type": "publicKey"
+          },
+          {
+            "name": "slotVoted",
+            "type": {
+              "defined": "PodU64"
+            }
+          },
+          {
+            "name": "voteIndex",
+            "type": {
+              "defined": "PodU16"
+            }
+          },
+          {
+            "name": "messageLen",
+            "type": "u8"
+          },
+          {
+            "name": "messageData",
+            "type": {
+              "array": [
+                "u8",
+                64
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 0,
+      "name": "NcnPortalWhitelistAdminInvalid",
+      "msg": "NcnPortalWhitelistAdminInvalid"
+    },
+    {
+      "code": 1,
+      "name": "NcnPortalParentInvalid",
+      "msg": "NcnPortalParentInvalid"
+    },
+    {
+      "code": 2,
+      "name": "NcnPortalWhitelistedInvalid",
+      "msg": "NcnPortalWhitelistedInvalid"
+    },
+    {
+      "code": 3,
+      "name": "ConsensusAlreadyReached",
+      "msg": "ConsensusAlreadyReached"
+    },
+    {
+      "code": 4,
+      "name": "OperatorVotesFull",
+      "msg": "OperatorVotesFull"
+    },
+    {
+      "code": 3000,
+      "name": "ArithmeticOverflow",
+      "msg": "ArithmeticOverflow"
+    },
+    {
+      "code": 3001,
+      "name": "ArithmeticUnderflow",
+      "msg": "ArithmeticUnderflow"
+    },
+    {
+      "code": 3002,
+      "name": "DivisionByZero",
+      "msg": "DivisionByZero"
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr"
+  }
+}
