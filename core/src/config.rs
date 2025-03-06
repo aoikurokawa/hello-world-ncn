@@ -7,7 +7,7 @@ use solana_program::{account_info::AccountInfo, msg, program_error::ProgramError
 #[repr(C)]
 pub struct Config {
     // NCN Pubkey
-    ncn: Pubkey,
+    pub ncn: Pubkey,
 }
 
 impl Config {

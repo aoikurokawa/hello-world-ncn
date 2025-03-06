@@ -6,10 +6,7 @@ use solana_sdk::{
     signature::Keypair, signer::Signer, system_instruction::transfer, transaction::Transaction,
 };
 
-use super::{
-    restaking_client::{NcnRoot, OperatorRoot},
-    TestResult,
-};
+use super::{restaking_client::OperatorRoot, TestResult};
 
 pub struct HelloWorldNcnClient {
     banks_client: BanksClient,
@@ -51,25 +48,25 @@ impl HelloWorldNcnClient {
         Ok(())
     }
 
-    pub async fn airdrop_lamports(&mut self, to: &Pubkey, lamports: u64) -> TestResult<()> {
-        let blockhash = self.banks_client.get_latest_blockhash().await?;
-        self.banks_client
-            .process_transaction_with_preflight_and_commitment(
-                Transaction::new_signed_with_payer(
-                    &[transfer(&self.payer.pubkey(), to, lamports)],
-                    Some(&self.payer.pubkey()),
-                    &[&self.payer],
-                    blockhash,
-                ),
-                CommitmentLevel::Processed,
-            )
-            .await?;
-        Ok(())
-    }
+    // pub async fn airdrop_lamports(&mut self, to: &Pubkey, lamports: u64) -> TestResult<()> {
+    //     let blockhash = self.banks_client.get_latest_blockhash().await?;
+    //     self.banks_client
+    //         .process_transaction_with_preflight_and_commitment(
+    //             Transaction::new_signed_with_payer(
+    //                 &[transfer(&self.payer.pubkey(), to, lamports)],
+    //                 Some(&self.payer.pubkey()),
+    //                 &[&self.payer],
+    //                 blockhash,
+    //             ),
+    //             CommitmentLevel::Processed,
+    //         )
+    //         .await?;
+    //     Ok(())
+    // }
 
-    pub async fn setup_hello_world_ncn(&mut self, ncn_root: &NcnRoot) -> TestResult<()> {
-        Ok(())
-    }
+    // pub async fn setup_hello_world_ncn(&mut self, ncn_root: &NcnRoot) -> TestResult<()> {
+    //     Ok(())
+    // }
 
     pub async fn get_ncn_config(&mut self, account: &Pubkey) -> TestResult<NcnConfig> {
         let account = self.banks_client.get_account(*account).await?.unwrap();

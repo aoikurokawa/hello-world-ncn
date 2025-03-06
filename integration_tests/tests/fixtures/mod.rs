@@ -37,6 +37,7 @@ impl TestError {
     }
 }
 
+#[allow(dead_code)]
 #[inline(always)]
 #[track_caller]
 pub fn assert_ix_error<T>(test_error: Result<T, TestError>, ix_error: InstructionError) {
