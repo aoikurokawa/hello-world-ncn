@@ -17,14 +17,14 @@ fn main() -> Result<()> {
 
     let envs = envfile::EnvFile::new(crate_root.join("config").join("program.env"))?;
     let ncn_portal_program_id = envs
-        .get("NCN_PORTAL_PROGRAM_ID")
-        .ok_or_else(|| anyhow!("NCN_PORTAL_PROGRAM_ID not found"))?
+        .get("HELLO_WORLD_NCN_PROGRAM_ID")
+        .ok_or_else(|| anyhow!("HELLO_WORLD_NCN_PROGRAM_ID not found"))?
         .to_string();
 
     let idl_configs = vec![IdlConfiguration {
         program_id: ncn_portal_program_id,
-        name: "ncn_portal",
-        paths: vec!["ncn_portal_sdk", "ncn_portal_core", "ncn_portal_program"],
+        name: "hello_world_ncn",
+        paths: vec!["sdk", "core", "program"],
     }];
 
     let crate_root = std::env::current_dir().unwrap();
