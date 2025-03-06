@@ -193,6 +193,7 @@ impl RestakingProgramClient {
         })
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_operator_vault_ticket(
         &mut self,
         operator_root: &OperatorRoot,
@@ -217,6 +218,7 @@ impl RestakingProgramClient {
         Ok(())
     }
 
+    #[allow(dead_code)]
     pub async fn do_warmup_operator_vault_ticket(
         &mut self,
         operator_root: &OperatorRoot,
@@ -312,6 +314,7 @@ impl RestakingProgramClient {
         })
     }
 
+    #[allow(dead_code)]
     pub async fn do_initialize_ncn_vault_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -335,6 +338,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_warmup_ncn_vault_ticket(
         &mut self,
         ncn_root: &NcnRoot,
@@ -356,6 +360,7 @@ impl RestakingProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn warmup_ncn_vault_ticket(
         &mut self,
         config: &Pubkey,

@@ -1,6 +1,6 @@
 #[cfg(test)]
 mod tests {
-    use hello_world_ncn_core::{ballot_box::BallotBox, message::Message};
+    use hello_world_ncn_core::ballot_box::BallotBox;
 
     use crate::fixtures::test_builder::TestBuilder;
 
