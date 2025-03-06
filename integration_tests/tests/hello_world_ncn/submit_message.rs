@@ -11,9 +11,8 @@ mod tests {
         let mut hello_world_ncn_client = fixture.hello_world_ncn_client();
 
         let mut test_ncn = fixture.create_test_ncn().await.unwrap();
-        // let ncn_root = fixture.setup_ncn().await.unwrap();
         fixture
-            .add_operators_to_test_ncn(&mut test_ncn, 1, None)
+            .add_operators_to_test_ncn(&mut test_ncn, 3, None)
             .await
             .unwrap();
 
@@ -50,6 +49,7 @@ mod tests {
             .await
             .unwrap();
 
+        // Operator 1
         let message_data = format!("{message_data} World");
 
         hello_world_ncn_client
@@ -73,5 +73,32 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(ballot_box.operator_votes[0].message_data(), message_data);
+        assert!(!ballot_box.is_consensus_reached());
+
+        // Operator 2
+        let message_data = format!("{message_data} World");
+
+        hello_world_ncn_client
+            .do_submit_message(
+                &test_ncn.ncn_root.ncn_pubkey,
+                &test_ncn.operators[1],
+                epoch,
+                message_data.clone(),
+            )
+            .await
+            .unwrap();
+
+        let ballot_box_pubkey = BallotBox::find_program_address(
+            &hello_world_ncn_program::id(),
+            &test_ncn.ncn_root.ncn_pubkey,
+            epoch,
+        )
+        .0;
+        let ballot_box = hello_world_ncn_client
+            .get_ballot_box(&ballot_box_pubkey)
+            .await
+            .unwrap();
+        assert_eq!(ballot_box.operator_votes[1].message_data(), message_data);
+        assert!(ballot_box.is_consensus_reached());
     }
 }
