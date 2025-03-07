@@ -1,0 +1,23 @@
+[package]
+name = "operator-cli"
+version = "0.1.0"
+edition = "2021"
+
+[[bin]]
+name = "operator"
+path = "src/bin/main.rs"
+
+[dependencies]
+anyhow = { workspace = true }
+clap = { workspace = true }
+dotenv = { workspace = true }
+env_logger = { workspace = true }
+hello-world-ncn-client = { workspace = true }
+log = { workspace = true }
+solana-rpc-client = { workspace = true }
+solana-rpc-client-api = { workspace = true }
+solana-sdk = { workspace = true }
+tokio = { workspace = true }
+
+[lints]
+workspace = true

@@ -1539,6 +1539,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "dotenv"
+version = "0.15.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "77c90badedccf4105eca100756a0b1289e191f6fcbdadd3cee1d2f614f97da8f"
+
+[[package]]
 name = "downcast"
 version = "0.11.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3222,6 +3228,22 @@ dependencies = [
  "pin-project",
  "rand 0.8.5",
  "thiserror",
+]
+
+[[package]]
+name = "operator-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap 4.5.23",
+ "dotenv",
+ "env_logger 0.10.2",
+ "hello-world-ncn-client",
+ "log",
+ "solana-rpc-client",
+ "solana-rpc-client-api",
+ "solana-sdk",
+ "tokio",
 ]
 
 [[package]]
