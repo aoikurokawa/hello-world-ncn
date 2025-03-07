@@ -7,6 +7,7 @@ use solana_sdk::{
     transaction::Transaction,
 };
 
+#[allow(dead_code)]
 pub struct Handler<'a> {
     rpc_url: String,
     payer: &'a Keypair,
@@ -28,28 +29,26 @@ impl<'a> Handler<'a> {
         RpcClient::new_with_commitment(self.rpc_url.clone(), CommitmentConfig::confirmed())
     }
 
-    pub fn get_config_pubkey(&self, ncn: &Pubkey, epoch: u64) -> Pubkey {
-        let seeds = vec![b"config".to_vec(), ncn.to_bytes().to_vec()];
+    pub fn get_config_pubkey(&self, ncn: &Pubkey) -> Pubkey {
+        let seeds = [b"config".to_vec(), ncn.to_bytes().to_vec()];
         let seeds_iter: Vec<_> = seeds.iter().map(|s| s.as_slice()).collect();
-        let config_pubkey = Pubkey::find_program_address(
+
+        Pubkey::find_program_address(
             &seeds_iter,
             &Pubkey::from_str("DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr").unwrap(),
         )
-        .0;
-
-        config_pubkey
+        .0
     }
 
     pub fn get_message_pubkey(&self, epoch: u64) -> Pubkey {
-        let seeds = vec![b"message".to_vec(), epoch.to_be_bytes().to_vec()];
+        let seeds = [b"message".to_vec(), epoch.to_be_bytes().to_vec()];
         let seeds_iter: Vec<_> = seeds.iter().map(|s| s.as_slice()).collect();
-        let message_pubkey = Pubkey::find_program_address(
+
+        Pubkey::find_program_address(
             &seeds_iter,
             &Pubkey::from_str("DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr").unwrap(),
         )
-        .0;
-
-        message_pubkey
+        .0
     }
 
     pub fn get_ballot_box_pubkey(&self, ncn: &Pubkey, epoch: u64) -> Pubkey {
@@ -59,19 +58,17 @@ impl<'a> Handler<'a> {
             epoch.to_le_bytes().to_vec(),
         ]);
         let seeds_iter: Vec<_> = seeds.iter().map(|s| s.as_slice()).collect();
-        let ballot_box_pubkey = Pubkey::find_program_address(
+
+        Pubkey::find_program_address(
             &seeds_iter,
             &Pubkey::from_str("DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr").unwrap(),
         )
-        .0;
-
-        ballot_box_pubkey
+        .0
     }
 
     pub async fn get_message(&self, epoch: u64) -> anyhow::Result<Message> {
         let rpc_client = self.get_rpc_client();
 
-        // let epoch = rpc_client.get_epoch_info().await?;
         let message_pubkey = self.get_message_pubkey(epoch);
 
         let message_account = rpc_client.get_account(&message_pubkey).await.unwrap();
@@ -89,7 +86,7 @@ impl<'a> Handler<'a> {
     ) -> anyhow::Result<()> {
         let rpc_client = self.get_rpc_client();
 
-        let config_pubkey = self.get_config_pubkey(ncn, epoch);
+        let config_pubkey = self.get_config_pubkey(ncn);
         let message_pubkey = self.get_message_pubkey(epoch);
         let ballot_box_pubkey = self.get_ballot_box_pubkey(ncn, epoch);
 

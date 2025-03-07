@@ -1,4 +1,5 @@
 #! /bin/bash
+set -e
 
 # Function to print command being executed
 print_executing() {
