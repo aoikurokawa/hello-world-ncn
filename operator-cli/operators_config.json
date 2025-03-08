@@ -1,0 +1,22 @@
+{
+  "rpc_url": "https://api.devnet.solana.com",
+  "program_id": "ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW",
+  "ncn_pubkey": "zSy3NQbg13YaKVNu2zh6cZ15VtQyMeQWXc1dzzxx6LM",
+  "crank_interval": 300,
+  "metrics_interval": 300,
+  "priority_fees": 10000,
+  "operators": [
+    {
+      "name": "Operator1",
+      "keypair_path": "./credentials/operator/opeKDrPSPhLYFFRpsPTLU6o86f4AFcFvNMRvbdifhvq.json"
+    },
+    {
+      "name": "Operator2",
+      "keypair_path": "./credentials/operator/opeKDrPSPhLYFFRpsPTLU6o86f4AFcFvNMRvbdifhvq.json"
+    },
+    {
+      "name": "Operator3",
+      "keypair_path": "./credentials/operator/opeKDrPSPhLYFFRpsPTLU6o86f4AFcFvNMRvbdifhvq.json"
+    }
+  ]
+}
