@@ -23,7 +23,7 @@ pub enum HelloWorldNcnInstruction {
     #[account(1, name = "ncn_info")]
     #[account(2, writable, name = "message_info")]
     #[account(3, writable, signer, name = "ncn_admin_info")]
-    #[account(4, name = "system_program_info")]
+    #[account(4, name = "system_program")]
     RequestMessage,
 
     /// Send Message
