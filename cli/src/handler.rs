@@ -165,8 +165,12 @@ impl CliHandler {
 
                 let config_info =
                     Config::find_program_address(&self.hello_world_ncn_program_id, ncn_pubkey).0;
-                let message_info =
-                    Message::find_program_address(&self.hello_world_ncn_program_id, epoch).0;
+                let message_info = Message::find_program_address(
+                    &self.hello_world_ncn_program_id,
+                    *ncn_pubkey,
+                    epoch,
+                )
+                .0;
 
                 let mut initialize_config_ix = RequestMessageBuilder::new()
                     .config_info(config_info)

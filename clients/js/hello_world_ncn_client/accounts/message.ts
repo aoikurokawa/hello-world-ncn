@@ -15,6 +15,8 @@ import {
   fetchEncodedAccounts,
   fixDecoderSize,
   fixEncoderSize,
+  getAddressDecoder,
+  getAddressEncoder,
   getBytesDecoder,
   getBytesEncoder,
   getStructDecoder,
@@ -38,6 +40,7 @@ import {
 
 export type Message = {
   discriminator: bigint;
+  ncn: Address;
   epoch: bigint;
   keywordLen: number;
   keyword: ReadonlyUint8Array;
@@ -45,6 +48,7 @@ export type Message = {
 
 export type MessageArgs = {
   discriminator: number | bigint;
+  ncn: Address;
   epoch: number | bigint;
   keywordLen: number;
   keyword: ReadonlyUint8Array;
@@ -53,6 +57,7 @@ export type MessageArgs = {
 export function getMessageEncoder(): Encoder<MessageArgs> {
   return getStructEncoder([
     ['discriminator', getU64Encoder()],
+    ['ncn', getAddressEncoder()],
     ['epoch', getU64Encoder()],
     ['keywordLen', getU8Encoder()],
     ['keyword', fixEncoderSize(getBytesEncoder(), 64)],
@@ -62,6 +67,7 @@ export function getMessageEncoder(): Encoder<MessageArgs> {
 export function getMessageDecoder(): Decoder<Message> {
   return getStructDecoder([
     ['discriminator', getU64Decoder()],
+    ['ncn', getAddressDecoder()],
     ['epoch', getU64Decoder()],
     ['keywordLen', getU8Decoder()],
     ['keyword', fixDecoderSize(getBytesDecoder(), 64)],

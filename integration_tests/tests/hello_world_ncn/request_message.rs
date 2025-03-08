@@ -39,7 +39,12 @@ mod tests {
             .await
             .unwrap();
 
-        let message_pubkey = Message::find_program_address(&hello_world_ncn_program::id(), epoch).0;
+        let message_pubkey = Message::find_program_address(
+            &hello_world_ncn_program::id(),
+            ncn_root.ncn_pubkey,
+            epoch,
+        )
+        .0;
         let message = hello_world_ncn_client
             .get_message(&message_pubkey)
             .await

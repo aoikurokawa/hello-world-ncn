@@ -7,5 +7,7 @@
 
 use solana_program::{pubkey, pubkey::Pubkey};
 
-/// `hello_world_ncn` program ID.
-pub const HELLO_WORLD_NCN_ID: Pubkey = pubkey!("ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj");
+
+  /// `hello_world_ncn` program ID.
+  pub const HELLO_WORLD_NCN_ID: Pubkey = pubkey!("ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW");
+

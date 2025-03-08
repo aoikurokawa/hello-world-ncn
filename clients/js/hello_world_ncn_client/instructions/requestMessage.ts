@@ -42,7 +42,9 @@ export type RequestMessageInstruction<
   TAccountNcnInfo extends string | IAccountMeta<string> = string,
   TAccountMessageInfo extends string | IAccountMeta<string> = string,
   TAccountNcnAdminInfo extends string | IAccountMeta<string> = string,
-  TAccountSystemProgramInfo extends string | IAccountMeta<string> = string,
+  TAccountSystemProgram extends
+    | string
+    | IAccountMeta<string> = '11111111111111111111111111111111',
   TRemainingAccounts extends readonly IAccountMeta<string>[] = [],
 > = IInstruction<TProgram> &
   IInstructionWithData<Uint8Array> &
@@ -61,9 +63,9 @@ export type RequestMessageInstruction<
         ? WritableSignerAccount<TAccountNcnAdminInfo> &
             IAccountSignerMeta<TAccountNcnAdminInfo>
         : TAccountNcnAdminInfo,
-      TAccountSystemProgramInfo extends string
-        ? ReadonlyAccount<TAccountSystemProgramInfo>
-        : TAccountSystemProgramInfo,
+      TAccountSystemProgram extends string
+        ? ReadonlyAccount<TAccountSystemProgram>
+        : TAccountSystemProgram,
       ...TRemainingAccounts,
     ]
   >;
@@ -98,13 +100,13 @@ export type RequestMessageInput<
   TAccountNcnInfo extends string = string,
   TAccountMessageInfo extends string = string,
   TAccountNcnAdminInfo extends string = string,
-  TAccountSystemProgramInfo extends string = string,
+  TAccountSystemProgram extends string = string,
 > = {
   configInfo: Address<TAccountConfigInfo>;
   ncnInfo: Address<TAccountNcnInfo>;
   messageInfo: Address<TAccountMessageInfo>;
   ncnAdminInfo: TransactionSigner<TAccountNcnAdminInfo>;
-  systemProgramInfo: Address<TAccountSystemProgramInfo>;
+  systemProgram?: Address<TAccountSystemProgram>;
 };
 
 export function getRequestMessageInstruction<
@@ -112,7 +114,7 @@ export function getRequestMessageInstruction<
   TAccountNcnInfo extends string,
   TAccountMessageInfo extends string,
   TAccountNcnAdminInfo extends string,
-  TAccountSystemProgramInfo extends string,
+  TAccountSystemProgram extends string,
   TProgramAddress extends Address = typeof HELLO_WORLD_NCN_PROGRAM_ADDRESS,
 >(
   input: RequestMessageInput<
@@ -120,7 +122,7 @@ export function getRequestMessageInstruction<
     TAccountNcnInfo,
     TAccountMessageInfo,
     TAccountNcnAdminInfo,
-    TAccountSystemProgramInfo
+    TAccountSystemProgram
   >,
   config?: { programAddress?: TProgramAddress }
 ): RequestMessageInstruction<
@@ -129,7 +131,7 @@ export function getRequestMessageInstruction<
   TAccountNcnInfo,
   TAccountMessageInfo,
   TAccountNcnAdminInfo,
-  TAccountSystemProgramInfo
+  TAccountSystemProgram
 > {
   // Program address.
   const programAddress =
@@ -141,15 +143,18 @@ export function getRequestMessageInstruction<
     ncnInfo: { value: input.ncnInfo ?? null, isWritable: false },
     messageInfo: { value: input.messageInfo ?? null, isWritable: true },
     ncnAdminInfo: { value: input.ncnAdminInfo ?? null, isWritable: true },
-    systemProgramInfo: {
-      value: input.systemProgramInfo ?? null,
-      isWritable: false,
-    },
+    systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
     ResolvedAccount
   >;
+
+  // Resolve default values.
+  if (!accounts.systemProgram.value) {
+    accounts.systemProgram.value =
+      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
   const instruction = {
@@ -158,7 +163,7 @@ export function getRequestMessageInstruction<
       getAccountMeta(accounts.ncnInfo),
       getAccountMeta(accounts.messageInfo),
       getAccountMeta(accounts.ncnAdminInfo),
-      getAccountMeta(accounts.systemProgramInfo),
+      getAccountMeta(accounts.systemProgram),
     ],
     programAddress,
     data: getRequestMessageInstructionDataEncoder().encode({}),
@@ -168,7 +173,7 @@ export function getRequestMessageInstruction<
     TAccountNcnInfo,
     TAccountMessageInfo,
     TAccountNcnAdminInfo,
-    TAccountSystemProgramInfo
+    TAccountSystemProgram
   >;
 
   return instruction;
@@ -184,7 +189,7 @@ export type ParsedRequestMessageInstruction<
     ncnInfo: TAccountMetas[1];
     messageInfo: TAccountMetas[2];
     ncnAdminInfo: TAccountMetas[3];
-    systemProgramInfo: TAccountMetas[4];
+    systemProgram: TAccountMetas[4];
   };
   data: RequestMessageInstructionData;
 };
@@ -214,7 +219,7 @@ export function parseRequestMessageInstruction<
       ncnInfo: getNextAccount(),
       messageInfo: getNextAccount(),
       ncnAdminInfo: getNextAccount(),
-      systemProgramInfo: getNextAccount(),
+      systemProgram: getNextAccount(),
     },
     data: getRequestMessageInstructionDataDecoder().decode(instruction.data),
   };
