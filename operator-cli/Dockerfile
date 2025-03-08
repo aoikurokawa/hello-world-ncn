@@ -29,13 +29,14 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-# Copy the binary from the builder stage
-COPY --from=builder /app/operator-client/target/release/operator-client /app/operator-client
+COPY --from=builder /app/operator-cli/target/release/operator-cli /app/operator-cli
 
-COPY --from=builder /app/operators_config.json /app/operators_config.json
+COPY --from=builder /app/operator-cli/operators_config.json /app/operators_config.json
+
+COPY --from=builder /app/credentials /app/
 
 # Create a directory for keypairs
 RUN mkdir -p /app/keypairs
 
 # Set the entrypoint
-ENTRYPOINT ["/app/operator-client", "--config-path", "/app/operators_config.json"]
+ENTRYPOINT ["/app/operator-cli", "--config-path", "/app/operators_config.json"]
