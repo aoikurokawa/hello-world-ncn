@@ -1,0 +1,20 @@
+version: '3.8'
+
+services:
+  operator-client:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: solana-operator-client
+    restart: unless-stopped
+    volumes:
+      # Mount your keypair files into the container
+      - ./keypairs:/app/keypairs
+      # Mount your config file to allow easy updates without rebuilding
+      - ./operators_config.json:/app/operators_config.json
+    environment:
+      # Optional environment variables to override config settings
+      - RUST_LOG=info
+      # - RPC_URL=https://api.mainnet-beta.solana.com  # Uncomment to override RPC URL
+    # You can override the entrypoint to add additional arguments
+    # command: --rpc-url https://api.testnet.solana.com
