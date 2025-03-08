@@ -7,12 +7,17 @@
 
 use borsh::BorshDeserialize;
 use borsh::BorshSerialize;
-use solana_sdk::pubkey::Pubkey;
+use solana_program::pubkey::Pubkey;
 
 #[derive(BorshSerialize, BorshDeserialize, Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct Message {
     pub discriminator: u64,
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "serde_with::As::<serde_with::DisplayFromStr>")
+    )]
+    pub ncn: Pubkey,
     pub epoch: u64,
     pub keyword_len: u8,
     #[cfg_attr(feature = "serde", serde(with = "serde_with::As::<serde_with::Bytes>"))]

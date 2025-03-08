@@ -42,7 +42,9 @@ export type InitializeBallotBoxInstruction<
   TAccountNcnInfo extends string | IAccountMeta<string> = string,
   TAccountBallotBoxInfo extends string | IAccountMeta<string> = string,
   TAccountNcnAdminInfo extends string | IAccountMeta<string> = string,
-  TAccountSystemProgramInfo extends string | IAccountMeta<string> = string,
+  TAccountSystemProgram extends
+    | string
+    | IAccountMeta<string> = '11111111111111111111111111111111',
   TRemainingAccounts extends readonly IAccountMeta<string>[] = [],
 > = IInstruction<TProgram> &
   IInstructionWithData<Uint8Array> &
@@ -61,9 +63,9 @@ export type InitializeBallotBoxInstruction<
         ? WritableSignerAccount<TAccountNcnAdminInfo> &
             IAccountSignerMeta<TAccountNcnAdminInfo>
         : TAccountNcnAdminInfo,
-      TAccountSystemProgramInfo extends string
-        ? ReadonlyAccount<TAccountSystemProgramInfo>
-        : TAccountSystemProgramInfo,
+      TAccountSystemProgram extends string
+        ? ReadonlyAccount<TAccountSystemProgram>
+        : TAccountSystemProgram,
       ...TRemainingAccounts,
     ]
   >;
@@ -101,13 +103,13 @@ export type InitializeBallotBoxInput<
   TAccountNcnInfo extends string = string,
   TAccountBallotBoxInfo extends string = string,
   TAccountNcnAdminInfo extends string = string,
-  TAccountSystemProgramInfo extends string = string,
+  TAccountSystemProgram extends string = string,
 > = {
   configInfo: Address<TAccountConfigInfo>;
   ncnInfo: Address<TAccountNcnInfo>;
   ballotBoxInfo: Address<TAccountBallotBoxInfo>;
   ncnAdminInfo: TransactionSigner<TAccountNcnAdminInfo>;
-  systemProgramInfo: Address<TAccountSystemProgramInfo>;
+  systemProgram?: Address<TAccountSystemProgram>;
 };
 
 export function getInitializeBallotBoxInstruction<
@@ -115,7 +117,7 @@ export function getInitializeBallotBoxInstruction<
   TAccountNcnInfo extends string,
   TAccountBallotBoxInfo extends string,
   TAccountNcnAdminInfo extends string,
-  TAccountSystemProgramInfo extends string,
+  TAccountSystemProgram extends string,
   TProgramAddress extends Address = typeof HELLO_WORLD_NCN_PROGRAM_ADDRESS,
 >(
   input: InitializeBallotBoxInput<
@@ -123,7 +125,7 @@ export function getInitializeBallotBoxInstruction<
     TAccountNcnInfo,
     TAccountBallotBoxInfo,
     TAccountNcnAdminInfo,
-    TAccountSystemProgramInfo
+    TAccountSystemProgram
   >,
   config?: { programAddress?: TProgramAddress }
 ): InitializeBallotBoxInstruction<
@@ -132,7 +134,7 @@ export function getInitializeBallotBoxInstruction<
   TAccountNcnInfo,
   TAccountBallotBoxInfo,
   TAccountNcnAdminInfo,
-  TAccountSystemProgramInfo
+  TAccountSystemProgram
 > {
   // Program address.
   const programAddress =
@@ -144,15 +146,18 @@ export function getInitializeBallotBoxInstruction<
     ncnInfo: { value: input.ncnInfo ?? null, isWritable: false },
     ballotBoxInfo: { value: input.ballotBoxInfo ?? null, isWritable: true },
     ncnAdminInfo: { value: input.ncnAdminInfo ?? null, isWritable: true },
-    systemProgramInfo: {
-      value: input.systemProgramInfo ?? null,
-      isWritable: false,
-    },
+    systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
     ResolvedAccount
   >;
+
+  // Resolve default values.
+  if (!accounts.systemProgram.value) {
+    accounts.systemProgram.value =
+      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
   const instruction = {
@@ -161,7 +166,7 @@ export function getInitializeBallotBoxInstruction<
       getAccountMeta(accounts.ncnInfo),
       getAccountMeta(accounts.ballotBoxInfo),
       getAccountMeta(accounts.ncnAdminInfo),
-      getAccountMeta(accounts.systemProgramInfo),
+      getAccountMeta(accounts.systemProgram),
     ],
     programAddress,
     data: getInitializeBallotBoxInstructionDataEncoder().encode({}),
@@ -171,7 +176,7 @@ export function getInitializeBallotBoxInstruction<
     TAccountNcnInfo,
     TAccountBallotBoxInfo,
     TAccountNcnAdminInfo,
-    TAccountSystemProgramInfo
+    TAccountSystemProgram
   >;
 
   return instruction;
@@ -187,7 +192,7 @@ export type ParsedInitializeBallotBoxInstruction<
     ncnInfo: TAccountMetas[1];
     ballotBoxInfo: TAccountMetas[2];
     ncnAdminInfo: TAccountMetas[3];
-    systemProgramInfo: TAccountMetas[4];
+    systemProgram: TAccountMetas[4];
   };
   data: InitializeBallotBoxInstructionData;
 };
@@ -217,7 +222,7 @@ export function parseInitializeBallotBoxInstruction<
       ncnInfo: getNextAccount(),
       ballotBoxInfo: getNextAccount(),
       ncnAdminInfo: getNextAccount(),
-      systemProgramInfo: getNextAccount(),
+      systemProgram: getNextAccount(),
     },
     data: getInitializeBallotBoxInstructionDataDecoder().decode(
       instruction.data

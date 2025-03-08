@@ -1,8 +1,10 @@
 use std::str::FromStr;
 
 use anyhow::anyhow;
-use hello_world_ncn_client::instructions::InitializeConfigBuilder;
-use hello_world_ncn_core::config::Config;
+use hello_world_ncn_client::instructions::{
+    InitializeBallotBoxBuilder, InitializeConfigBuilder, RequestMessageBuilder,
+};
+use hello_world_ncn_core::{ballot_box::BallotBox, config::Config, message::Message};
 use solana_rpc_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::{
     commitment_config::CommitmentConfig,
@@ -112,8 +114,88 @@ impl CliHandler {
 
                 println!("Result: {}", result);
             }
-            ProgramCommand::InitializeBallotBox => {}
-            ProgramCommand::RequestMessage => {}
+            ProgramCommand::InitializeBallotBox => {
+                let ncn_pubkey = self.ncn()?;
+                let ncn_admin = self.keypair()?;
+                let ncn_admin_pubkey = ncn_admin.pubkey();
+
+                let epoch_info = self.rpc_client.get_epoch_info().await?;
+                let epoch = epoch_info.epoch;
+
+                let config_info =
+                    Config::find_program_address(&self.hello_world_ncn_program_id, ncn_pubkey).0;
+                let ballot_box_info = BallotBox::find_program_address(
+                    &self.hello_world_ncn_program_id,
+                    ncn_pubkey,
+                    epoch,
+                )
+                .0;
+
+                let mut initialize_config_ix = InitializeBallotBoxBuilder::new()
+                    .config_info(config_info)
+                    .ncn_info(*ncn_pubkey)
+                    .ballot_box_info(ballot_box_info)
+                    .ncn_admin_info(ncn_admin_pubkey)
+                    .instruction();
+                initialize_config_ix.program_id = self.hello_world_ncn_program_id;
+
+                let recent_blockhash = self.rpc_client.get_latest_blockhash().await?;
+                let tx = Transaction::new_signed_with_payer(
+                    &[initialize_config_ix],
+                    Some(&ncn_admin_pubkey),
+                    &[ncn_admin],
+                    recent_blockhash,
+                );
+
+                let result = self
+                    .rpc_client
+                    .send_and_confirm_transaction(&tx)
+                    .await
+                    .unwrap();
+
+                println!("Result: {}", result);
+            }
+            ProgramCommand::RequestMessage => {
+                let ncn_pubkey = self.ncn()?;
+                let ncn_admin = self.keypair()?;
+                let ncn_admin_pubkey = ncn_admin.pubkey();
+
+                let epoch_info = self.rpc_client.get_epoch_info().await?;
+                let epoch = epoch_info.epoch;
+
+                let config_info =
+                    Config::find_program_address(&self.hello_world_ncn_program_id, ncn_pubkey).0;
+                let message_info = Message::find_program_address(
+                    &self.hello_world_ncn_program_id,
+                    *ncn_pubkey,
+                    epoch,
+                )
+                .0;
+
+                let mut initialize_config_ix = RequestMessageBuilder::new()
+                    .config_info(config_info)
+                    .ncn_info(*ncn_pubkey)
+                    .message_info(message_info)
+                    .ncn_admin_info(ncn_admin_pubkey)
+                    .instruction();
+                initialize_config_ix.program_id = self.hello_world_ncn_program_id;
+
+                let recent_blockhash = self.rpc_client.get_latest_blockhash().await?;
+                let tx = Transaction::new_signed_with_payer(
+                    &[initialize_config_ix],
+                    Some(&ncn_admin_pubkey),
+                    &[ncn_admin],
+                    recent_blockhash,
+                );
+
+                let result = self
+                    .rpc_client
+                    .send_and_confirm_transaction(&tx)
+                    .await
+                    .unwrap();
+
+                println!("Result: {}", result);
+            }
         }
 
         Ok(())

@@ -18,7 +18,7 @@ pub struct RequestMessage {
 
     pub ncn_admin_info: solana_program::pubkey::Pubkey,
 
-    pub system_program_info: solana_program::pubkey::Pubkey,
+    pub system_program: solana_program::pubkey::Pubkey,
 }
 
 impl RequestMessage {
@@ -48,7 +48,7 @@ impl RequestMessage {
             true,
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            self.system_program_info,
+            self.system_program,
             false,
         ));
         accounts.extend_from_slice(remaining_accounts);
@@ -87,14 +87,14 @@ impl Default for RequestMessageInstructionData {
 ///   1. `[]` ncn_info
 ///   2. `[writable]` message_info
 ///   3. `[writable, signer]` ncn_admin_info
-///   4. `[]` system_program_info
+///   4. `[optional]` system_program (default to `11111111111111111111111111111111`)
 #[derive(Clone, Debug, Default)]
 pub struct RequestMessageBuilder {
     config_info: Option<solana_program::pubkey::Pubkey>,
     ncn_info: Option<solana_program::pubkey::Pubkey>,
     message_info: Option<solana_program::pubkey::Pubkey>,
     ncn_admin_info: Option<solana_program::pubkey::Pubkey>,
-    system_program_info: Option<solana_program::pubkey::Pubkey>,
+    system_program: Option<solana_program::pubkey::Pubkey>,
     __remaining_accounts: Vec<solana_program::instruction::AccountMeta>,
 }
 
@@ -122,12 +122,10 @@ impl RequestMessageBuilder {
         self.ncn_admin_info = Some(ncn_admin_info);
         self
     }
+    /// `[optional account, default to '11111111111111111111111111111111']`
     #[inline(always)]
-    pub fn system_program_info(
-        &mut self,
-        system_program_info: solana_program::pubkey::Pubkey,
-    ) -> &mut Self {
-        self.system_program_info = Some(system_program_info);
+    pub fn system_program(&mut self, system_program: solana_program::pubkey::Pubkey) -> &mut Self {
+        self.system_program = Some(system_program);
         self
     }
     /// Add an additional account to the instruction.
@@ -155,9 +153,9 @@ impl RequestMessageBuilder {
             ncn_info: self.ncn_info.expect("ncn_info is not set"),
             message_info: self.message_info.expect("message_info is not set"),
             ncn_admin_info: self.ncn_admin_info.expect("ncn_admin_info is not set"),
-            system_program_info: self
-                .system_program_info
-                .expect("system_program_info is not set"),
+            system_program: self
+                .system_program
+                .unwrap_or(solana_program::pubkey!("11111111111111111111111111111111")),
         };
 
         accounts.instruction_with_remaining_accounts(&self.__remaining_accounts)
@@ -174,7 +172,7 @@ pub struct RequestMessageCpiAccounts<'a, 'b> {
 
     pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
 
-    pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+    pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
 }
 
 /// `request_message` CPI instruction.
@@ -190,7 +188,7 @@ pub struct RequestMessageCpi<'a, 'b> {
 
     pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
 
-    pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+    pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
 }
 
 impl<'a, 'b> RequestMessageCpi<'a, 'b> {
@@ -204,7 +202,7 @@ impl<'a, 'b> RequestMessageCpi<'a, 'b> {
             ncn_info: accounts.ncn_info,
             message_info: accounts.message_info,
             ncn_admin_info: accounts.ncn_admin_info,
-            system_program_info: accounts.system_program_info,
+            system_program: accounts.system_program,
         }
     }
     #[inline(always)]
@@ -258,7 +256,7 @@ impl<'a, 'b> RequestMessageCpi<'a, 'b> {
             true,
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            *self.system_program_info.key,
+            *self.system_program.key,
             false,
         ));
         remaining_accounts.iter().for_each(|remaining_account| {
@@ -281,7 +279,7 @@ impl<'a, 'b> RequestMessageCpi<'a, 'b> {
         account_infos.push(self.ncn_info.clone());
         account_infos.push(self.message_info.clone());
         account_infos.push(self.ncn_admin_info.clone());
-        account_infos.push(self.system_program_info.clone());
+        account_infos.push(self.system_program.clone());
         remaining_accounts
             .iter()
             .for_each(|remaining_account| account_infos.push(remaining_account.0.clone()));
@@ -302,7 +300,7 @@ impl<'a, 'b> RequestMessageCpi<'a, 'b> {
 ///   1. `[]` ncn_info
 ///   2. `[writable]` message_info
 ///   3. `[writable, signer]` ncn_admin_info
-///   4. `[]` system_program_info
+///   4. `[]` system_program
 #[derive(Clone, Debug)]
 pub struct RequestMessageCpiBuilder<'a, 'b> {
     instruction: Box<RequestMessageCpiBuilderInstruction<'a, 'b>>,
@@ -316,7 +314,7 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
             ncn_info: None,
             message_info: None,
             ncn_admin_info: None,
-            system_program_info: None,
+            system_program: None,
             __remaining_accounts: Vec::new(),
         });
         Self { instruction }
@@ -354,11 +352,11 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
         self
     }
     #[inline(always)]
-    pub fn system_program_info(
+    pub fn system_program(
         &mut self,
-        system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+        system_program: &'b solana_program::account_info::AccountInfo<'a>,
     ) -> &mut Self {
-        self.instruction.system_program_info = Some(system_program_info);
+        self.instruction.system_program = Some(system_program);
         self
     }
     /// Add an additional account to the instruction.
@@ -422,10 +420,10 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
                 .ncn_admin_info
                 .expect("ncn_admin_info is not set"),
 
-            system_program_info: self
+            system_program: self
                 .instruction
-                .system_program_info
-                .expect("system_program_info is not set"),
+                .system_program
+                .expect("system_program is not set"),
         };
         instruction.invoke_signed_with_remaining_accounts(
             signers_seeds,
@@ -441,7 +439,7 @@ struct RequestMessageCpiBuilderInstruction<'a, 'b> {
     ncn_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     message_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ncn_admin_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-    system_program_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    system_program: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     /// Additional instruction accounts `(AccountInfo, is_writable, is_signer)`.
     __remaining_accounts: Vec<(
         &'b solana_program::account_info::AccountInfo<'a>,

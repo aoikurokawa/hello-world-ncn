@@ -15,7 +15,7 @@ cargo clippy --all-features -- -D warnings -D clippy::all -D clippy::nursery -D 
 
 
 print_executing "cargo b && ./target/debug/jito-tip-router-shank-cli && yarn install && yarn generate-clients && cargo b"
-cargo b && ./target/debug/jito-tip-router-shank-cli && yarn install && yarn generate-clients && cargo b
+cargo b && ./target/debug/shank-cli && yarn install && yarn generate-clients && cargo b
 
 print_executing "cargo-build-sbf"
 cargo-build-sbf

@@ -40,7 +40,7 @@ pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) ->
 
     // The Message account shall be at the canonical PDA
     let (message_pubkey, message_bump, mut message_seeds) =
-        Message::find_program_address(program_id, epoch);
+        Message::find_program_address(program_id, *ncn_info.key, epoch);
     message_seeds.push(vec![message_bump]);
     if message_pubkey.ne(message_info.key) {
         msg!("Message account is not at the correct PDA");
@@ -65,7 +65,7 @@ pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) ->
     let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
 
     // TODO: Change message data
-    *message_acc = Message::new(epoch, "Hello");
+    *message_acc = Message::new(*ncn_info.key, epoch, "Hello");
 
     Ok(())
 }

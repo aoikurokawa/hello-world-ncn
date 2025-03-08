@@ -61,7 +61,7 @@
           "isSigner": true
         },
         {
-          "name": "systemProgramInfo",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -96,7 +96,7 @@
           "isSigner": true
         },
         {
-          "name": "systemProgramInfo",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
@@ -225,6 +225,10 @@
         "kind": "struct",
         "fields": [
           {
+            "name": "ncn",
+            "type": "publicKey"
+          },
+          {
             "name": "epoch",
             "type": {
               "defined": "PodU64"
@@ -330,6 +334,6 @@
   ],
   "metadata": {
     "origin": "shank",
-    "address": "ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj"
+    "address": "ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW"
   }
 }

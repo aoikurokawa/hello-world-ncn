@@ -8,6 +8,9 @@ pub const MAX_MESSAGE_LENGTH: usize = 64;
 #[derive(Debug, Clone, Copy, Zeroable, ShankAccount, Pod, AccountDeserialize)]
 #[repr(C)]
 pub struct Message {
+    /// NCN
+    ncn: Pubkey,
+
     /// Epoch
     epoch: PodU64,
 
@@ -20,7 +23,7 @@ pub struct Message {
 
 impl Message {
     /// Initiallize a new Message
-    pub fn new(epoch: u64, keyword: &str) -> Self {
+    pub fn new(ncn: Pubkey, epoch: u64, keyword: &str) -> Self {
         let mut keyword_data = [0; 64];
 
         // Only copy up to min(keyword length, 64) bytes
@@ -30,6 +33,7 @@ impl Message {
         keyword_data[..copy_len].copy_from_slice(&bytes_to_copy[..copy_len]);
 
         Self {
+            ncn,
             epoch: PodU64::from(epoch),
             keyword_len: keyword.len() as u8,
             keyword: keyword_data,
@@ -37,13 +41,21 @@ impl Message {
     }
 
     /// Seeds of Message Account
-    pub fn seeds(epoch: u64) -> Vec<Vec<u8>> {
-        vec![b"message".to_vec(), epoch.to_be_bytes().to_vec()]
+    pub fn seeds(ncn: Pubkey, epoch: u64) -> Vec<Vec<u8>> {
+        vec![
+            b"message".to_vec(),
+            ncn.to_bytes().to_vec(),
+            epoch.to_be_bytes().to_vec(),
+        ]
     }
 
     /// Find the program address of Message Account
-    pub fn find_program_address(program_id: &Pubkey, epoch: u64) -> (Pubkey, u8, Vec<Vec<u8>>) {
-        let seeds = Self::seeds(epoch);
+    pub fn find_program_address(
+        program_id: &Pubkey,
+        ncn: Pubkey,
+        epoch: u64,
+    ) -> (Pubkey, u8, Vec<Vec<u8>>) {
+        let seeds = Self::seeds(ncn, epoch);
         let seeds_iter: Vec<_> = seeds.iter().map(|s| s.as_slice()).collect();
         let (pda, bump) = Pubkey::find_program_address(&seeds_iter, program_id);
         (pda, bump, seeds)
@@ -54,6 +66,7 @@ impl Message {
         program_id: &Pubkey,
         account: &AccountInfo,
         expect_writable: bool,
+        ncn: Pubkey,
         epoch: u64,
     ) -> Result<(), ProgramError> {
         if account.owner.ne(program_id) {
@@ -74,7 +87,7 @@ impl Message {
         }
         if account
             .key
-            .ne(&Self::find_program_address(program_id, epoch).0)
+            .ne(&Self::find_program_address(program_id, ncn, epoch).0)
         {
             msg!("Config account is not at the correct PDA");
             return Err(ProgramError::InvalidAccountData);
