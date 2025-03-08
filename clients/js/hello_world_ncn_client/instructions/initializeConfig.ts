@@ -10,6 +10,8 @@ import {
   combineCodec,
   getStructDecoder,
   getStructEncoder,
+  getU64Decoder,
+  getU64Encoder,
   getU8Decoder,
   getU8Encoder,
   transformEncoder,
@@ -64,19 +66,28 @@ export type InitializeConfigInstruction<
     ]
   >;
 
-export type InitializeConfigInstructionData = { discriminator: number };
+export type InitializeConfigInstructionData = {
+  discriminator: number;
+  minStake: bigint;
+};
 
-export type InitializeConfigInstructionDataArgs = {};
+export type InitializeConfigInstructionDataArgs = { minStake: number | bigint };
 
 export function getInitializeConfigInstructionDataEncoder(): Encoder<InitializeConfigInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([['discriminator', getU8Encoder()]]),
+    getStructEncoder([
+      ['discriminator', getU8Encoder()],
+      ['minStake', getU64Encoder()],
+    ]),
     (value) => ({ ...value, discriminator: INITIALIZE_CONFIG_DISCRIMINATOR })
   );
 }
 
 export function getInitializeConfigInstructionDataDecoder(): Decoder<InitializeConfigInstructionData> {
-  return getStructDecoder([['discriminator', getU8Decoder()]]);
+  return getStructDecoder([
+    ['discriminator', getU8Decoder()],
+    ['minStake', getU64Decoder()],
+  ]);
 }
 
 export function getInitializeConfigInstructionDataCodec(): Codec<
@@ -99,6 +110,7 @@ export type InitializeConfigInput<
   ncnInfo: Address<TAccountNcnInfo>;
   ncnAdminInfo: TransactionSigner<TAccountNcnAdminInfo>;
   systemProgramInfo: Address<TAccountSystemProgramInfo>;
+  minStake: InitializeConfigInstructionDataArgs['minStake'];
 };
 
 export function getInitializeConfigInstruction<
@@ -141,6 +153,9 @@ export function getInitializeConfigInstruction<
     ResolvedAccount
   >;
 
+  // Original args.
+  const args = { ...input };
+
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
   const instruction = {
     accounts: [
@@ -150,7 +165,9 @@ export function getInitializeConfigInstruction<
       getAccountMeta(accounts.systemProgramInfo),
     ],
     programAddress,
-    data: getInitializeConfigInstructionDataEncoder().encode({}),
+    data: getInitializeConfigInstructionDataEncoder().encode(
+      args as InitializeConfigInstructionDataArgs
+    ),
   } as InitializeConfigInstruction<
     TProgramAddress,
     TAccountConfigInfo,

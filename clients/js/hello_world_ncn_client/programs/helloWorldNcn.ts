@@ -20,7 +20,7 @@ import {
 } from '../instructions';
 
 export const HELLO_WORLD_NCN_PROGRAM_ADDRESS =
-  'DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr' as Address<'DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr'>;
+  'ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj' as Address<'ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj'>;
 
 export enum HelloWorldNcnAccount {
   BallotBox,
@@ -57,7 +57,7 @@ export function identifyHelloWorldNcnInstruction(
 }
 
 export type ParsedHelloWorldNcnInstruction<
-  TProgram extends string = 'DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr',
+  TProgram extends string = 'ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj',
 > =
   | ({
       instructionType: HelloWorldNcnInstruction.InitializeConfig;

@@ -10,6 +10,7 @@ name = "hello_world_ncn_program"
 [features]
 no-entrypoint = []
 test-sbf = []
+custom-panic = []
 
 [dependencies]
 borsh = { workspace = true }

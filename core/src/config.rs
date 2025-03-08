@@ -1,5 +1,5 @@
 use bytemuck::{Pod, Zeroable};
-use jito_bytemuck::{AccountDeserialize, Discriminator};
+use jito_bytemuck::{types::PodU64, AccountDeserialize, Discriminator};
 use shank::ShankAccount;
 use solana_program::{account_info::AccountInfo, msg, program_error::ProgramError, pubkey::Pubkey};
 
@@ -8,12 +8,18 @@ use solana_program::{account_info::AccountInfo, msg, program_error::ProgramError
 pub struct Config {
     // NCN Pubkey
     pub ncn: Pubkey,
+
+    // Minimum Stake
+    pub min_stake: PodU64,
 }
 
 impl Config {
     /// Initiallize Config
-    pub const fn new(ncn: Pubkey) -> Self {
-        Self { ncn }
+    pub fn new(ncn: Pubkey, min_stake: u64) -> Self {
+        Self {
+            ncn,
+            min_stake: PodU64::from(min_stake),
+        }
     }
 
     /// Seeds of Config Account

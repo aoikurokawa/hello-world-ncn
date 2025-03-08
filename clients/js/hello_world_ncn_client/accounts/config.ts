@@ -31,14 +31,19 @@ import {
   type MaybeEncodedAccount,
 } from '@solana/web3.js';
 
-export type Config = { discriminator: bigint; ncn: Address };
+export type Config = { discriminator: bigint; ncn: Address; minStake: bigint };
 
-export type ConfigArgs = { discriminator: number | bigint; ncn: Address };
+export type ConfigArgs = {
+  discriminator: number | bigint;
+  ncn: Address;
+  minStake: number | bigint;
+};
 
 export function getConfigEncoder(): Encoder<ConfigArgs> {
   return getStructEncoder([
     ['discriminator', getU64Encoder()],
     ['ncn', getAddressEncoder()],
+    ['minStake', getU64Encoder()],
   ]);
 }
 
@@ -46,6 +51,7 @@ export function getConfigDecoder(): Decoder<Config> {
   return getStructDecoder([
     ['discriminator', getU64Decoder()],
     ['ncn', getAddressDecoder()],
+    ['minStake', getU64Decoder()],
   ]);
 }
 
@@ -104,8 +110,4 @@ export async function fetchAllMaybeConfig(
 ): Promise<MaybeAccount<Config>[]> {
   const maybeAccounts = await fetchEncodedAccounts(rpc, addresses, config);
   return maybeAccounts.map((maybeAccount) => decodeConfig(maybeAccount));
-}
-
-export function getConfigSize(): number {
-  return 32;
 }

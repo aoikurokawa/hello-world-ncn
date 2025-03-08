@@ -20,12 +20,16 @@ pub struct InitializeConfig {
 }
 
 impl InitializeConfig {
-    pub fn instruction(&self) -> solana_program::instruction::Instruction {
-        self.instruction_with_remaining_accounts(&[])
+    pub fn instruction(
+        &self,
+        args: InitializeConfigInstructionArgs,
+    ) -> solana_program::instruction::Instruction {
+        self.instruction_with_remaining_accounts(args, &[])
     }
     #[allow(clippy::vec_init_then_push)]
     pub fn instruction_with_remaining_accounts(
         &self,
+        args: InitializeConfigInstructionArgs,
         remaining_accounts: &[solana_program::instruction::AccountMeta],
     ) -> solana_program::instruction::Instruction {
         let mut accounts = Vec::with_capacity(4 + remaining_accounts.len());
@@ -46,7 +50,9 @@ impl InitializeConfig {
             false,
         ));
         accounts.extend_from_slice(remaining_accounts);
-        let data = InitializeConfigInstructionData::new().try_to_vec().unwrap();
+        let mut data = InitializeConfigInstructionData::new().try_to_vec().unwrap();
+        let mut args = args.try_to_vec().unwrap();
+        data.append(&mut args);
 
         solana_program::instruction::Instruction {
             program_id: crate::HELLO_WORLD_NCN_ID,
@@ -73,6 +79,12 @@ impl Default for InitializeConfigInstructionData {
     }
 }
 
+#[derive(BorshSerialize, BorshDeserialize, Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct InitializeConfigInstructionArgs {
+    pub min_stake: u64,
+}
+
 /// Instruction builder for `InitializeConfig`.
 ///
 /// ### Accounts:
@@ -87,6 +99,7 @@ pub struct InitializeConfigBuilder {
     ncn_info: Option<solana_program::pubkey::Pubkey>,
     ncn_admin_info: Option<solana_program::pubkey::Pubkey>,
     system_program_info: Option<solana_program::pubkey::Pubkey>,
+    min_stake: Option<u64>,
     __remaining_accounts: Vec<solana_program::instruction::AccountMeta>,
 }
 
@@ -117,6 +130,11 @@ impl InitializeConfigBuilder {
         self.system_program_info = Some(system_program_info);
         self
     }
+    #[inline(always)]
+    pub fn min_stake(&mut self, min_stake: u64) -> &mut Self {
+        self.min_stake = Some(min_stake);
+        self
+    }
     /// Add an additional account to the instruction.
     #[inline(always)]
     pub fn add_remaining_account(
@@ -145,8 +163,11 @@ impl InitializeConfigBuilder {
                 .system_program_info
                 .expect("system_program_info is not set"),
         };
+        let args = InitializeConfigInstructionArgs {
+            min_stake: self.min_stake.clone().expect("min_stake is not set"),
+        };
 
-        accounts.instruction_with_remaining_accounts(&self.__remaining_accounts)
+        accounts.instruction_with_remaining_accounts(args, &self.__remaining_accounts)
     }
 }
 
@@ -173,12 +194,15 @@ pub struct InitializeConfigCpi<'a, 'b> {
     pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
 
     pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+    /// The arguments for the instruction.
+    pub __args: InitializeConfigInstructionArgs,
 }
 
 impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
     pub fn new(
         program: &'b solana_program::account_info::AccountInfo<'a>,
         accounts: InitializeConfigCpiAccounts<'a, 'b>,
+        args: InitializeConfigInstructionArgs,
     ) -> Self {
         Self {
             __program: program,
@@ -186,6 +210,7 @@ impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
             ncn_info: accounts.ncn_info,
             ncn_admin_info: accounts.ncn_admin_info,
             system_program_info: accounts.system_program_info,
+            __args: args,
         }
     }
     #[inline(always)]
@@ -245,7 +270,9 @@ impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
                 is_writable: remaining_account.2,
             })
         });
-        let data = InitializeConfigInstructionData::new().try_to_vec().unwrap();
+        let mut data = InitializeConfigInstructionData::new().try_to_vec().unwrap();
+        let mut args = self.__args.try_to_vec().unwrap();
+        data.append(&mut args);
 
         let instruction = solana_program::instruction::Instruction {
             program_id: crate::HELLO_WORLD_NCN_ID,
@@ -291,6 +318,7 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
             ncn_info: None,
             ncn_admin_info: None,
             system_program_info: None,
+            min_stake: None,
             __remaining_accounts: Vec::new(),
         });
         Self { instruction }
@@ -325,6 +353,11 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
         system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
     ) -> &mut Self {
         self.instruction.system_program_info = Some(system_program_info);
+        self
+    }
+    #[inline(always)]
+    pub fn min_stake(&mut self, min_stake: u64) -> &mut Self {
+        self.instruction.min_stake = Some(min_stake);
         self
     }
     /// Add an additional account to the instruction.
@@ -368,6 +401,13 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
         &self,
         signers_seeds: &[&[&[u8]]],
     ) -> solana_program::entrypoint::ProgramResult {
+        let args = InitializeConfigInstructionArgs {
+            min_stake: self
+                .instruction
+                .min_stake
+                .clone()
+                .expect("min_stake is not set"),
+        };
         let instruction = InitializeConfigCpi {
             __program: self.instruction.__program,
 
@@ -387,6 +427,7 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
                 .instruction
                 .system_program_info
                 .expect("system_program_info is not set"),
+            __args: args,
         };
         instruction.invoke_signed_with_remaining_accounts(
             signers_seeds,
@@ -402,6 +443,7 @@ struct InitializeConfigCpiBuilderInstruction<'a, 'b> {
     ncn_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ncn_admin_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     system_program_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    min_stake: Option<u64>,
     /// Additional instruction accounts `(AccountInfo, is_writable, is_signer)`.
     __remaining_accounts: Vec<(
         &'b solana_program::account_info::AccountInfo<'a>,

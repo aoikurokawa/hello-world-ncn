@@ -12,6 +12,7 @@ pub fn initialize_config(
     config: &Pubkey,
     ncn: &Pubkey,
     ncn_admin: &Pubkey,
+    min_stake: u64,
 ) -> Instruction {
     let accounts = vec![
         AccountMeta::new(*config, false),
@@ -22,7 +23,7 @@ pub fn initialize_config(
     Instruction {
         program_id: *program_id,
         accounts,
-        data: HelloWorldNcnInstruction::InitializeConfig
+        data: HelloWorldNcnInstruction::InitializeConfig { min_stake }
             .try_to_vec()
             .unwrap(),
     }

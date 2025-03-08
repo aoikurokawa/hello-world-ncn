@@ -1,0 +1,37 @@
+[package]
+name = "hello-world-ncn-cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anchor-lang = { workspace = true }
+anyhow = { workspace = true }
+borsh = { workspace = true }
+borsh1 = { package = "borsh", version = "1.5.3" }
+bytemuck = { workspace = true }
+chrono = { workspace = true }
+clap = { workspace = true }
+clap-markdown = { workspace = true }
+dotenv = { workspace = true }
+env_logger = { workspace = true }
+futures = { workspace = true }
+hello-world-ncn-client = { workspace = true }
+hello-world-ncn-core = { workspace = true }
+hello-world-ncn-program = { workspace = true }
+jito-bytemuck = { workspace = true }
+jito-jsm-core = { workspace = true }
+jito-restaking-client = { workspace = true }
+jito-restaking-core = { workspace = true }
+jito-restaking-program = { workspace = true }
+jito-restaking-sdk = { workspace = true }
+log = { workspace = true }
+solana-account-decoder = { workspace = true }
+solana-rpc-client-api = { workspace = true }
+solana-program = { workspace = true }
+solana-rpc-client = { workspace = true }
+solana-sdk = { workspace = true }
+thiserror = { workspace = true }
+tokio = { workspace = true }
+
+[lints]
+workspace = true

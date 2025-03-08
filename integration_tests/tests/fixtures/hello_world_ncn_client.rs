@@ -87,14 +87,20 @@ impl HelloWorldNcnClient {
         &mut self,
         ncn: &Pubkey,
         ncn_admin: &Keypair,
+        min_stake: u64,
     ) -> TestResult<()> {
         // Setup Payer
         self.airdrop(&self.payer.pubkey(), 1.0).await?;
 
-        self.initialize_config(ncn, ncn_admin).await
+        self.initialize_config(ncn, ncn_admin, min_stake).await
     }
 
-    pub async fn initialize_config(&mut self, ncn: &Pubkey, ncn_admin: &Keypair) -> TestResult<()> {
+    pub async fn initialize_config(
+        &mut self,
+        ncn: &Pubkey,
+        ncn_admin: &Keypair,
+        min_stake: u64,
+    ) -> TestResult<()> {
         let config = hello_world_ncn_core::config::Config::find_program_address(
             &hello_world_ncn_program::id(),
             ncn,
@@ -106,6 +112,7 @@ impl HelloWorldNcnClient {
             &config,
             ncn,
             &ncn_admin.pubkey(),
+            min_stake,
         );
 
         let blockhash = self.banks_client.get_latest_blockhash().await?;
