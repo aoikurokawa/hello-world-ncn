@@ -11,12 +11,9 @@ WORKDIR /app
 
 COPY . .
 
-# Copy your operator_cli code if it's a local dependency
-# Uncomment and adjust path as needed:
-# COPY ./operator_cli /app/operator_cli
-
-# Build dependencies - this is the caching Docker layer
-RUN cargo build --release
+# Build the project
+RUN cargo build --release --bin operator-cli
+RUN cargo install --path ./operator-cli --bin operator-cli --locked
 
 # Create a smaller runtime image
 FROM debian:bullseye-slim
@@ -29,14 +26,11 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-COPY --from=builder /app/operator-cli/target/release/operator-cli /app/operator-cli
+COPY --from=builder /app/target/release/operator-cli /usr/local/bin/operator-cli
 
-COPY --from=builder /app/operator-cli/operators_config.json /app/operators_config.json
+COPY --from=builder /app/operator-cli/operators_config.json /usr/local/bin/operators_config.json
 
-COPY --from=builder /app/credentials /app/
-
-# Create a directory for keypairs
-RUN mkdir -p /app/keypairs
+COPY --from=builder /app/credentials /usr/local/bin/
 
 # Set the entrypoint
-ENTRYPOINT ["/app/operator-cli", "--config-path", "/app/operators_config.json"]
+ENTRYPOINT ["operator-cli", "--config-path", "/app/operators_config.json"]
