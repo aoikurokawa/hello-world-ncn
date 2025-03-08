@@ -88,11 +88,13 @@ impl CliHandler {
                 let config_info =
                     Config::find_program_address(&self.hello_world_ncn_program_id, ncn_pubkey).0;
 
-                let initialize_config_ix = InitializeConfigBuilder::new()
+                let mut initialize_config_ix = InitializeConfigBuilder::new()
                     .config_info(config_info)
                     .ncn_info(*ncn_pubkey)
                     .ncn_admin_info(ncn_admin_pubkey)
+                    .min_stake(100)
                     .instruction();
+                initialize_config_ix.program_id = self.hello_world_ncn_program_id;
 
                 let recent_blockhash = self.rpc_client.get_latest_blockhash().await?;
                 let tx = Transaction::new_signed_with_payer(
@@ -102,7 +104,11 @@ impl CliHandler {
                     recent_blockhash,
                 );
 
-                let result = self.rpc_client.send_and_confirm_transaction(&tx).await?;
+                let result = self
+                    .rpc_client
+                    .send_and_confirm_transaction(&tx)
+                    .await
+                    .unwrap();
 
                 println!("Result: {}", result);
             }

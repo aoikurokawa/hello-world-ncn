@@ -1,5 +1,5 @@
 [workspace]
-members = [ "cli",
+members = ["cli",
 	"clients/rust/hello_world_ncn_client",
 	"core",
 	"integration_tests",

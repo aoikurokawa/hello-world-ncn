@@ -22,7 +22,7 @@ pub struct Args {
         long,
         global = true,
         env = "RPC_URL",
-        default_value = "https://api.mainnet-beta.solana.com",
+        default_value = "https://api.devnet.solana.com",
         help = "RPC URL to use"
     )]
     pub rpc_url: String,
@@ -39,7 +39,7 @@ pub struct Args {
     #[arg(
         long,
         global = true,
-        env = "TIP_ROUTER_PROGRAM_ID",
+        env = "HELLO_WORLD_NCN_PROGRAM_ID",
         default_value_t = hello_world_ncn_program::id().to_string(),
         help = "Tip router program ID"
     )]

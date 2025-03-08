@@ -1,16 +1,15 @@
 use anyhow::Result;
 use clap::Parser;
-use clap_markdown::MarkdownOptions;
 use dotenv::dotenv;
 
-use hello_world_ncn_cli::{args::Args, handler::CliHandler, log::init_logger};
+use hello_world_ncn_cli::{args::Args, handler::CliHandler};
 use log::info;
 
 #[tokio::main]
 #[allow(clippy::large_stack_frames)]
 async fn main() -> Result<()> {
     dotenv().ok();
-    init_logger();
+    // init_logger();
 
     let args: Args = Args::parse();
 

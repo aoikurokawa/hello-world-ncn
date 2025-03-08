@@ -16,7 +16,7 @@ pub struct InitializeConfig {
 
     pub ncn_admin_info: solana_program::pubkey::Pubkey,
 
-    pub system_program_info: solana_program::pubkey::Pubkey,
+    pub system_program: solana_program::pubkey::Pubkey,
 }
 
 impl InitializeConfig {
@@ -46,7 +46,7 @@ impl InitializeConfig {
             true,
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            self.system_program_info,
+            self.system_program,
             false,
         ));
         accounts.extend_from_slice(remaining_accounts);
@@ -92,13 +92,13 @@ pub struct InitializeConfigInstructionArgs {
 ///   0. `[writable]` config_info
 ///   1. `[]` ncn_info
 ///   2. `[writable, signer]` ncn_admin_info
-///   3. `[]` system_program_info
+///   3. `[optional]` system_program (default to `11111111111111111111111111111111`)
 #[derive(Clone, Debug, Default)]
 pub struct InitializeConfigBuilder {
     config_info: Option<solana_program::pubkey::Pubkey>,
     ncn_info: Option<solana_program::pubkey::Pubkey>,
     ncn_admin_info: Option<solana_program::pubkey::Pubkey>,
-    system_program_info: Option<solana_program::pubkey::Pubkey>,
+    system_program: Option<solana_program::pubkey::Pubkey>,
     min_stake: Option<u64>,
     __remaining_accounts: Vec<solana_program::instruction::AccountMeta>,
 }
@@ -122,12 +122,10 @@ impl InitializeConfigBuilder {
         self.ncn_admin_info = Some(ncn_admin_info);
         self
     }
+    /// `[optional account, default to '11111111111111111111111111111111']`
     #[inline(always)]
-    pub fn system_program_info(
-        &mut self,
-        system_program_info: solana_program::pubkey::Pubkey,
-    ) -> &mut Self {
-        self.system_program_info = Some(system_program_info);
+    pub fn system_program(&mut self, system_program: solana_program::pubkey::Pubkey) -> &mut Self {
+        self.system_program = Some(system_program);
         self
     }
     #[inline(always)]
@@ -159,9 +157,9 @@ impl InitializeConfigBuilder {
             config_info: self.config_info.expect("config_info is not set"),
             ncn_info: self.ncn_info.expect("ncn_info is not set"),
             ncn_admin_info: self.ncn_admin_info.expect("ncn_admin_info is not set"),
-            system_program_info: self
-                .system_program_info
-                .expect("system_program_info is not set"),
+            system_program: self
+                .system_program
+                .unwrap_or(solana_program::pubkey!("11111111111111111111111111111111")),
         };
         let args = InitializeConfigInstructionArgs {
             min_stake: self.min_stake.clone().expect("min_stake is not set"),
@@ -179,7 +177,7 @@ pub struct InitializeConfigCpiAccounts<'a, 'b> {
 
     pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
 
-    pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+    pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
 }
 
 /// `initialize_config` CPI instruction.
@@ -193,7 +191,7 @@ pub struct InitializeConfigCpi<'a, 'b> {
 
     pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
 
-    pub system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+    pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
     /// The arguments for the instruction.
     pub __args: InitializeConfigInstructionArgs,
 }
@@ -209,7 +207,7 @@ impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
             config_info: accounts.config_info,
             ncn_info: accounts.ncn_info,
             ncn_admin_info: accounts.ncn_admin_info,
-            system_program_info: accounts.system_program_info,
+            system_program: accounts.system_program,
             __args: args,
         }
     }
@@ -260,7 +258,7 @@ impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
             true,
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
-            *self.system_program_info.key,
+            *self.system_program.key,
             false,
         ));
         remaining_accounts.iter().for_each(|remaining_account| {
@@ -284,7 +282,7 @@ impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
         account_infos.push(self.config_info.clone());
         account_infos.push(self.ncn_info.clone());
         account_infos.push(self.ncn_admin_info.clone());
-        account_infos.push(self.system_program_info.clone());
+        account_infos.push(self.system_program.clone());
         remaining_accounts
             .iter()
             .for_each(|remaining_account| account_infos.push(remaining_account.0.clone()));
@@ -304,7 +302,7 @@ impl<'a, 'b> InitializeConfigCpi<'a, 'b> {
 ///   0. `[writable]` config_info
 ///   1. `[]` ncn_info
 ///   2. `[writable, signer]` ncn_admin_info
-///   3. `[]` system_program_info
+///   3. `[]` system_program
 #[derive(Clone, Debug)]
 pub struct InitializeConfigCpiBuilder<'a, 'b> {
     instruction: Box<InitializeConfigCpiBuilderInstruction<'a, 'b>>,
@@ -317,7 +315,7 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
             config_info: None,
             ncn_info: None,
             ncn_admin_info: None,
-            system_program_info: None,
+            system_program: None,
             min_stake: None,
             __remaining_accounts: Vec::new(),
         });
@@ -348,11 +346,11 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
         self
     }
     #[inline(always)]
-    pub fn system_program_info(
+    pub fn system_program(
         &mut self,
-        system_program_info: &'b solana_program::account_info::AccountInfo<'a>,
+        system_program: &'b solana_program::account_info::AccountInfo<'a>,
     ) -> &mut Self {
-        self.instruction.system_program_info = Some(system_program_info);
+        self.instruction.system_program = Some(system_program);
         self
     }
     #[inline(always)]
@@ -423,10 +421,10 @@ impl<'a, 'b> InitializeConfigCpiBuilder<'a, 'b> {
                 .ncn_admin_info
                 .expect("ncn_admin_info is not set"),
 
-            system_program_info: self
+            system_program: self
                 .instruction
-                .system_program_info
-                .expect("system_program_info is not set"),
+                .system_program
+                .expect("system_program is not set"),
             __args: args,
         };
         instruction.invoke_signed_with_remaining_accounts(
@@ -442,7 +440,7 @@ struct InitializeConfigCpiBuilderInstruction<'a, 'b> {
     config_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ncn_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ncn_admin_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
-    system_program_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    system_program: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     min_stake: Option<u64>,
     /// Additional instruction accounts `(AccountInfo, is_writable, is_signer)`.
     __remaining_accounts: Vec<(

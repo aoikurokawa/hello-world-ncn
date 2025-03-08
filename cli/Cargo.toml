@@ -26,9 +26,9 @@ jito-restaking-program = { workspace = true }
 jito-restaking-sdk = { workspace = true }
 log = { workspace = true }
 solana-account-decoder = { workspace = true }
-solana-rpc-client-api = { workspace = true }
 solana-program = { workspace = true }
 solana-rpc-client = { workspace = true }
+solana-rpc-client-api = { workspace = true }
 solana-sdk = { workspace = true }
 thiserror = { workspace = true }
 tokio = { workspace = true }

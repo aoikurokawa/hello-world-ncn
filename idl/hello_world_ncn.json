@@ -21,7 +21,7 @@
           "isSigner": true
         },
         {
-          "name": "systemProgramInfo",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
