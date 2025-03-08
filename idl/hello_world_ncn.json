@@ -21,12 +21,17 @@
           "isSigner": true
         },
         {
-          "name": "systemProgramInfo",
+          "name": "systemProgram",
           "isMut": false,
           "isSigner": false
         }
       ],
-      "args": [],
+      "args": [
+        {
+          "name": "minStake",
+          "type": "u64"
+        }
+      ],
       "discriminant": {
         "type": "u8",
         "value": 0
@@ -204,6 +209,12 @@
           {
             "name": "ncn",
             "type": "publicKey"
+          },
+          {
+            "name": "minStake",
+            "type": {
+              "defined": "PodU64"
+            }
           }
         ]
       }
@@ -319,6 +330,6 @@
   ],
   "metadata": {
     "origin": "shank",
-    "address": "DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr"
+    "address": "ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj"
   }
 }

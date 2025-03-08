@@ -26,8 +26,14 @@ mod tests {
         let slot = fixture.get_current_slot().await.unwrap();
         let epoch = slot / restaking_config.epoch_length();
 
+        let min_stake = 100;
+
         hello_world_ncn_client
-            .do_initialize_config(&test_ncn.ncn_root.ncn_pubkey, &test_ncn.ncn_root.ncn_admin)
+            .do_initialize_config(
+                &test_ncn.ncn_root.ncn_pubkey,
+                &test_ncn.ncn_root.ncn_admin,
+                min_stake,
+            )
             .await
             .unwrap();
         hello_world_ncn_client

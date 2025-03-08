@@ -29,7 +29,7 @@
 
 | Network | Program         | Address                                      | Version |
 | ------- | --------------- | -------------------------------------------- | ------- |
-| Devnet  | Hello World NCN | ncn9kxoGY7qXZMGZAE1iwoKaH8BGKPwWiWM2wNFGGYj | 0.1.0   |
+| Devnet  | Hello World NCN | ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW  | 0.1.0   |
 
 ### Test
 

@@ -32,9 +32,9 @@ pub fn process_instruction(
     let instruction = HelloWorldNcnInstruction::try_from_slice(instruction_data)?;
 
     match instruction {
-        HelloWorldNcnInstruction::InitializeConfig => {
+        HelloWorldNcnInstruction::InitializeConfig { min_stake } => {
             msg!("Instruction: InitializeConfig");
-            process_initialize_config(program_id, accounts)
+            process_initialize_config(program_id, accounts, min_stake)
         }
 
         HelloWorldNcnInstruction::InitializeBallotBox => {

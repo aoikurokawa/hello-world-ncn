@@ -18,11 +18,10 @@ pub struct Config {
         serde(with = "serde_with::As::<serde_with::DisplayFromStr>")
     )]
     pub ncn: Pubkey,
+    pub min_stake: u64,
 }
 
 impl Config {
-    pub const LEN: usize = 32;
-
     #[inline(always)]
     pub fn from_bytes(data: &[u8]) -> Result<Self, std::io::Error> {
         let mut data = data;

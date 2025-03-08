@@ -10,7 +10,11 @@ use solana_program::{
     pubkey::Pubkey, rent::Rent, sysvar::Sysvar,
 };
 
-pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
+pub fn process_initialize_config(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    min_stake: u64,
+) -> ProgramResult {
     let [config_info, ncn_info, ncn_admin_info, system_program_info] = accounts else {
         return Err(ProgramError::NotEnoughAccountKeys);
     };
@@ -44,7 +48,7 @@ pub fn process_initialize_config(program_id: &Pubkey, accounts: &[AccountInfo]) 
     let mut config_data = config_info.try_borrow_mut_data()?;
     config_data[0] = Config::DISCRIMINATOR;
     let config_acc = Config::try_from_slice_unchecked_mut(&mut config_data)?;
-    *config_acc = Config::new(*ncn_info.key);
+    *config_acc = Config::new(*ncn_info.key, min_stake);
 
     Ok(())
 }

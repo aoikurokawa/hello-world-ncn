@@ -10,6 +10,8 @@ import {
   combineCodec,
   getStructDecoder,
   getStructEncoder,
+  getU64Decoder,
+  getU64Encoder,
   getU8Decoder,
   getU8Encoder,
   transformEncoder,
@@ -41,7 +43,9 @@ export type InitializeConfigInstruction<
   TAccountConfigInfo extends string | IAccountMeta<string> = string,
   TAccountNcnInfo extends string | IAccountMeta<string> = string,
   TAccountNcnAdminInfo extends string | IAccountMeta<string> = string,
-  TAccountSystemProgramInfo extends string | IAccountMeta<string> = string,
+  TAccountSystemProgram extends
+    | string
+    | IAccountMeta<string> = '11111111111111111111111111111111',
   TRemainingAccounts extends readonly IAccountMeta<string>[] = [],
 > = IInstruction<TProgram> &
   IInstructionWithData<Uint8Array> &
@@ -57,26 +61,35 @@ export type InitializeConfigInstruction<
         ? WritableSignerAccount<TAccountNcnAdminInfo> &
             IAccountSignerMeta<TAccountNcnAdminInfo>
         : TAccountNcnAdminInfo,
-      TAccountSystemProgramInfo extends string
-        ? ReadonlyAccount<TAccountSystemProgramInfo>
-        : TAccountSystemProgramInfo,
+      TAccountSystemProgram extends string
+        ? ReadonlyAccount<TAccountSystemProgram>
+        : TAccountSystemProgram,
       ...TRemainingAccounts,
     ]
   >;
 
-export type InitializeConfigInstructionData = { discriminator: number };
+export type InitializeConfigInstructionData = {
+  discriminator: number;
+  minStake: bigint;
+};
 
-export type InitializeConfigInstructionDataArgs = {};
+export type InitializeConfigInstructionDataArgs = { minStake: number | bigint };
 
 export function getInitializeConfigInstructionDataEncoder(): Encoder<InitializeConfigInstructionDataArgs> {
   return transformEncoder(
-    getStructEncoder([['discriminator', getU8Encoder()]]),
+    getStructEncoder([
+      ['discriminator', getU8Encoder()],
+      ['minStake', getU64Encoder()],
+    ]),
     (value) => ({ ...value, discriminator: INITIALIZE_CONFIG_DISCRIMINATOR })
   );
 }
 
 export function getInitializeConfigInstructionDataDecoder(): Decoder<InitializeConfigInstructionData> {
-  return getStructDecoder([['discriminator', getU8Decoder()]]);
+  return getStructDecoder([
+    ['discriminator', getU8Decoder()],
+    ['minStake', getU64Decoder()],
+  ]);
 }
 
 export function getInitializeConfigInstructionDataCodec(): Codec<
@@ -93,26 +106,27 @@ export type InitializeConfigInput<
   TAccountConfigInfo extends string = string,
   TAccountNcnInfo extends string = string,
   TAccountNcnAdminInfo extends string = string,
-  TAccountSystemProgramInfo extends string = string,
+  TAccountSystemProgram extends string = string,
 > = {
   configInfo: Address<TAccountConfigInfo>;
   ncnInfo: Address<TAccountNcnInfo>;
   ncnAdminInfo: TransactionSigner<TAccountNcnAdminInfo>;
-  systemProgramInfo: Address<TAccountSystemProgramInfo>;
+  systemProgram?: Address<TAccountSystemProgram>;
+  minStake: InitializeConfigInstructionDataArgs['minStake'];
 };
 
 export function getInitializeConfigInstruction<
   TAccountConfigInfo extends string,
   TAccountNcnInfo extends string,
   TAccountNcnAdminInfo extends string,
-  TAccountSystemProgramInfo extends string,
+  TAccountSystemProgram extends string,
   TProgramAddress extends Address = typeof HELLO_WORLD_NCN_PROGRAM_ADDRESS,
 >(
   input: InitializeConfigInput<
     TAccountConfigInfo,
     TAccountNcnInfo,
     TAccountNcnAdminInfo,
-    TAccountSystemProgramInfo
+    TAccountSystemProgram
   >,
   config?: { programAddress?: TProgramAddress }
 ): InitializeConfigInstruction<
@@ -120,7 +134,7 @@ export function getInitializeConfigInstruction<
   TAccountConfigInfo,
   TAccountNcnInfo,
   TAccountNcnAdminInfo,
-  TAccountSystemProgramInfo
+  TAccountSystemProgram
 > {
   // Program address.
   const programAddress =
@@ -131,15 +145,21 @@ export function getInitializeConfigInstruction<
     configInfo: { value: input.configInfo ?? null, isWritable: true },
     ncnInfo: { value: input.ncnInfo ?? null, isWritable: false },
     ncnAdminInfo: { value: input.ncnAdminInfo ?? null, isWritable: true },
-    systemProgramInfo: {
-      value: input.systemProgramInfo ?? null,
-      isWritable: false,
-    },
+    systemProgram: { value: input.systemProgram ?? null, isWritable: false },
   };
   const accounts = originalAccounts as Record<
     keyof typeof originalAccounts,
     ResolvedAccount
   >;
+
+  // Original args.
+  const args = { ...input };
+
+  // Resolve default values.
+  if (!accounts.systemProgram.value) {
+    accounts.systemProgram.value =
+      '11111111111111111111111111111111' as Address<'11111111111111111111111111111111'>;
+  }
 
   const getAccountMeta = getAccountMetaFactory(programAddress, 'programId');
   const instruction = {
@@ -147,16 +167,18 @@ export function getInitializeConfigInstruction<
       getAccountMeta(accounts.configInfo),
       getAccountMeta(accounts.ncnInfo),
       getAccountMeta(accounts.ncnAdminInfo),
-      getAccountMeta(accounts.systemProgramInfo),
+      getAccountMeta(accounts.systemProgram),
     ],
     programAddress,
-    data: getInitializeConfigInstructionDataEncoder().encode({}),
+    data: getInitializeConfigInstructionDataEncoder().encode(
+      args as InitializeConfigInstructionDataArgs
+    ),
   } as InitializeConfigInstruction<
     TProgramAddress,
     TAccountConfigInfo,
     TAccountNcnInfo,
     TAccountNcnAdminInfo,
-    TAccountSystemProgramInfo
+    TAccountSystemProgram
   >;
 
   return instruction;
@@ -171,7 +193,7 @@ export type ParsedInitializeConfigInstruction<
     configInfo: TAccountMetas[0];
     ncnInfo: TAccountMetas[1];
     ncnAdminInfo: TAccountMetas[2];
-    systemProgramInfo: TAccountMetas[3];
+    systemProgram: TAccountMetas[3];
   };
   data: InitializeConfigInstructionData;
 };
@@ -200,7 +222,7 @@ export function parseInitializeConfigInstruction<
       configInfo: getNextAccount(),
       ncnInfo: getNextAccount(),
       ncnAdminInfo: getNextAccount(),
-      systemProgramInfo: getNextAccount(),
+      systemProgram: getNextAccount(),
     },
     data: getInitializeConfigInstructionDataDecoder().decode(instruction.data),
   };

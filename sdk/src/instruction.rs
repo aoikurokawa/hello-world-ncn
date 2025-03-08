@@ -7,8 +7,8 @@ pub enum HelloWorldNcnInstruction {
     #[account(0, writable, name = "config_info")]
     #[account(1, name = "ncn_info")]
     #[account(2, writable, signer, name = "ncn_admin_info")]
-    #[account(3, name = "system_program_info")]
-    InitializeConfig,
+    #[account(3, name = "system_program")]
+    InitializeConfig { min_stake: u64 },
 
     /// Initializes NCN Ballot Box
     #[account(0, name = "config_info")]
