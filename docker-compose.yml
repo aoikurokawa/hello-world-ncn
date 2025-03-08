@@ -4,8 +4,8 @@ services:
   operator-client:
     build:
       context: .
-      dockerfile: Dockerfile
-    container_name: solana-operator-client
+      dockerfile: operator-cli/Dockerfile
+    container_name: operator-client
     restart: unless-stopped
     volumes:
       # Mount your keypair files into the container
