@@ -8,14 +8,17 @@
   "operators": [
     {
       "name": "Operator1",
+      "operator_pubkey": "6BeXz72E9yn8JgkfzjiPdsnaE8PppbdpKTGDi7H7bsZj",
       "keypair_path": "./credentials/operator/opeKDrPSPhLYFFRpsPTLU6o86f4AFcFvNMRvbdifhvq.json"
     },
     {
       "name": "Operator2",
+      "operator_pubkey": "DqwU1gHAN55PJWX25Kvopkny2ENddCjWdqX68VEWPLQg",
       "keypair_path": "./credentials/operator/opeKDrPSPhLYFFRpsPTLU6o86f4AFcFvNMRvbdifhvq.json"
     },
     {
       "name": "Operator3",
+      "operator_pubkey": "9sMvk2pvMnPusPZWuEim5dp6JPvfM5KKmLjgRV4uw61z",
       "keypair_path": "./credentials/operator/opeKDrPSPhLYFFRpsPTLU6o86f4AFcFvNMRvbdifhvq.json"
     }
   ]

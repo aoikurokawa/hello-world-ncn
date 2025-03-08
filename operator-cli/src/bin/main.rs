@@ -1,5 +1,6 @@
 use std::{
     path::{Path, PathBuf},
+    str::FromStr,
     time::Duration,
 };
 
@@ -15,6 +16,7 @@ use solana_sdk::{pubkey::Pubkey, signature::read_keypair_file, signer::Signer};
 #[derive(Serialize, Deserialize, Debug, Clone)]
 struct OperatorConfig {
     name: String,
+    operator_pubkey: String,
     keypair_path: String,
 }
 
@@ -159,7 +161,8 @@ async fn run_operator(
         )
     })?;
 
-    let operator_pubkey = operator_keypair.pubkey();
+    // let operator_pubkey = operator_keypair.pubkey();
+    let operator_pubkey = Pubkey::from_str(&operator_config.operator_pubkey).unwrap();
     info!(
         "Operator '{}' pubkey: {}",
         operator_config.name, operator_pubkey
@@ -200,7 +203,7 @@ async fn run_operator(
             operator_config.name, slot, epoch
         );
 
-        match handler.get_message(epoch).await {
+        match handler.get_message(ncn_pubkey, epoch).await {
             Ok(msg) => {
                 let keyword = String::from_utf8_lossy(&msg.keyword[..msg.keyword_len as usize]);
                 info!(

@@ -35,18 +35,23 @@ impl<'a> Handler<'a> {
 
         Pubkey::find_program_address(
             &seeds_iter,
-            &Pubkey::from_str("DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr").unwrap(),
+            &Pubkey::from_str("ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW").unwrap(),
         )
         .0
     }
 
-    pub fn get_message_pubkey(&self, epoch: u64) -> Pubkey {
-        let seeds = [b"message".to_vec(), epoch.to_be_bytes().to_vec()];
+    pub fn get_message_pubkey(&self, ncn: Pubkey, epoch: u64) -> Pubkey {
+        let seeds = [
+            b"message".to_vec(),
+            ncn.to_bytes().to_vec(),
+            epoch.to_be_bytes().to_vec(),
+        ];
+        // let seeds = [b"message".to_vec(), epoch.to_be_bytes().to_vec()];
         let seeds_iter: Vec<_> = seeds.iter().map(|s| s.as_slice()).collect();
 
         Pubkey::find_program_address(
             &seeds_iter,
-            &Pubkey::from_str("DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr").unwrap(),
+            &Pubkey::from_str("ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW").unwrap(),
         )
         .0
     }
@@ -61,15 +66,15 @@ impl<'a> Handler<'a> {
 
         Pubkey::find_program_address(
             &seeds_iter,
-            &Pubkey::from_str("DXWJEC5JBUeNurpo7wPDUHGhDWnjkTzUiV3gp2D9y8zr").unwrap(),
+            &Pubkey::from_str("ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW").unwrap(),
         )
         .0
     }
 
-    pub async fn get_message(&self, epoch: u64) -> anyhow::Result<Message> {
+    pub async fn get_message(&self, ncn: Pubkey, epoch: u64) -> anyhow::Result<Message> {
         let rpc_client = self.get_rpc_client();
 
-        let message_pubkey = self.get_message_pubkey(epoch);
+        let message_pubkey = self.get_message_pubkey(ncn, epoch);
 
         let message_account = rpc_client.get_account(&message_pubkey).await.unwrap();
         let message = Message::from_bytes(&message_account.data)?;
@@ -87,7 +92,7 @@ impl<'a> Handler<'a> {
         let rpc_client = self.get_rpc_client();
 
         let config_pubkey = self.get_config_pubkey(ncn);
-        let message_pubkey = self.get_message_pubkey(epoch);
+        let message_pubkey = self.get_message_pubkey(*ncn, epoch);
         let ballot_box_pubkey = self.get_ballot_box_pubkey(ncn, epoch);
 
         let mut submit_message_ix_builder = SubmitMessageBuilder::new();

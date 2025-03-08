@@ -8,12 +8,10 @@ services:
     container_name: operator-client
     restart: unless-stopped
     volumes:
-      # Mount your keypair files into the container
       - ./keypairs:/app/keypairs
-      # Mount your config file to allow easy updates without rebuilding
       - ./operators_config.json:/app/operators_config.json
+      - ./credentials:/app/credentials
     environment:
-      # Optional environment variables to override config settings
       - RUST_LOG=info
       # - RPC_URL=https://api.mainnet-beta.solana.com  # Uncomment to override RPC URL
     # You can override the entrypoint to add additional arguments

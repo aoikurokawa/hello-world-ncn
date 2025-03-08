@@ -7,7 +7,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/*
 
 # Create a new empty project
-WORKDIR /app
+WORKDIR /usr/src/app
 
 COPY . .
 
@@ -15,8 +15,8 @@ COPY . .
 RUN cargo build --release --bin operator-cli
 RUN cargo install --path ./operator-cli --bin operator-cli --locked
 
-# Create a smaller runtime image
-FROM debian:bullseye-slim
+# Create a runtime image with newer glibc
+FROM ubuntu:22.04
 
 # Install runtime dependencies
 RUN apt-get update && \
@@ -24,13 +24,11 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
-WORKDIR /app
+COPY --from=builder /usr/src/app/target/release/operator-cli /usr/local/bin/operator-cli
 
-COPY --from=builder /app/target/release/operator-cli /usr/local/bin/operator-cli
+COPY --from=builder /usr/src/app/operator-cli/operators_config.json /usr/local/bin/operators_config.json
 
-COPY --from=builder /app/operator-cli/operators_config.json /usr/local/bin/operators_config.json
-
-COPY --from=builder /app/credentials /usr/local/bin/
+COPY --from=builder /usr/src/app/credentials /usr/local/bin/
 
 # Set the entrypoint
 ENTRYPOINT ["operator-cli", "--config-path", "/app/operators_config.json"]
