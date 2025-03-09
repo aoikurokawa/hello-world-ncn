@@ -25,6 +25,7 @@ struct Config {
     rpc_url: String,
     program_id: String,
     ncn_pubkey: String,
+    vault_pubkey: String,
     crank_interval: u64,
     metrics_interval: u64,
     priority_fees: u64,
@@ -98,6 +99,11 @@ async fn main() -> anyhow::Result<()> {
         .parse::<Pubkey>()
         .context("Invalid NCN pubkey in config")?;
 
+    let vault_pubkey = config
+        .vault_pubkey
+        .parse::<Pubkey>()
+        .context("Invalid NCN pubkey in config")?;
+
     if config.operators.is_empty() {
         return Err(anyhow!("No operators defined in configuration file"));
     }
@@ -108,6 +114,7 @@ async fn main() -> anyhow::Result<()> {
         let rpc_url = config.rpc_url.clone();
         let program_id_clone = program_id;
         let ncn_pubkey_clone = ncn_pubkey;
+        let vault_pubkey_clone = vault_pubkey;
         let crank_interval = config.crank_interval;
         let priority_fees = config.priority_fees;
         let operator_name = operator_config.name.clone();
@@ -119,6 +126,7 @@ async fn main() -> anyhow::Result<()> {
                 rpc_url,
                 program_id_clone,
                 ncn_pubkey_clone,
+                vault_pubkey_clone,
                 crank_interval,
                 priority_fees,
             )
@@ -144,6 +152,7 @@ async fn run_operator(
     rpc_url: String,
     program_id: Pubkey,
     ncn_pubkey: Pubkey,
+    vault_pubkey: Pubkey,
     crank_interval: u64,
     priority_fees: u64,
 ) -> anyhow::Result<()> {
@@ -213,7 +222,7 @@ async fn run_operator(
 
                 let message = format!("{}, World from Operator {}", keyword, operator_config.name);
                 match handler
-                    .submit_message(&ncn_pubkey, &operator_pubkey, epoch, message)
+                    .submit_message(&ncn_pubkey, &operator_pubkey, &vault_pubkey, epoch, message)
                     .await
                 {
                     Ok(_) => info!(
