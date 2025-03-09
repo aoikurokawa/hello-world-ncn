@@ -9,11 +9,9 @@ const projectRoot = path.join(__dirname, "..");
 const idlDir = path.join(projectRoot, "idl");
 
 const rustClientsDir = path.join(__dirname, "..", "clients", "rust");
-// const jsClientsDir = path.join(__dirname, "..", "clients", "js");
 
 // Generate the restaking client in Rust and JavaScript.
 const rustRestakingClientDir = path.join(rustClientsDir, "hello_world_ncn_client");
-// const jsRestakingClientDir = path.join(jsClientsDir, "hello_world_ncn_client");
 const restakingRootNode = anchorIdl.rootNodeFromAnchor(require(path.join(idlDir, "hello_world_ncn.json")));
 const restakingKinobi = kinobi.createFromRoot(restakingRootNode);
 restakingKinobi.update(kinobi.bottomUpTransformerVisitor([
@@ -107,5 +105,4 @@ restakingKinobi.accept(renderers.renderRustVisitor(path.join(rustRestakingClient
     deleteFolderBeforeRendering: true,
     toolchain: "+nightly-2024-07-25"
 }));
-// restakingKinobi.accept(renderers.renderJavaScriptVisitor(path.join(jsRestakingClientDir), {}));
 
