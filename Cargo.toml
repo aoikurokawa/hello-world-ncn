@@ -1,8 +1,9 @@
 [workspace]
-members = ["cli",
-	"clients/rust/hello_world_ncn_client",
+members = [
+	"cli",
+	"clients/rust/hello-world-ncn-client",
 	"core",
-	"integration_tests",
+	"integration-tests",
 	"operator-cli",
 	"program",
 	"sdk",
@@ -40,7 +41,7 @@ jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", re
 jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d", features = ["no-entrypoint"] }
 jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 log = "0.4.22"
-hello-world-ncn-client = { path = "clients/rust/hello_world_ncn_client", version = "0.1.0" }
+hello-world-ncn-client = { path = "clients/rust/hello-world-ncn-client", version = "0.1.0" }
 hello-world-ncn-core = { path = "core", version = "0.1.0" }
 hello-world-ncn-program = { path = "program", version = "0.1.0" }
 hello-world-ncn-sdk = { path = "sdk", version = "0.1.0" }

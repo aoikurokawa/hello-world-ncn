@@ -5,10 +5,11 @@
 //! <https://github.com/codama-idl/codama>
 //!
 
-pub mod accounts;
-pub mod errors;
-pub mod instructions;
-pub mod programs;
-pub mod types;
+  pub(crate) mod r#ballot_box;
+  pub(crate) mod r#config;
+  pub(crate) mod r#message;
 
-pub(crate) use programs::*;
+  pub use self::r#ballot_box::*;
+  pub use self::r#config::*;
+  pub use self::r#message::*;
+

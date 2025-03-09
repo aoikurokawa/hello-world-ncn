@@ -5,7 +5,10 @@
 //! <https://github.com/codama-idl/codama>
 //!
 
-use solana_program::{pubkey, pubkey::Pubkey};
-
-/// `hello_world_ncn` program ID.
-pub const HELLO_WORLD_NCN_ID: Pubkey = pubkey!("ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW");
+      pub mod accounts;
+        pub mod errors;
+        pub mod instructions;
+        pub mod programs;
+        pub mod types;
+  
+  pub(crate) use programs::*;
