@@ -12,7 +12,7 @@ members = [
 resolver = "2"
 
 [workspace.dependencies]
-anchor-lang = { version = "0.30.1", features = ["idl-build"] }
+anchor-lang = { git = "https://github.com/coral-xyz/anchor", rev = "96ed3b791c6fed9ab64cb138397795fe55991280", features = ["idl-build"] }
 anyhow = "1.0.94"
 axum = { version = "0.7.9", features = ["ws"] }
 axum-extra = { version = "0.9.6", features = ["typed-header"] }
@@ -30,16 +30,16 @@ futures = "0.3.31"
 futures-util = { version = "0.3.31", default-features = false, features = ["sink", "std"] }
 headers = "0.4.0"
 hex = "0.4.3"
-jito-account-traits-derive = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-bytemuck = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-jsm-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-restaking-client = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-restaking-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-restaking-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d", features = ["no-entrypoint"] }
-jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d", features = ["no-entrypoint"] }
-jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
+jito-account-traits-derive = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-bytemuck = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-jsm-core = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-restaking-client = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-restaking-core = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-restaking-sdk = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", branch = "master", features = ["no-entrypoint"] }
+jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", branch = "master", features = ["no-entrypoint"] }
+jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
 log = "0.4.22"
 hello-world-ncn-client = { path = "clients/rust/hello-world-ncn-client", version = "0.1.0" }
 hello-world-ncn-core = { path = "core", version = "0.1.0" }
@@ -55,15 +55,15 @@ serde_json = "1.0.133"
 serde_with = "3.9.0"
 shank = "0.4.2"
 shank_idl = "0.4.2"
-solana-account-decoder = "~1.18"
-solana-cli-config = "~1.18"
-solana-program = "~1.18"
-solana-program-test = "~1.18"
-solana-sdk = "~1.18"
-solana-rpc-client = "~1.18"
-solana-rpc-client-api = "~1.18"
-spl-associated-token-account = { version = "2.2.0", features = ["no-entrypoint"] }
-spl-token = { version = "4.0.0", features = ["no-entrypoint"] }
+solana-account-decoder = "~2.1"
+solana-cli-config = "~2.1"
+solana-program = "~2.1"
+solana-program-test = "~2.1"
+solana-sdk = "~2.1"
+solana-rpc-client = "~2.1"
+solana-rpc-client-api = "~2.1"
+spl-associated-token-account = { version = "6.0.0", features = ["no-entrypoint"] }
+spl-token = { version = "7.0.0", features = ["no-entrypoint"] }
 thiserror = "1.0.57"
 tokio = { version = "1.42.0", features = ["full"] }
 tokio-tungstenite = "0.24.0"
