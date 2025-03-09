@@ -1,6 +1,10 @@
 use std::str::FromStr;
 
 use hello_world_ncn_client::{accounts::Message, instructions::SubmitMessageBuilder};
+use jito_restaking_core::{ncn_operator_state::NcnOperatorState, ncn_vault_ticket::NcnVaultTicket};
+use jito_vault_core::{
+    vault_ncn_ticket::VaultNcnTicket, vault_operator_delegation::VaultOperatorDelegation,
+};
 use solana_rpc_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::{
     commitment_config::CommitmentConfig, pubkey::Pubkey, signature::Keypair, signer::Signer,
@@ -86,6 +90,7 @@ impl<'a> Handler<'a> {
         &self,
         ncn: &Pubkey,
         operator: &Pubkey,
+        vault: &Pubkey,
         epoch: u64,
         message_data: String,
     ) -> anyhow::Result<()> {
@@ -95,11 +100,34 @@ impl<'a> Handler<'a> {
         let message_pubkey = self.get_message_pubkey(*ncn, epoch);
         let ballot_box_pubkey = self.get_ballot_box_pubkey(ncn, epoch);
 
+        let restaking_config_info = jito_restaking_core::config::Config::find_program_address(
+            &jito_restaking_program::id(),
+        )
+        .0;
+        let vault_ncn_ticket_info =
+            VaultNcnTicket::find_program_address(&jito_vault_program::id(), vault, ncn).0;
+        let ncn_vault_ticket_info =
+            NcnVaultTicket::find_program_address(&jito_restaking_program::id(), ncn, vault).0;
+        let ncn_operator_state_info =
+            NcnOperatorState::find_program_address(&jito_restaking_program::id(), ncn, operator).0;
+        let vault_operator_delegation_info = VaultOperatorDelegation::find_program_address(
+            &jito_vault_program::id(),
+            vault,
+            operator,
+        )
+        .0;
+
         let mut submit_message_ix_builder = SubmitMessageBuilder::new();
         submit_message_ix_builder
             .config_info(config_pubkey)
+            .restaking_config_info(restaking_config_info)
             .ncn_info(*ncn)
             .operator_info(*operator)
+            .vault_info(*vault)
+            .vault_ncn_ticket_info(vault_ncn_ticket_info)
+            .ncn_vault_ticket_info(ncn_vault_ticket_info)
+            .ncn_operator_state_info(ncn_operator_state_info)
+            .vault_operator_delegation_info(vault_operator_delegation_info)
             .message_info(message_pubkey)
             .ballot_box_info(ballot_box_pubkey)
             .operator_voter_info(self.payer.pubkey())

@@ -146,6 +146,11 @@
           "isSigner": false
         },
         {
+          "name": "ncnOperatorStateInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "vaultOperatorDelegationInfo",
           "isMut": false,
           "isSigner": false

@@ -34,9 +34,10 @@ pub enum HelloWorldNcnInstruction {
     #[account(4, name = "vault_info")]
     #[account(5, name = "vault_ncn_ticket_info")]
     #[account(6, name = "ncn_vault_ticket_info")]
-    #[account(7, name = "vault_operator_delegation_info")]
-    #[account(8, name = "message_info")]
-    #[account(9, writable, name = "ballot_box_info")]
-    #[account(10, writable, signer, name = "operator_voter_info")]
+    #[account(7, name = "ncn_operator_state_info")]
+    #[account(8, name = "vault_operator_delegation_info")]
+    #[account(9, name = "message_info")]
+    #[account(10, writable, name = "ballot_box_info")]
+    #[account(11, writable, signer, name = "operator_voter_info")]
     SubmitMessage { message: String },
 }
