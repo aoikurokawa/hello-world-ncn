@@ -11,7 +11,7 @@ const idlDir = path.join(projectRoot, "idl");
 const rustClientsDir = path.join(__dirname, "..", "clients", "rust");
 
 // Generate the restaking client in Rust and JavaScript.
-const rustRestakingClientDir = path.join(rustClientsDir, "hello_world_ncn_client");
+const rustRestakingClientDir = path.join(rustClientsDir, "hello-world-ncn-client");
 const restakingRootNode = anchorIdl.rootNodeFromAnchor(require(path.join(idlDir, "hello_world_ncn.json")));
 const restakingKinobi = kinobi.createFromRoot(restakingRootNode);
 restakingKinobi.update(kinobi.bottomUpTransformerVisitor([
