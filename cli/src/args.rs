@@ -9,7 +9,7 @@ pub enum ProgramCommand {
     InitializeBallotBox,
 
     /// Admin
-    RequestMessage,
+    RequestMessage { keyword: String },
 }
 
 #[derive(Parser)]
