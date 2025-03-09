@@ -37,8 +37,6 @@ pub fn process_submit_message(
     let restaking_config = RestakingConfig::try_from_slice_unchecked(&restaking_config_data)?;
 
     Ncn::load(&jito_restaking_program::id(), ncn_info, false)?;
-    // let ncn_data = ncn_info.try_borrow_data()?;
-    // let _ncn = Ncn::try_from_slice_unchecked(&ncn_data)?;
 
     Operator::load(&jito_restaking_program::id(), operator_info, false)?;
     let operator_data = operator_info.try_borrow_data()?;
@@ -50,8 +48,6 @@ pub fn process_submit_message(
     }
 
     Vault::load(&jito_vault_program::id(), vault_info, false)?;
-    // let vault_data = vault_info.try_borrow_data()?;
-    // let _vault = Vault::try_from_slice_unchecked(&vault_data)?;
 
     VaultNcnTicket::load(
         &jito_vault_program::id(),

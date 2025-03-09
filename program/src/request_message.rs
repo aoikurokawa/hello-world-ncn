@@ -20,9 +20,9 @@ pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) ->
         return Err(ProgramError::NotEnoughAccountKeys);
     };
 
-    let config_data = config_info.try_borrow_data()?;
-    let _config = Config::try_from_slice_unchecked(&config_data)?;
+    Config::load(program_id, config_info, ncn_info.key, false)?;
 
+    Ncn::load(&jito_restaking_program::id(), ncn_info, false)?;
     let ncn_data = ncn_info.try_borrow_data()?;
     let ncn = Ncn::try_from_slice_unchecked(&ncn_data)?;
 
