@@ -2,7 +2,7 @@
 node_modules
 .yarn
 
-integration_tests/tests/fixtures/hello_world_ncn_program-keypair.json
-integration_tests/tests/fixtures/hello_world_ncn_program.so
+integration-tests/tests/fixtures/hello_world_ncn_program-keypair.json
+integration-tests/tests/fixtures/hello_world_ncn_program.so
 
 credentials
