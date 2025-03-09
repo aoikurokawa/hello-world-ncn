@@ -14,7 +14,11 @@ use solana_program::{
 /// Request Message
 ///
 /// Initialize Messae Account
-pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) -> ProgramResult {
+pub fn process_request_message(
+    program_id: &Pubkey,
+    accounts: &[AccountInfo],
+    keyword: String,
+) -> ProgramResult {
     let [config_info, ncn_info, message_info, ncn_admin_info, system_program_info] = accounts
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
@@ -64,8 +68,7 @@ pub fn process_request_message(program_id: &Pubkey, accounts: &[AccountInfo]) ->
     message_data[0] = Message::DISCRIMINATOR;
     let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
 
-    // TODO: Change message data
-    *message_acc = Message::new(*ncn_info.key, epoch, "Hello");
+    *message_acc = Message::new(*ncn_info.key, epoch, &keyword);
 
     Ok(())
 }

@@ -42,9 +42,9 @@ pub fn process_instruction(
             process_initialize_ballot_box(program_id, accounts)
         }
 
-        HelloWorldNcnInstruction::RequestMessage => {
+        HelloWorldNcnInstruction::RequestMessage { keyword } => {
             msg!("Instruction: RequestMessage");
-            process_request_message(program_id, accounts)
+            process_request_message(program_id, accounts, keyword)
         }
 
         HelloWorldNcnInstruction::SubmitMessage { message } => {

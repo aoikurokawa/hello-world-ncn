@@ -24,7 +24,7 @@ mod tests {
             .await
             .unwrap();
 
-        let message_data = "Hello,";
+        let keyword = "Hello,";
 
         let config = jito_restaking_core::config::Config::find_program_address(
             &jito_restaking_program::id(),
@@ -58,7 +58,7 @@ mod tests {
                 &test_ncn.ncn_root.ncn_pubkey,
                 &test_ncn.ncn_root.ncn_admin,
                 epoch,
-                message_data.to_string(),
+                keyword.to_string(),
             )
             .await
             .unwrap();
@@ -71,7 +71,7 @@ mod tests {
         let vault = &test_ncn.vaults[0];
 
         // Operator 1
-        let message_data = format!("{message_data} World");
+        let message_data = format!("{keyword} World");
 
         hello_world_ncn_client
             .do_submit_message(
@@ -98,7 +98,7 @@ mod tests {
         assert!(!ballot_box.is_consensus_reached());
 
         // Operator 2
-        let message_data = format!("{message_data} World");
+        let message_data = format!("{keyword} World");
 
         hello_world_ncn_client
             .do_submit_message(

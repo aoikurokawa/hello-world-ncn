@@ -12,7 +12,7 @@ mod tests {
 
         let ncn_root = fixture.setup_ncn().await.unwrap();
 
-        let message_data = "Hello,";
+        let keyword = "Hello,";
 
         let config = jito_restaking_core::config::Config::find_program_address(
             &jito_restaking_program::id(),
@@ -34,7 +34,7 @@ mod tests {
                 &ncn_root.ncn_pubkey,
                 &ncn_root.ncn_admin,
                 epoch,
-                message_data.to_string(),
+                keyword.to_string(),
             )
             .await
             .unwrap();
@@ -50,6 +50,6 @@ mod tests {
             .await
             .unwrap();
         assert_eq!(message.epoch(), epoch);
-        assert_eq!(message.keyword(), "Hello".to_string());
+        assert_eq!(message.keyword(), keyword.to_string());
     }
 }

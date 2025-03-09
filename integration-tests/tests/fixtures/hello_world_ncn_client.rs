@@ -162,13 +162,12 @@ impl HelloWorldNcnClient {
         ncn: &Pubkey,
         ncn_admin: &Keypair,
         epoch: u64,
-        message_data: String,
+        keyword: String,
     ) -> TestResult<()> {
         // Setup Payer
         self.airdrop(&self.payer.pubkey(), 1.0).await?;
 
-        self.request_message(ncn, ncn_admin, epoch, message_data)
-            .await
+        self.request_message(ncn, ncn_admin, epoch, keyword).await
     }
 
     pub async fn request_message(
@@ -176,7 +175,7 @@ impl HelloWorldNcnClient {
         ncn: &Pubkey,
         ncn_admin: &Keypair,
         epoch: u64,
-        message_data: String,
+        keyword: String,
     ) -> TestResult<()> {
         let ncn_config = hello_world_ncn_core::config::Config::find_program_address(
             &hello_world_ncn_program::id(),
@@ -196,7 +195,7 @@ impl HelloWorldNcnClient {
             &ncn,
             &message,
             &ncn_admin.pubkey(),
-            message_data,
+            keyword,
         );
 
         let blockhash = self.banks_client.get_latest_blockhash().await?;
