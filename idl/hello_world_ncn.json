@@ -101,7 +101,12 @@
           "isSigner": false
         }
       ],
-      "args": [],
+      "args": [
+        {
+          "name": "keyword",
+          "type": "string"
+        }
+      ],
       "discriminant": {
         "type": "u8",
         "value": 2

@@ -24,7 +24,7 @@ pub enum HelloWorldNcnInstruction {
     #[account(2, writable, name = "message_info")]
     #[account(3, writable, signer, name = "ncn_admin_info")]
     #[account(4, name = "system_program")]
-    RequestMessage,
+    RequestMessage { keyword: String },
 
     /// Send Message
     #[account(0, name = "config_info")]

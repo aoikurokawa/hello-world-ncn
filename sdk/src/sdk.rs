@@ -58,7 +58,7 @@ pub fn request_message(
     ncn: &Pubkey,
     message: &Pubkey,
     ncn_admin: &Pubkey,
-    _message_data: String,
+    keyword: String,
 ) -> Instruction {
     let accounts = vec![
         AccountMeta::new_readonly(*config, false),
@@ -70,7 +70,7 @@ pub fn request_message(
     Instruction {
         program_id: *program_id,
         accounts,
-        data: HelloWorldNcnInstruction::RequestMessage
+        data: HelloWorldNcnInstruction::RequestMessage { keyword }
             .try_to_vec()
             .unwrap(),
     }

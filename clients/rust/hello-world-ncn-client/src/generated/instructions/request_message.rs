@@ -22,12 +22,16 @@ pub struct RequestMessage {
 }
 
 impl RequestMessage {
-    pub fn instruction(&self) -> solana_program::instruction::Instruction {
-        self.instruction_with_remaining_accounts(&[])
+    pub fn instruction(
+        &self,
+        args: RequestMessageInstructionArgs,
+    ) -> solana_program::instruction::Instruction {
+        self.instruction_with_remaining_accounts(args, &[])
     }
     #[allow(clippy::vec_init_then_push)]
     pub fn instruction_with_remaining_accounts(
         &self,
+        args: RequestMessageInstructionArgs,
         remaining_accounts: &[solana_program::instruction::AccountMeta],
     ) -> solana_program::instruction::Instruction {
         let mut accounts = Vec::with_capacity(5 + remaining_accounts.len());
@@ -52,7 +56,9 @@ impl RequestMessage {
             false,
         ));
         accounts.extend_from_slice(remaining_accounts);
-        let data = RequestMessageInstructionData::new().try_to_vec().unwrap();
+        let mut data = RequestMessageInstructionData::new().try_to_vec().unwrap();
+        let mut args = args.try_to_vec().unwrap();
+        data.append(&mut args);
 
         solana_program::instruction::Instruction {
             program_id: crate::HELLO_WORLD_NCN_ID,
@@ -79,6 +85,12 @@ impl Default for RequestMessageInstructionData {
     }
 }
 
+#[derive(BorshSerialize, BorshDeserialize, Clone, Debug, Eq, PartialEq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
+pub struct RequestMessageInstructionArgs {
+    pub keyword: String,
+}
+
 /// Instruction builder for `RequestMessage`.
 ///
 /// ### Accounts:
@@ -95,6 +107,7 @@ pub struct RequestMessageBuilder {
     message_info: Option<solana_program::pubkey::Pubkey>,
     ncn_admin_info: Option<solana_program::pubkey::Pubkey>,
     system_program: Option<solana_program::pubkey::Pubkey>,
+    keyword: Option<String>,
     __remaining_accounts: Vec<solana_program::instruction::AccountMeta>,
 }
 
@@ -128,6 +141,11 @@ impl RequestMessageBuilder {
         self.system_program = Some(system_program);
         self
     }
+    #[inline(always)]
+    pub fn keyword(&mut self, keyword: String) -> &mut Self {
+        self.keyword = Some(keyword);
+        self
+    }
     /// Add an additional account to the instruction.
     #[inline(always)]
     pub fn add_remaining_account(
@@ -157,8 +175,11 @@ impl RequestMessageBuilder {
                 .system_program
                 .unwrap_or(solana_program::pubkey!("11111111111111111111111111111111")),
         };
+        let args = RequestMessageInstructionArgs {
+            keyword: self.keyword.clone().expect("keyword is not set"),
+        };
 
-        accounts.instruction_with_remaining_accounts(&self.__remaining_accounts)
+        accounts.instruction_with_remaining_accounts(args, &self.__remaining_accounts)
     }
 }
 
@@ -189,12 +210,15 @@ pub struct RequestMessageCpi<'a, 'b> {
     pub ncn_admin_info: &'b solana_program::account_info::AccountInfo<'a>,
 
     pub system_program: &'b solana_program::account_info::AccountInfo<'a>,
+    /// The arguments for the instruction.
+    pub __args: RequestMessageInstructionArgs,
 }
 
 impl<'a, 'b> RequestMessageCpi<'a, 'b> {
     pub fn new(
         program: &'b solana_program::account_info::AccountInfo<'a>,
         accounts: RequestMessageCpiAccounts<'a, 'b>,
+        args: RequestMessageInstructionArgs,
     ) -> Self {
         Self {
             __program: program,
@@ -203,6 +227,7 @@ impl<'a, 'b> RequestMessageCpi<'a, 'b> {
             message_info: accounts.message_info,
             ncn_admin_info: accounts.ncn_admin_info,
             system_program: accounts.system_program,
+            __args: args,
         }
     }
     #[inline(always)]
@@ -266,7 +291,9 @@ impl<'a, 'b> RequestMessageCpi<'a, 'b> {
                 is_writable: remaining_account.2,
             })
         });
-        let data = RequestMessageInstructionData::new().try_to_vec().unwrap();
+        let mut data = RequestMessageInstructionData::new().try_to_vec().unwrap();
+        let mut args = self.__args.try_to_vec().unwrap();
+        data.append(&mut args);
 
         let instruction = solana_program::instruction::Instruction {
             program_id: crate::HELLO_WORLD_NCN_ID,
@@ -315,6 +342,7 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
             message_info: None,
             ncn_admin_info: None,
             system_program: None,
+            keyword: None,
             __remaining_accounts: Vec::new(),
         });
         Self { instruction }
@@ -359,6 +387,11 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
         self.instruction.system_program = Some(system_program);
         self
     }
+    #[inline(always)]
+    pub fn keyword(&mut self, keyword: String) -> &mut Self {
+        self.instruction.keyword = Some(keyword);
+        self
+    }
     /// Add an additional account to the instruction.
     #[inline(always)]
     pub fn add_remaining_account(
@@ -400,6 +433,13 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
         &self,
         signers_seeds: &[&[&[u8]]],
     ) -> solana_program::entrypoint::ProgramResult {
+        let args = RequestMessageInstructionArgs {
+            keyword: self
+                .instruction
+                .keyword
+                .clone()
+                .expect("keyword is not set"),
+        };
         let instruction = RequestMessageCpi {
             __program: self.instruction.__program,
 
@@ -424,6 +464,7 @@ impl<'a, 'b> RequestMessageCpiBuilder<'a, 'b> {
                 .instruction
                 .system_program
                 .expect("system_program is not set"),
+            __args: args,
         };
         instruction.invoke_signed_with_remaining_accounts(
             signers_seeds,
@@ -440,6 +481,7 @@ struct RequestMessageCpiBuilderInstruction<'a, 'b> {
     message_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ncn_admin_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     system_program: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    keyword: Option<String>,
     /// Additional instruction accounts `(AccountInfo, is_writable, is_signer)`.
     __remaining_accounts: Vec<(
         &'b solana_program::account_info::AccountInfo<'a>,
