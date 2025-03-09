@@ -262,4 +262,28 @@ impl TestBuilder {
 
         Ok(())
     }
+
+    // 4. Setup Delegations
+    pub async fn add_delegation_in_test_ncn(
+        &mut self,
+        test_ncn: &TestNcn,
+        delegation_amount: u64,
+    ) -> TestResult<()> {
+        let mut vault_program_client = self.vault_program_client();
+
+        for vault_root in test_ncn.vaults.iter() {
+            for operator_root in test_ncn.operators.iter() {
+                vault_program_client
+                    .do_add_delegation(
+                        vault_root,
+                        &operator_root.operator_pubkey,
+                        delegation_amount,
+                    )
+                    .await
+                    .unwrap();
+            }
+        }
+
+        Ok(())
+    }
 }

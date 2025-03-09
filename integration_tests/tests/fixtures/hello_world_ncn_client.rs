@@ -248,7 +248,7 @@ impl HelloWorldNcnClient {
         )
         .0;
         let ncn_vault_ticket_info = NcnVaultTicket::find_program_address(
-            &jito_vault_program::id(),
+            &jito_restaking_program::id(),
             ncn,
             &vault_root.vault_pubkey,
         )

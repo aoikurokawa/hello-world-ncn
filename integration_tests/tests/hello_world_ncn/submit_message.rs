@@ -19,6 +19,10 @@ mod tests {
             .add_vaults_to_test_ncn(&mut test_ncn, 1, None)
             .await
             .unwrap();
+        fixture
+            .add_delegation_in_test_ncn(&mut test_ncn, 100)
+            .await
+            .unwrap();
 
         let message_data = "Hello,";
 
@@ -56,6 +60,11 @@ mod tests {
                 epoch,
                 message_data.to_string(),
             )
+            .await
+            .unwrap();
+
+        fixture
+            .warp_slot_incremental(2 * restaking_config.epoch_length())
             .await
             .unwrap();
 

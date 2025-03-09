@@ -35,9 +35,9 @@ jito-jsm-core = { git = "https://github.com/jito-foundation/restaking.git", rev 
 jito-restaking-client = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 jito-restaking-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 jito-restaking-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
+jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d", features = ["no-entrypoint"] }
 jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
-jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
+jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d", features = ["no-entrypoint"] }
 jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 log = "0.4.22"
 hello-world-ncn-client = { path = "clients/rust/hello_world_ncn_client", version = "0.1.0" }

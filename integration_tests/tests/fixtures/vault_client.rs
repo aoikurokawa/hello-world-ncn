@@ -224,6 +224,7 @@ impl VaultProgramClient {
         )?)
     }
 
+    #[allow(dead_code)]
     pub async fn get_vault_is_update_needed(
         &mut self,
         vault: &Pubkey,
@@ -676,9 +677,9 @@ impl VaultProgramClient {
     ) -> Result<(), TestError> {
         let blockhash = self.banks_client.get_latest_blockhash().await?;
 
-        let admin_st_token_account =
-            get_associated_token_address(&vault_admin.pubkey(), &st_mint.pubkey());
-        let vault_st_token_account = get_associated_token_address(vault, &st_mint.pubkey());
+        // let admin_st_token_account =
+        //     get_associated_token_address(&vault_admin.pubkey(), &st_mint.pubkey());
+        // let vault_st_token_account = get_associated_token_address(vault, &st_mint.pubkey());
 
         // let burn_vault =
         //     BurnVault::find_program_address(&jito_vault_program::id(), &vault_base.pubkey()).0;
@@ -1007,6 +1008,7 @@ impl VaultProgramClient {
         .await
     }
 
+    #[allow(dead_code)]
     pub async fn do_full_vault_update(
         &mut self,
         vault_pubkey: &Pubkey,

@@ -2139,7 +2139,9 @@ dependencies = [
  "jito-bytemuck",
  "jito-jsm-core",
  "jito-restaking-core",
+ "jito-restaking-program",
  "jito-vault-core",
+ "jito-vault-program",
  "solana-program",
 ]
 
