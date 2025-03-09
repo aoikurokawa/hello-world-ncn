@@ -4,7 +4,6 @@ mod request_message;
 mod submit_message;
 
 use borsh::BorshDeserialize;
-use const_str_to_pubkey::str_to_pubkey;
 use hello_world_ncn_sdk::instruction::HelloWorldNcnInstruction;
 use initialize_ballot_box::process_initialize_ballot_box;
 use initialize_config::process_initialize_config;
@@ -15,7 +14,7 @@ use solana_program::{
 };
 use submit_message::process_submit_message;
 
-declare_id!(str_to_pubkey(env!("HELLO_WORLD_NCN_PROGRAM_ID")));
+declare_id!(env!("HELLO_WORLD_NCN_PROGRAM_ID"));
 
 #[cfg(not(feature = "no-entrypoint"))]
 solana_program::entrypoint!(process_instruction);

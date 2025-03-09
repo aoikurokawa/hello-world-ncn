@@ -6,7 +6,8 @@ use jito_restaking_core::{
     operator_vault_ticket::OperatorVaultTicket,
 };
 use jito_vault_core::{
-    config::Config, vault::Vault, vault_ncn_slasher_operator_ticket::VaultNcnSlasherOperatorTicket,
+    burn_vault::BurnVault, config::Config, vault::Vault,
+    vault_ncn_slasher_operator_ticket::VaultNcnSlasherOperatorTicket,
     vault_ncn_slasher_ticket::VaultNcnSlasherTicket, vault_ncn_ticket::VaultNcnTicket,
     vault_operator_delegation::VaultOperatorDelegation,
     vault_staker_withdrawal_ticket::VaultStakerWithdrawalTicket,
@@ -677,15 +678,15 @@ impl VaultProgramClient {
     ) -> Result<(), TestError> {
         let blockhash = self.banks_client.get_latest_blockhash().await?;
 
-        // let admin_st_token_account =
-        //     get_associated_token_address(&vault_admin.pubkey(), &st_mint.pubkey());
-        // let vault_st_token_account = get_associated_token_address(vault, &st_mint.pubkey());
+        let admin_st_token_account =
+            get_associated_token_address(&vault_admin.pubkey(), &st_mint.pubkey());
+        let vault_st_token_account = get_associated_token_address(vault, &st_mint.pubkey());
 
-        // let burn_vault =
-        //     BurnVault::find_program_address(&jito_vault_program::id(), &vault_base.pubkey()).0;
+        let burn_vault =
+            BurnVault::find_program_address(&jito_vault_program::id(), &vault_base.pubkey()).0;
 
-        // let burn_vault_vrt_token_account =
-        //     get_associated_token_address(&burn_vault, &vrt_mint.pubkey());
+        let burn_vault_vrt_token_account =
+            get_associated_token_address(&burn_vault, &vrt_mint.pubkey());
 
         self.create_ata(&st_mint.pubkey(), vault).await?;
         self.create_ata(&st_mint.pubkey(), &vault_admin.pubkey())
@@ -706,17 +707,17 @@ impl VaultProgramClient {
                 &vrt_mint.pubkey(),
                 &st_mint.pubkey(),
                 // TODO: Review these keys, maybe refactor to use restaking
-                // &admin_st_token_account,
-                // &vault_st_token_account,
-                // &burn_vault,
-                // &burn_vault_vrt_token_account,
+                &admin_st_token_account,
+                &vault_st_token_account,
+                &burn_vault,
+                &burn_vault_vrt_token_account,
                 &vault_admin.pubkey(),
                 &vault_base.pubkey(),
                 deposit_fee_bps,
                 withdrawal_fee_bps,
                 reward_fee_bps,
                 decimals,
-                // initialize_token_amount,
+                initialize_token_amount,
             )],
             Some(&vault_admin.pubkey()),
             &[&vault_admin, &vrt_mint, &vault_base],

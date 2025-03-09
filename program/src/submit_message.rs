@@ -61,7 +61,7 @@ pub fn process_submit_message(
 
     if !vault_ncn_ticket
         .state
-        .is_active(current_slot, restaking_config.epoch_length())
+        .is_active(current_slot, restaking_config.epoch_length())?
     {
         msg!("VaultNcnTicket is not active");
         return Err(ProgramError::InvalidAccountData);
@@ -79,7 +79,7 @@ pub fn process_submit_message(
 
     if !ncn_vault_ticket
         .state
-        .is_active(current_slot, restaking_config.epoch_length())
+        .is_active(current_slot, restaking_config.epoch_length())?
     {
         msg!("NcnVaultTicket is not active");
         return Err(ProgramError::InvalidAccountData);
@@ -97,10 +97,10 @@ pub fn process_submit_message(
 
     if !ncn_operator_state
         .ncn_opt_in_state
-        .is_active(current_slot, restaking_config.epoch_length())
+        .is_active(current_slot, restaking_config.epoch_length())?
         || !ncn_operator_state
             .operator_opt_in_state
-            .is_active(current_slot, restaking_config.epoch_length())
+            .is_active(current_slot, restaking_config.epoch_length())?
     {
         msg!("NcnOperatorState is not active");
         return Err(ProgramError::InvalidAccountData);
