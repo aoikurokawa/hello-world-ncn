@@ -30,16 +30,16 @@ futures = "0.3.31"
 futures-util = { version = "0.3.31", default-features = false, features = ["sink", "std"] }
 headers = "0.4.0"
 hex = "0.4.3"
-jito-account-traits-derive = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-bytemuck = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-jsm-core = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-restaking-client = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-restaking-core = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-restaking-sdk = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", branch = "master", features = ["no-entrypoint"] }
-jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
-jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", branch = "master", features = ["no-entrypoint"] }
-jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", branch = "master" }
+jito-account-traits-derive = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-bytemuck = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-jsm-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-restaking-client = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-restaking-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-restaking-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba", features = ["no-entrypoint"] }
+jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
+jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba", features = ["no-entrypoint"] }
+jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "9efa55c30b3427d94975b22dcd27a82181c776ba" }
 log = "0.4.22"
 hello-world-ncn-client = { path = "clients/rust/hello-world-ncn-client", version = "0.1.0" }
 hello-world-ncn-core = { path = "core", version = "0.1.0" }
@@ -55,13 +55,13 @@ serde_json = "1.0.133"
 serde_with = "3.9.0"
 shank = "0.4.2"
 shank_idl = "0.4.2"
-solana-account-decoder = "~2.1"
-solana-cli-config = "~2.1"
-solana-program = "~2.1"
-solana-program-test = "~2.1"
-solana-sdk = "~2.1"
-solana-rpc-client = "~2.1"
-solana-rpc-client-api = "~2.1"
+solana-account-decoder = "2.1"
+solana-cli-config = "2.1"
+solana-program = "2.1"
+solana-program-test = "2.1"
+solana-sdk = "2.1"
+solana-rpc-client = "2.1"
+solana-rpc-client-api = "2.1"
 spl-associated-token-account = { version = "6.0.0", features = ["no-entrypoint"] }
 spl-token = { version = "7.0.0", features = ["no-entrypoint"] }
 thiserror = "1.0.57"
