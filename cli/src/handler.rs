@@ -155,7 +155,7 @@ impl CliHandler {
 
                 println!("Result: {}", result);
             }
-            ProgramCommand::RequestMessage => {
+            ProgramCommand::RequestMessage { keyword } => {
                 let ncn_pubkey = self.ncn()?;
                 let ncn_admin = self.keypair()?;
                 let ncn_admin_pubkey = ncn_admin.pubkey();
@@ -177,6 +177,7 @@ impl CliHandler {
                     .ncn_info(*ncn_pubkey)
                     .message_info(message_info)
                     .ncn_admin_info(ncn_admin_pubkey)
+                    .keyword(keyword)
                     .instruction();
                 initialize_config_ix.program_id = self.hello_world_ncn_program_id;
 
