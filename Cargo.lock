@@ -2116,10 +2116,14 @@ dependencies = [
  "jito-restaking-core",
  "jito-restaking-program",
  "jito-restaking-sdk",
+ "jito-vault-core",
  "jito-vault-program",
+ "jito-vault-sdk",
  "solana-program",
  "solana-program-test",
  "solana-sdk",
+ "spl-associated-token-account",
+ "spl-token",
  "thiserror",
  "tokio",
 ]
@@ -2135,6 +2139,9 @@ dependencies = [
  "jito-bytemuck",
  "jito-jsm-core",
  "jito-restaking-core",
+ "jito-restaking-program",
+ "jito-vault-core",
+ "jito-vault-program",
  "solana-program",
 ]
 

@@ -1,15 +1,17 @@
 use solana_program_test::{processor, BanksClientError, ProgramTest, ProgramTestContext};
-use solana_sdk::clock::Clock;
+use solana_sdk::{clock::Clock, native_token::sol_to_lamports, signature::Keypair, signer::Signer};
 
 use super::{
     hello_world_ncn_client::HelloWorldNcnClient,
     restaking_client::{NcnRoot, OperatorRoot, RestakingProgramClient},
+    vault_client::{VaultProgramClient, VaultRoot},
     TestResult,
 };
 
 pub struct TestNcn {
     pub ncn_root: NcnRoot,
     pub operators: Vec<OperatorRoot>,
+    pub vaults: Vec<VaultRoot>,
 }
 
 #[allow(dead_code)]
@@ -41,6 +43,11 @@ impl TestBuilder {
                 jito_restaking_program::id(),
                 processor!(jito_restaking_program::process_instruction),
             );
+            program_test.add_program(
+                "jito_vault_program",
+                jito_vault_program::id(),
+                processor!(jito_vault_program::process_instruction),
+            );
 
             program_test
         };
@@ -59,6 +66,13 @@ impl TestBuilder {
 
     pub fn restaking_program_client(&self) -> RestakingProgramClient {
         RestakingProgramClient::new(
+            self.context.banks_client.clone(),
+            self.context.payer.insecure_clone(),
+        )
+    }
+
+    pub fn vault_program_client(&self) -> VaultProgramClient {
+        VaultProgramClient::new(
             self.context.banks_client.clone(),
             self.context.payer.insecure_clone(),
         )
@@ -94,9 +108,9 @@ impl TestBuilder {
     pub async fn create_test_ncn(&mut self) -> TestResult<TestNcn> {
         let mut restaking_program_client = self.restaking_program_client();
 
-        // let mut vault_program_client = self.vault_program_client();
+        let mut vault_program_client = self.vault_program_client();
 
-        // vault_program_client.do_initialize_config().await?;
+        vault_program_client.do_initialize_config().await?;
 
         restaking_program_client.do_initialize_config().await?;
 
@@ -121,7 +135,7 @@ impl TestBuilder {
         Ok(TestNcn {
             ncn_root: ncn_root.clone(),
             operators: vec![],
-            // vaults: vec![],
+            vaults: vec![],
         })
     }
 
@@ -155,6 +169,119 @@ impl TestBuilder {
                 .await?;
 
             test_ncn.operators.push(operator_root);
+        }
+
+        Ok(())
+    }
+
+    // 3. Setup Vaults
+    pub async fn add_vaults_to_test_ncn(
+        &mut self,
+        test_ncn: &mut TestNcn,
+        vault_count: usize,
+        token_mint: Option<Keypair>,
+    ) -> TestResult<()> {
+        let mut vault_program_client = self.vault_program_client();
+        let mut restaking_program_client = self.restaking_program_client();
+
+        const DEPOSIT_FEE_BPS: u16 = 0;
+        const WITHDRAWAL_FEE_BPS: u16 = 0;
+        const REWARD_FEE_BPS: u16 = 0;
+        let mint_amount: u64 = sol_to_lamports(100_000_000.0);
+
+        let should_generate = token_mint.is_none();
+        let pass_through = if token_mint.is_some() {
+            token_mint.unwrap()
+        } else {
+            Keypair::new()
+        };
+
+        for _ in 0..vault_count {
+            let pass_through = if should_generate {
+                Keypair::new()
+            } else {
+                pass_through.insecure_clone()
+            };
+
+            let vault_root = vault_program_client
+                .do_initialize_vault(
+                    DEPOSIT_FEE_BPS,
+                    WITHDRAWAL_FEE_BPS,
+                    REWARD_FEE_BPS,
+                    9,
+                    &self.context.payer.pubkey(),
+                    Some(pass_through),
+                )
+                .await?;
+
+            // vault <> ncn
+            restaking_program_client
+                .do_initialize_ncn_vault_ticket(&test_ncn.ncn_root, &vault_root.vault_pubkey)
+                .await?;
+            self.warp_slot_incremental(1).await.unwrap();
+            restaking_program_client
+                .do_warmup_ncn_vault_ticket(&test_ncn.ncn_root, &vault_root.vault_pubkey)
+                .await?;
+            vault_program_client
+                .do_initialize_vault_ncn_ticket(&vault_root, &test_ncn.ncn_root.ncn_pubkey)
+                .await?;
+            self.warp_slot_incremental(1).await.unwrap();
+            vault_program_client
+                .do_warmup_vault_ncn_ticket(&vault_root, &test_ncn.ncn_root.ncn_pubkey)
+                .await?;
+
+            for operator_root in test_ncn.operators.iter() {
+                // vault <> operator
+                restaking_program_client
+                    .do_initialize_operator_vault_ticket(operator_root, &vault_root.vault_pubkey)
+                    .await?;
+                self.warp_slot_incremental(1).await.unwrap();
+                restaking_program_client
+                    .do_warmup_operator_vault_ticket(operator_root, &vault_root.vault_pubkey)
+                    .await?;
+                vault_program_client
+                    .do_initialize_vault_operator_delegation(
+                        &vault_root,
+                        &operator_root.operator_pubkey,
+                    )
+                    .await?;
+            }
+
+            let depositor_keypair = self.context.payer.insecure_clone();
+            let depositor = depositor_keypair.pubkey();
+            vault_program_client
+                .configure_depositor(&vault_root, &depositor, mint_amount)
+                .await?;
+            vault_program_client
+                .do_mint_to(&vault_root, &depositor_keypair, mint_amount, mint_amount)
+                .await
+                .unwrap();
+
+            test_ncn.vaults.push(vault_root);
+        }
+
+        Ok(())
+    }
+
+    // 4. Setup Delegations
+    pub async fn add_delegation_in_test_ncn(
+        &mut self,
+        test_ncn: &TestNcn,
+        delegation_amount: u64,
+    ) -> TestResult<()> {
+        let mut vault_program_client = self.vault_program_client();
+
+        for vault_root in test_ncn.vaults.iter() {
+            for operator_root in test_ncn.operators.iter() {
+                vault_program_client
+                    .do_add_delegation(
+                        vault_root,
+                        &operator_root.operator_pubkey,
+                        delegation_amount,
+                    )
+                    .await
+                    .unwrap();
+            }
         }
 
         Ok(())

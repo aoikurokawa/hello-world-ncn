@@ -1,12 +1,16 @@
 use hello_world_ncn_core::{ballot_box::BallotBox, config::Config as NcnConfig, message::Message};
 use jito_bytemuck::AccountDeserialize;
+use jito_restaking_core::ncn_vault_ticket::NcnVaultTicket;
+use jito_vault_core::{
+    vault_ncn_ticket::VaultNcnTicket, vault_operator_delegation::VaultOperatorDelegation,
+};
 use solana_program_test::BanksClient;
 use solana_sdk::{
     commitment_config::CommitmentLevel, native_token::sol_to_lamports, pubkey::Pubkey,
     signature::Keypair, signer::Signer, system_instruction::transfer, transaction::Transaction,
 };
 
-use super::{restaking_client::OperatorRoot, TestResult};
+use super::{restaking_client::OperatorRoot, vault_client::VaultRoot, TestResult};
 
 pub struct HelloWorldNcnClient {
     banks_client: BanksClient,
@@ -209,13 +213,14 @@ impl HelloWorldNcnClient {
         &mut self,
         ncn: &Pubkey,
         operator_root: &OperatorRoot,
+        vault_root: &VaultRoot,
         epoch: u64,
         message_data: String,
     ) -> TestResult<()> {
         // Setup Payer
         self.airdrop(&self.payer.pubkey(), 1.0).await?;
 
-        self.submit_message(ncn, operator_root, epoch, message_data)
+        self.submit_message(ncn, operator_root, vault_root, epoch, message_data)
             .await
     }
 
@@ -223,12 +228,35 @@ impl HelloWorldNcnClient {
         &mut self,
         ncn: &Pubkey,
         operator_root: &OperatorRoot,
+        vault_root: &VaultRoot,
         epoch: u64,
         message_data: String,
     ) -> TestResult<()> {
         let ncn_config = hello_world_ncn_core::config::Config::find_program_address(
             &hello_world_ncn_program::id(),
             ncn,
+        )
+        .0;
+        let restaking_config_info = jito_restaking_core::config::Config::find_program_address(
+            &jito_restaking_program::id(),
+        )
+        .0;
+        let vault_ncn_ticket_info = VaultNcnTicket::find_program_address(
+            &jito_vault_program::id(),
+            &vault_root.vault_pubkey,
+            ncn,
+        )
+        .0;
+        let ncn_vault_ticket_info = NcnVaultTicket::find_program_address(
+            &jito_restaking_program::id(),
+            ncn,
+            &vault_root.vault_pubkey,
+        )
+        .0;
+        let vault_operator_delegation_info = VaultOperatorDelegation::find_program_address(
+            &jito_vault_program::id(),
+            &vault_root.vault_pubkey,
+            &operator_root.operator_pubkey,
         )
         .0;
         let message = hello_world_ncn_core::message::Message::find_program_address(
@@ -247,8 +275,13 @@ impl HelloWorldNcnClient {
         let ix = hello_world_ncn_sdk::sdk::submit_message(
             &hello_world_ncn_program::id(),
             &ncn_config,
+            &restaking_config_info,
             &ncn,
             &operator_root.operator_pubkey,
+            &vault_root.vault_pubkey,
+            &vault_ncn_ticket_info,
+            &ncn_vault_ticket_info,
+            &vault_operator_delegation_info,
             &message,
             &ballot_box,
             &operator_root.operator_admin.pubkey(),

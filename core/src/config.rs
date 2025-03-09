@@ -67,4 +67,8 @@ impl Config {
         }
         Ok(())
     }
+
+    pub fn min_stake(&self) -> u64 {
+        self.min_stake.into()
+    }
 }

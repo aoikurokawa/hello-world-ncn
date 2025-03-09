@@ -15,6 +15,14 @@ mod tests {
             .add_operators_to_test_ncn(&mut test_ncn, 3, None)
             .await
             .unwrap();
+        fixture
+            .add_vaults_to_test_ncn(&mut test_ncn, 1, None)
+            .await
+            .unwrap();
+        fixture
+            .add_delegation_in_test_ncn(&mut test_ncn, 100)
+            .await
+            .unwrap();
 
         let message_data = "Hello,";
 
@@ -55,6 +63,13 @@ mod tests {
             .await
             .unwrap();
 
+        fixture
+            .warp_slot_incremental(2 * restaking_config.epoch_length())
+            .await
+            .unwrap();
+
+        let vault = &test_ncn.vaults[0];
+
         // Operator 1
         let message_data = format!("{message_data} World");
 
@@ -62,6 +77,7 @@ mod tests {
             .do_submit_message(
                 &test_ncn.ncn_root.ncn_pubkey,
                 &test_ncn.operators[0],
+                vault,
                 epoch,
                 message_data.clone(),
             )
@@ -88,6 +104,7 @@ mod tests {
             .do_submit_message(
                 &test_ncn.ncn_root.ncn_pubkey,
                 &test_ncn.operators[1],
+                vault,
                 epoch,
                 message_data.clone(),
             )

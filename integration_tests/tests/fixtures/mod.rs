@@ -6,6 +6,7 @@ use thiserror::Error;
 pub mod hello_world_ncn_client;
 pub mod restaking_client;
 pub mod test_builder;
+pub mod vault_client;
 
 pub type TestResult<T> = Result<T, TestError>;
 

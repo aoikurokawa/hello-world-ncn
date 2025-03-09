@@ -112,7 +112,12 @@
       "accounts": [
         {
           "name": "configInfo",
-          "isMut": true,
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "restakingConfigInfo",
+          "isMut": false,
           "isSigner": false
         },
         {
@@ -122,6 +127,26 @@
         },
         {
           "name": "operatorInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vaultInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vaultNcnTicketInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "ncnVaultTicketInfo",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
+          "name": "vaultOperatorDelegationInfo",
           "isMut": false,
           "isSigner": false
         },

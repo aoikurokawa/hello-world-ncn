@@ -80,8 +80,13 @@ pub fn request_message(
 pub fn submit_message(
     program_id: &Pubkey,
     config_info: &Pubkey,
+    restaking_config_info: &Pubkey,
     ncn_info: &Pubkey,
     operator_info: &Pubkey,
+    vault_info: &Pubkey,
+    vault_ncn_ticket_info: &Pubkey,
+    ncn_vault_ticket_info: &Pubkey,
+    vault_operator_delegation_info: &Pubkey,
     message_info: &Pubkey,
     ballot_box_info: &Pubkey,
     operator_voter_info: &Pubkey,
@@ -89,8 +94,13 @@ pub fn submit_message(
 ) -> Instruction {
     let accounts = vec![
         AccountMeta::new_readonly(*config_info, false),
+        AccountMeta::new_readonly(*restaking_config_info, false),
         AccountMeta::new_readonly(*ncn_info, false),
         AccountMeta::new_readonly(*operator_info, false),
+        AccountMeta::new_readonly(*vault_info, false),
+        AccountMeta::new_readonly(*vault_ncn_ticket_info, false),
+        AccountMeta::new_readonly(*ncn_vault_ticket_info, false),
+        AccountMeta::new_readonly(*vault_operator_delegation_info, false),
         AccountMeta::new_readonly(*message_info, false),
         AccountMeta::new(*ballot_box_info, false),
         AccountMeta::new_readonly(*operator_voter_info, true),
