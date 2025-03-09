@@ -2,8 +2,8 @@ use hello_world_ncn_core::{ballot_box::BallotBox, config::Config as NcnConfig, m
 use jito_bytemuck::AccountDeserialize;
 use jito_jsm_core::loader::load_signer;
 use jito_restaking_core::{
-    config::Config as RestakingConfig, ncn::Ncn, ncn_vault_ticket::NcnVaultTicket,
-    operator::Operator,
+    config::Config as RestakingConfig, ncn::Ncn, ncn_operator_state::NcnOperatorState,
+    ncn_vault_ticket::NcnVaultTicket, operator::Operator,
 };
 use jito_vault_core::{
     vault::Vault, vault_ncn_ticket::VaultNcnTicket,
@@ -19,7 +19,7 @@ pub fn process_submit_message(
     accounts: &[AccountInfo],
     message: String,
 ) -> ProgramResult {
-    let [config_info, restaking_config_info, ncn_info, operator_info, vault_info, vault_ncn_ticket_info, ncn_vault_ticket_info, vault_operator_delegation_info, message_info, ballot_box_info, operator_voter_info] =
+    let [config_info, restaking_config_info, ncn_info, operator_info, vault_info, vault_ncn_ticket_info, ncn_vault_ticket_info, ncn_operator_state_info, vault_operator_delegation_info, message_info, ballot_box_info, operator_voter_info] =
         accounts
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
@@ -82,6 +82,27 @@ pub fn process_submit_message(
         .is_active(current_slot, restaking_config.epoch_length())
     {
         msg!("NcnVaultTicket is not active");
+        return Err(ProgramError::InvalidAccountData);
+    }
+
+    NcnOperatorState::load(
+        &jito_restaking_program::id(),
+        ncn_operator_state_info,
+        ncn_info,
+        operator_info,
+        false,
+    )?;
+    let ncn_operator_state_data = ncn_operator_state_info.try_borrow_data()?;
+    let ncn_operator_state = NcnOperatorState::try_from_slice_unchecked(&ncn_operator_state_data)?;
+
+    if !ncn_operator_state
+        .ncn_opt_in_state
+        .is_active(current_slot, restaking_config.epoch_length())
+        || !ncn_operator_state
+            .operator_opt_in_state
+            .is_active(current_slot, restaking_config.epoch_length())
+    {
+        msg!("NcnOperatorState is not active");
         return Err(ProgramError::InvalidAccountData);
     }
 

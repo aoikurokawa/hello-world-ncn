@@ -1,6 +1,6 @@
 use hello_world_ncn_core::{ballot_box::BallotBox, config::Config as NcnConfig, message::Message};
 use jito_bytemuck::AccountDeserialize;
-use jito_restaking_core::ncn_vault_ticket::NcnVaultTicket;
+use jito_restaking_core::{ncn_operator_state::NcnOperatorState, ncn_vault_ticket::NcnVaultTicket};
 use jito_vault_core::{
     vault_ncn_ticket::VaultNcnTicket, vault_operator_delegation::VaultOperatorDelegation,
 };
@@ -253,6 +253,12 @@ impl HelloWorldNcnClient {
             &vault_root.vault_pubkey,
         )
         .0;
+        let ncn_operator_state_info = NcnOperatorState::find_program_address(
+            &jito_restaking_program::id(),
+            ncn,
+            &operator_root.operator_pubkey,
+        )
+        .0;
         let vault_operator_delegation_info = VaultOperatorDelegation::find_program_address(
             &jito_vault_program::id(),
             &vault_root.vault_pubkey,
@@ -281,6 +287,7 @@ impl HelloWorldNcnClient {
             &vault_root.vault_pubkey,
             &vault_ncn_ticket_info,
             &ncn_vault_ticket_info,
+            &ncn_operator_state_info,
             &vault_operator_delegation_info,
             &message,
             &ballot_box,
