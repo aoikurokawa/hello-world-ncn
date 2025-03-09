@@ -10,6 +10,9 @@ print_executing() {
 print_executing "cargo sort --workspace"
 cargo sort --workspace
 
+print_executing "cargo fmt --all --check"
+cargo fmt --all --check
+
 print_executing "cargo clippy --all-features"
 cargo clippy --all-features -- -D warnings -D clippy::all -D clippy::nursery -D clippy::integer_division -D clippy::arithmetic_side_effects -D clippy::style -D clippy::perf
 
