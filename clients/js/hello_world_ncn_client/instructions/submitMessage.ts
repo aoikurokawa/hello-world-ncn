@@ -45,8 +45,15 @@ export function getSubmitMessageDiscriminatorBytes() {
 export type SubmitMessageInstruction<
   TProgram extends string = typeof HELLO_WORLD_NCN_PROGRAM_ADDRESS,
   TAccountConfigInfo extends string | IAccountMeta<string> = string,
+  TAccountRestakingConfigInfo extends string | IAccountMeta<string> = string,
   TAccountNcnInfo extends string | IAccountMeta<string> = string,
   TAccountOperatorInfo extends string | IAccountMeta<string> = string,
+  TAccountVaultInfo extends string | IAccountMeta<string> = string,
+  TAccountVaultNcnTicketInfo extends string | IAccountMeta<string> = string,
+  TAccountNcnVaultTicketInfo extends string | IAccountMeta<string> = string,
+  TAccountVaultOperatorDelegationInfo extends
+    | string
+    | IAccountMeta<string> = string,
   TAccountMessageInfo extends string | IAccountMeta<string> = string,
   TAccountBallotBoxInfo extends string | IAccountMeta<string> = string,
   TAccountOperatorVoterInfo extends string | IAccountMeta<string> = string,
@@ -56,14 +63,29 @@ export type SubmitMessageInstruction<
   IInstructionWithAccounts<
     [
       TAccountConfigInfo extends string
-        ? WritableAccount<TAccountConfigInfo>
+        ? ReadonlyAccount<TAccountConfigInfo>
         : TAccountConfigInfo,
+      TAccountRestakingConfigInfo extends string
+        ? ReadonlyAccount<TAccountRestakingConfigInfo>
+        : TAccountRestakingConfigInfo,
       TAccountNcnInfo extends string
         ? ReadonlyAccount<TAccountNcnInfo>
         : TAccountNcnInfo,
       TAccountOperatorInfo extends string
         ? ReadonlyAccount<TAccountOperatorInfo>
         : TAccountOperatorInfo,
+      TAccountVaultInfo extends string
+        ? ReadonlyAccount<TAccountVaultInfo>
+        : TAccountVaultInfo,
+      TAccountVaultNcnTicketInfo extends string
+        ? ReadonlyAccount<TAccountVaultNcnTicketInfo>
+        : TAccountVaultNcnTicketInfo,
+      TAccountNcnVaultTicketInfo extends string
+        ? ReadonlyAccount<TAccountNcnVaultTicketInfo>
+        : TAccountNcnVaultTicketInfo,
+      TAccountVaultOperatorDelegationInfo extends string
+        ? ReadonlyAccount<TAccountVaultOperatorDelegationInfo>
+        : TAccountVaultOperatorDelegationInfo,
       TAccountMessageInfo extends string
         ? ReadonlyAccount<TAccountMessageInfo>
         : TAccountMessageInfo,
@@ -114,15 +136,25 @@ export function getSubmitMessageInstructionDataCodec(): Codec<
 
 export type SubmitMessageInput<
   TAccountConfigInfo extends string = string,
+  TAccountRestakingConfigInfo extends string = string,
   TAccountNcnInfo extends string = string,
   TAccountOperatorInfo extends string = string,
+  TAccountVaultInfo extends string = string,
+  TAccountVaultNcnTicketInfo extends string = string,
+  TAccountNcnVaultTicketInfo extends string = string,
+  TAccountVaultOperatorDelegationInfo extends string = string,
   TAccountMessageInfo extends string = string,
   TAccountBallotBoxInfo extends string = string,
   TAccountOperatorVoterInfo extends string = string,
 > = {
   configInfo: Address<TAccountConfigInfo>;
+  restakingConfigInfo: Address<TAccountRestakingConfigInfo>;
   ncnInfo: Address<TAccountNcnInfo>;
   operatorInfo: Address<TAccountOperatorInfo>;
+  vaultInfo: Address<TAccountVaultInfo>;
+  vaultNcnTicketInfo: Address<TAccountVaultNcnTicketInfo>;
+  ncnVaultTicketInfo: Address<TAccountNcnVaultTicketInfo>;
+  vaultOperatorDelegationInfo: Address<TAccountVaultOperatorDelegationInfo>;
   messageInfo: Address<TAccountMessageInfo>;
   ballotBoxInfo: Address<TAccountBallotBoxInfo>;
   operatorVoterInfo: TransactionSigner<TAccountOperatorVoterInfo>;
@@ -131,8 +163,13 @@ export type SubmitMessageInput<
 
 export function getSubmitMessageInstruction<
   TAccountConfigInfo extends string,
+  TAccountRestakingConfigInfo extends string,
   TAccountNcnInfo extends string,
   TAccountOperatorInfo extends string,
+  TAccountVaultInfo extends string,
+  TAccountVaultNcnTicketInfo extends string,
+  TAccountNcnVaultTicketInfo extends string,
+  TAccountVaultOperatorDelegationInfo extends string,
   TAccountMessageInfo extends string,
   TAccountBallotBoxInfo extends string,
   TAccountOperatorVoterInfo extends string,
@@ -140,8 +177,13 @@ export function getSubmitMessageInstruction<
 >(
   input: SubmitMessageInput<
     TAccountConfigInfo,
+    TAccountRestakingConfigInfo,
     TAccountNcnInfo,
     TAccountOperatorInfo,
+    TAccountVaultInfo,
+    TAccountVaultNcnTicketInfo,
+    TAccountNcnVaultTicketInfo,
+    TAccountVaultOperatorDelegationInfo,
     TAccountMessageInfo,
     TAccountBallotBoxInfo,
     TAccountOperatorVoterInfo
@@ -150,8 +192,13 @@ export function getSubmitMessageInstruction<
 ): SubmitMessageInstruction<
   TProgramAddress,
   TAccountConfigInfo,
+  TAccountRestakingConfigInfo,
   TAccountNcnInfo,
   TAccountOperatorInfo,
+  TAccountVaultInfo,
+  TAccountVaultNcnTicketInfo,
+  TAccountNcnVaultTicketInfo,
+  TAccountVaultOperatorDelegationInfo,
   TAccountMessageInfo,
   TAccountBallotBoxInfo,
   TAccountOperatorVoterInfo
@@ -162,9 +209,26 @@ export function getSubmitMessageInstruction<
 
   // Original accounts.
   const originalAccounts = {
-    configInfo: { value: input.configInfo ?? null, isWritable: true },
+    configInfo: { value: input.configInfo ?? null, isWritable: false },
+    restakingConfigInfo: {
+      value: input.restakingConfigInfo ?? null,
+      isWritable: false,
+    },
     ncnInfo: { value: input.ncnInfo ?? null, isWritable: false },
     operatorInfo: { value: input.operatorInfo ?? null, isWritable: false },
+    vaultInfo: { value: input.vaultInfo ?? null, isWritable: false },
+    vaultNcnTicketInfo: {
+      value: input.vaultNcnTicketInfo ?? null,
+      isWritable: false,
+    },
+    ncnVaultTicketInfo: {
+      value: input.ncnVaultTicketInfo ?? null,
+      isWritable: false,
+    },
+    vaultOperatorDelegationInfo: {
+      value: input.vaultOperatorDelegationInfo ?? null,
+      isWritable: false,
+    },
     messageInfo: { value: input.messageInfo ?? null, isWritable: false },
     ballotBoxInfo: { value: input.ballotBoxInfo ?? null, isWritable: true },
     operatorVoterInfo: {
@@ -184,8 +248,13 @@ export function getSubmitMessageInstruction<
   const instruction = {
     accounts: [
       getAccountMeta(accounts.configInfo),
+      getAccountMeta(accounts.restakingConfigInfo),
       getAccountMeta(accounts.ncnInfo),
       getAccountMeta(accounts.operatorInfo),
+      getAccountMeta(accounts.vaultInfo),
+      getAccountMeta(accounts.vaultNcnTicketInfo),
+      getAccountMeta(accounts.ncnVaultTicketInfo),
+      getAccountMeta(accounts.vaultOperatorDelegationInfo),
       getAccountMeta(accounts.messageInfo),
       getAccountMeta(accounts.ballotBoxInfo),
       getAccountMeta(accounts.operatorVoterInfo),
@@ -197,8 +266,13 @@ export function getSubmitMessageInstruction<
   } as SubmitMessageInstruction<
     TProgramAddress,
     TAccountConfigInfo,
+    TAccountRestakingConfigInfo,
     TAccountNcnInfo,
     TAccountOperatorInfo,
+    TAccountVaultInfo,
+    TAccountVaultNcnTicketInfo,
+    TAccountNcnVaultTicketInfo,
+    TAccountVaultOperatorDelegationInfo,
     TAccountMessageInfo,
     TAccountBallotBoxInfo,
     TAccountOperatorVoterInfo
@@ -214,11 +288,16 @@ export type ParsedSubmitMessageInstruction<
   programAddress: Address<TProgram>;
   accounts: {
     configInfo: TAccountMetas[0];
-    ncnInfo: TAccountMetas[1];
-    operatorInfo: TAccountMetas[2];
-    messageInfo: TAccountMetas[3];
-    ballotBoxInfo: TAccountMetas[4];
-    operatorVoterInfo: TAccountMetas[5];
+    restakingConfigInfo: TAccountMetas[1];
+    ncnInfo: TAccountMetas[2];
+    operatorInfo: TAccountMetas[3];
+    vaultInfo: TAccountMetas[4];
+    vaultNcnTicketInfo: TAccountMetas[5];
+    ncnVaultTicketInfo: TAccountMetas[6];
+    vaultOperatorDelegationInfo: TAccountMetas[7];
+    messageInfo: TAccountMetas[8];
+    ballotBoxInfo: TAccountMetas[9];
+    operatorVoterInfo: TAccountMetas[10];
   };
   data: SubmitMessageInstructionData;
 };
@@ -231,7 +310,7 @@ export function parseSubmitMessageInstruction<
     IInstructionWithAccounts<TAccountMetas> &
     IInstructionWithData<Uint8Array>
 ): ParsedSubmitMessageInstruction<TProgram, TAccountMetas> {
-  if (instruction.accounts.length < 6) {
+  if (instruction.accounts.length < 11) {
     // TODO: Coded error.
     throw new Error('Not enough accounts');
   }
@@ -245,8 +324,13 @@ export function parseSubmitMessageInstruction<
     programAddress: instruction.programAddress,
     accounts: {
       configInfo: getNextAccount(),
+      restakingConfigInfo: getNextAccount(),
       ncnInfo: getNextAccount(),
       operatorInfo: getNextAccount(),
+      vaultInfo: getNextAccount(),
+      vaultNcnTicketInfo: getNextAccount(),
+      ncnVaultTicketInfo: getNextAccount(),
+      vaultOperatorDelegationInfo: getNextAccount(),
       messageInfo: getNextAccount(),
       ballotBoxInfo: getNextAccount(),
       operatorVoterInfo: getNextAccount(),

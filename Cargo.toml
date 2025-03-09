@@ -36,7 +36,9 @@ jito-restaking-client = { git = "https://github.com/jito-foundation/restaking.gi
 jito-restaking-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 jito-restaking-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 jito-restaking-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
+jito-vault-core = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 jito-vault-program = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
+jito-vault-sdk = { git = "https://github.com/jito-foundation/restaking.git", rev = "eaf88e7e5ca2845fe3108c4fc4a06a25f9a8514d" }
 log = "0.4.22"
 hello-world-ncn-client = { path = "clients/rust/hello_world_ncn_client", version = "0.1.0" }
 hello-world-ncn-core = { path = "core", version = "0.1.0" }
@@ -59,6 +61,8 @@ solana-program-test = "~1.18"
 solana-sdk = "~1.18"
 solana-rpc-client = "~1.18"
 solana-rpc-client-api = "~1.18"
+spl-associated-token-account = { version = "2.2.0", features = ["no-entrypoint"] }
+spl-token = { version = "4.0.0", features = ["no-entrypoint"] }
 thiserror = "1.0.57"
 tokio = { version = "1.42.0", features = ["full"] }
 tokio-tungstenite = "0.24.0"
