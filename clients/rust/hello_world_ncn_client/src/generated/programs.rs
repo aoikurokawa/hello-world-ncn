@@ -5,6 +5,9 @@
 //! <https://github.com/codama-idl/codama>
 //!
 
-pub(crate) mod hello_world_ncn;
+use solana_program::{pubkey, pubkey::Pubkey};
 
-pub use self::hello_world_ncn::HelloWorldNcnError;
+
+  /// `hello_world_ncn` program ID.
+  pub const HELLO_WORLD_NCN_ID: Pubkey = pubkey!("ncncd27gXkYMV56EfwntDmYhH5Wzo896yTnrBbEq9xW");
+

@@ -5,6 +5,10 @@
 //! <https://github.com/codama-idl/codama>
 //!
 
-pub(crate) mod hello_world_ncn;
-
-pub use self::hello_world_ncn::HelloWorldNcnError;
+      pub mod accounts;
+        pub mod errors;
+        pub mod instructions;
+        pub mod programs;
+        pub mod types;
+  
+  pub(crate) use programs::*;

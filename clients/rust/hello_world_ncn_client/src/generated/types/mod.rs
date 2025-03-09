@@ -5,6 +5,7 @@
 //! <https://github.com/codama-idl/codama>
 //!
 
-pub(crate) mod hello_world_ncn;
+  pub(crate) mod r#operator_vote;
 
-pub use self::hello_world_ncn::HelloWorldNcnError;
+  pub use self::r#operator_vote::*;
+

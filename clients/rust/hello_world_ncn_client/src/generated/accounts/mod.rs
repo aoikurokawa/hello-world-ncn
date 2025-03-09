@@ -5,6 +5,11 @@
 //! <https://github.com/codama-idl/codama>
 //!
 
-pub(crate) mod hello_world_ncn;
+  pub(crate) mod r#ballot_box;
+  pub(crate) mod r#config;
+  pub(crate) mod r#message;
 
-pub use self::hello_world_ncn::HelloWorldNcnError;
+  pub use self::r#ballot_box::*;
+  pub use self::r#config::*;
+  pub use self::r#message::*;
+
