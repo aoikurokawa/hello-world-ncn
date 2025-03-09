@@ -5,146 +5,209 @@ __metadata:
   version: 8
   cacheKey: 10c0
 
-"@codama/errors@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/errors@npm:1.1.0"
+"@exo-tech-xyz/errors@npm:0.21.5":
+  version: 0.21.5
+  resolution: "@exo-tech-xyz/errors@npm:0.21.5"
   dependencies:
-    "@codama/node-types": "npm:1.1.0"
+    "@exo-tech-xyz/node-types": "npm:0.21.5"
     chalk: "npm:^5.3.0"
     commander: "npm:^12.1.0"
   bin:
     errors: bin/cli.mjs
-  checksum: 10c0/9e512d97b857d339240abb4b5f1dd8210e1c1e93d89383de9e3ccc90875d0b86f8ce1485da7215d05042b1cb563e07f38cc5eed6bbc388715c018876ce0b4233
+  checksum: 10c0/023634df061b8365af9bbf2147103904c7d2e241bb6e76c19ad4344ba92736d6806ff4db1118107e169dbb4eba67f6c691b6adc72d38fd278347281aebf1d225
   languageName: node
   linkType: hard
 
-"@codama/node-types@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/node-types@npm:1.1.0"
-  checksum: 10c0/f8ce65004e9ffd563619465ac6c05e72ddec4418ccbbb50baf5aab1256883118b2f9e41176d391955f5fa1577478db92535bb00b02c4618e09bafebb220ea1a1
+"@exo-tech-xyz/node-types@npm:0.21.5":
+  version: 0.21.5
+  resolution: "@exo-tech-xyz/node-types@npm:0.21.5"
+  checksum: 10c0/36e82af71f4d651295acb98fcdbe07410706b5284e54a5831beb58502460be1249425571f2f169e5c3e70358a925a70e98d55c7e6dc8bb7c0c4656d4749416ad
   languageName: node
   linkType: hard
 
-"@codama/nodes-from-anchor@npm:1.0.1, @codama/nodes-from-anchor@npm:^1.0.1":
-  version: 1.0.1
-  resolution: "@codama/nodes-from-anchor@npm:1.0.1"
+"@exo-tech-xyz/nodes-from-anchor@npm:0.21.3":
+  version: 0.21.3
+  resolution: "@exo-tech-xyz/nodes-from-anchor@npm:0.21.3"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/visitors": "npm:1.1.0"
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/visitors": "npm:0.21.5"
     "@noble/hashes": "npm:^1.5.0"
-  checksum: 10c0/9401c89f9fba96c9fec71b569fb13b751d5b09487c35ec1c04aed0aa87fc25b39f9eaaf650f94eae5e2b1c49d62cc8eecac2c6f29fa530ea270e5aca084f6aca
+  checksum: 10c0/e580e7f3ff598542ba93879aa5130bfb4c539abd0d3e74e387f3196a573c15cd30337c3431f65ee6badd1172a4949de3d7d5150fd7ac82497671e100b4ab6643
   languageName: node
   linkType: hard
 
-"@codama/nodes@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/nodes@npm:1.1.0"
+"@exo-tech-xyz/nodes@npm:0.21.5":
+  version: 0.21.5
+  resolution: "@exo-tech-xyz/nodes@npm:0.21.5"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/node-types": "npm:1.1.0"
-  checksum: 10c0/233c5cce0004b1c517f584d61a84f469ef779248ab45bf6a31a00cc50dd9e41da0a907251cf18bfff47938bbebfaca33cac67463e28df40f40296e8ad520aea5
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/node-types": "npm:0.21.5"
+  checksum: 10c0/91c70d94330b69b06d96edbac07807b15233c13b17f831302aaaa05d8b74a734c8681e260631c2ff9381d06b710aab1d3b5fa1f4797960b42cff0e3405133333
   languageName: node
   linkType: hard
 
-"@codama/renderers-core@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@codama/renderers-core@npm:1.0.1"
+"@exo-tech-xyz/renderers-core@npm:0.21.3":
+  version: 0.21.3
+  resolution: "@exo-tech-xyz/renderers-core@npm:0.21.3"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/visitors-core": "npm:1.1.0"
-  checksum: 10c0/32b5046662f2a7009404eefeed7f31ba11b9a9cfb1e831ac3cc589cde7ace12c5cade8b445098ec292b052a6d504fbc9de9aa35e03be83ff746efac943309494
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/visitors-core": "npm:0.21.5"
+  checksum: 10c0/237353bba914e953ac3eb3d3e80a7af98d0992d50c05faa088456bdd9e2fe7bfe5bbca2544ccd5e2e28b3030db5c0ee14b7abbaf915ba1fc6c46081d2420d2b6
   languageName: node
   linkType: hard
 
-"@codama/renderers-js-umi@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/renderers-js-umi@npm:1.1.0"
+"@exo-tech-xyz/renderers-js-umi@npm:0.21.7":
+  version: 0.21.7
+  resolution: "@exo-tech-xyz/renderers-js-umi@npm:0.21.7"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/renderers-core": "npm:1.0.1"
-    "@codama/validators": "npm:1.1.0"
-    "@codama/visitors-core": "npm:1.1.0"
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/renderers-core": "npm:0.21.3"
+    "@exo-tech-xyz/validators": "npm:0.21.5"
+    "@exo-tech-xyz/visitors-core": "npm:0.21.5"
     "@solana/codecs-strings": "npm:rc"
     nunjucks: "npm:^3.2.4"
     prettier: "npm:^3.3.3"
-  checksum: 10c0/b0978f9c6516a39e4a00a1b325b26d929855672aa3046ae38aa0d3bef6d709d5fcd1ed7bdcb3f37e01480dfebba36e03861b50405e2d4830408ad20d936d0c61
+  checksum: 10c0/79734d535b4c117862b22b7984fe8b43fb2a0182fabba29c3b7da7cbb3cbf175c516d423e9b0820ce9207f353950e0112d82e38661e0c112c1d4445a3edefaf7
   languageName: node
   linkType: hard
 
-"@codama/renderers-js@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/renderers-js@npm:1.1.0"
+"@exo-tech-xyz/renderers-js@npm:0.21.9":
+  version: 0.21.9
+  resolution: "@exo-tech-xyz/renderers-js@npm:0.21.9"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/nodes-from-anchor": "npm:1.0.1"
-    "@codama/renderers-core": "npm:1.0.1"
-    "@codama/visitors-core": "npm:1.1.0"
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/nodes-from-anchor": "npm:0.21.3"
+    "@exo-tech-xyz/renderers-core": "npm:0.21.3"
+    "@exo-tech-xyz/visitors-core": "npm:0.21.5"
     "@solana/codecs-strings": "npm:rc"
     nunjucks: "npm:^3.2.4"
     prettier: "npm:^3.3.3"
-  checksum: 10c0/6ad262f669f175e80f23b23254becdff889d70b06f95402389b53b2607f8967e0d2edd393525e74417898208da0ccb51cdbf108bc8be2b139b9c3b83c47d9c44
+  checksum: 10c0/606b6c1e99ec9859e5c3f720ab2a1a54f334c9360053d3f8ea4759f3e4631e0f7cea202a1a78dced182963391becc51e45c6173f36afe184aebd91c1e6671ad8
   languageName: node
   linkType: hard
 
-"@codama/renderers-rust@npm:1.0.4":
-  version: 1.0.4
-  resolution: "@codama/renderers-rust@npm:1.0.4"
+"@exo-tech-xyz/renderers-rust@npm:0.21.8":
+  version: 0.21.8
+  resolution: "@exo-tech-xyz/renderers-rust@npm:0.21.8"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/renderers-core": "npm:1.0.1"
-    "@codama/visitors-core": "npm:1.1.0"
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/renderers-core": "npm:0.21.3"
+    "@exo-tech-xyz/visitors-core": "npm:0.21.5"
     "@solana/codecs-strings": "npm:rc"
     nunjucks: "npm:^3.2.4"
-  checksum: 10c0/55df1d7c1a48d0b4f4ecdc93c7bf6caa15d8ba63c9605d8243a95a2d2e3f065523b893397551148733f780ff2fcacdb3832f22c92624e563ff0892912cc4feb7
+  checksum: 10c0/c547deb1afb6969abb7741814be803ab3e5a4d56707100cff7b694a947911f4a2ae6118e1a3bd7a8588761ff7be0d94a364dc4f6aa8664322909785e6120c0b8
   languageName: node
   linkType: hard
 
-"@codama/renderers@npm:^1.0.4":
-  version: 1.0.4
-  resolution: "@codama/renderers@npm:1.0.4"
+"@exo-tech-xyz/renderers@npm:0.21.4":
+  version: 0.21.4
+  resolution: "@exo-tech-xyz/renderers@npm:0.21.4"
   dependencies:
-    "@codama/renderers-js": "npm:1.1.0"
-    "@codama/renderers-js-umi": "npm:1.1.0"
-    "@codama/renderers-rust": "npm:1.0.4"
-  checksum: 10c0/a36edb0d1dc31ed3425a53f0c09865c1816bd855312f67558992d159f03971e9450cf70dc988a7782e943f8ea891e83c879c17e416afb0083f29adc393ce344a
+    "@exo-tech-xyz/renderers-js": "npm:0.21.9"
+    "@exo-tech-xyz/renderers-js-umi": "npm:0.21.7"
+    "@exo-tech-xyz/renderers-rust": "npm:0.21.8"
+  checksum: 10c0/416f32b54788fd56e1646b40c768f2407fa8d517e5de7fa1208e9665f24e444fe3aed43ec192b7c9eb13f2cc531a7c9df0db7d5de31678954ee2e505b0f00f48
   languageName: node
   linkType: hard
 
-"@codama/validators@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/validators@npm:1.1.0"
+"@exo-tech-xyz/validators@npm:0.21.5":
+  version: 0.21.5
+  resolution: "@exo-tech-xyz/validators@npm:0.21.5"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/visitors-core": "npm:1.1.0"
-  checksum: 10c0/400c4eb0ae445fbd14d9b0d0907e516dfdf41916a386284f5cf03db7442ccb3a785e9b99a51d5b9776f01800690ff86e2b8c324279161cfd9786c7c910c65084
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/visitors-core": "npm:0.21.5"
+  checksum: 10c0/cc348c356e7b7d0355df44754e06e71917053ec8e1eb54d13a0fe98a8283390b11e496afd6156cc704982041ee83d5f2343afd53e6423ab9c6f5d3f7c774dc78
   languageName: node
   linkType: hard
 
-"@codama/visitors-core@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/visitors-core@npm:1.1.0"
+"@exo-tech-xyz/visitors-core@npm:0.21.5":
+  version: 0.21.5
+  resolution: "@exo-tech-xyz/visitors-core@npm:0.21.5"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
     json-stable-stringify: "npm:^1.1.1"
-  checksum: 10c0/e3c7e8a01f59f3a5fbfba1ec4094d5c71553bef9a6c57c93f4ef6ebcb60066ea67a0711b9b704b22c6f24e79297c797a07273b64ff1789939a73a5dcdb1e4fc2
+  checksum: 10c0/250fd468f905095886ed70d3a35c5dcdebe46bdd219d48658dc8084c29aadd472626fe16704020f7af9142fe6e1309e829dfe23c5b3d2b3e5883fd8051982e91
   languageName: node
   linkType: hard
 
-"@codama/visitors@npm:1.1.0":
-  version: 1.1.0
-  resolution: "@codama/visitors@npm:1.1.0"
+"@exo-tech-xyz/visitors@npm:0.21.5":
+  version: 0.21.5
+  resolution: "@exo-tech-xyz/visitors@npm:0.21.5"
   dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/visitors-core": "npm:1.1.0"
-  checksum: 10c0/6740bfa0e313008c451b835954b3c5129980b7acfcb171f90ea98488a6e55595f29a42551de02fb5b567709280445b7acf4c57a642084f326e03614f108207a8
+    "@exo-tech-xyz/errors": "npm:0.21.5"
+    "@exo-tech-xyz/nodes": "npm:0.21.5"
+    "@exo-tech-xyz/visitors-core": "npm:0.21.5"
+  checksum: 10c0/d40cfc308e3d2b6c8a1ab44e7af6edd37f689ea64446949e68e14157062419873a850fd702b75701b8fc5f001f45804b115bb8b8e44cd40f5418e6be0ea50dfe
+  languageName: node
+  linkType: hard
+
+"@kinobi-so/errors@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@kinobi-so/errors@npm:0.21.1"
+  dependencies:
+    "@kinobi-so/node-types": "npm:0.21.1"
+    chalk: "npm:^5.3.0"
+    commander: "npm:^12.1.0"
+  bin:
+    errors: bin/cli.mjs
+  checksum: 10c0/881949e214bec4bba2fb9f8e08c3f06bdd722c7b6d2ce9a4510489b2a281cbf7f9f55bf9ff7d03d2ea1a6d056a25da29d62505454e9539efec16754ad2e195a6
+  languageName: node
+  linkType: hard
+
+"@kinobi-so/node-types@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@kinobi-so/node-types@npm:0.21.1"
+  checksum: 10c0/8cb35c9116182e722514367a460ab1a55a1f9553eb356ec94055ec006f325ff7e9723fcf18525376df1db6394cc7f8a643261d04274165d36c431bff3bf07d0e
+  languageName: node
+  linkType: hard
+
+"@kinobi-so/nodes@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@kinobi-so/nodes@npm:0.21.1"
+  dependencies:
+    "@kinobi-so/errors": "npm:0.21.1"
+    "@kinobi-so/node-types": "npm:0.21.1"
+  checksum: 10c0/68f51cabf19b3cfc8433057cbaa60fed0f9a0f433d4f7b37b2246caf6ad9b3592b8b396a68b307231e65c772ef13f716f4048464ac7dd4b6b52d1b1e4cea7294
+  languageName: node
+  linkType: hard
+
+"@kinobi-so/validators@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@kinobi-so/validators@npm:0.21.1"
+  dependencies:
+    "@kinobi-so/errors": "npm:0.21.1"
+    "@kinobi-so/nodes": "npm:0.21.1"
+    "@kinobi-so/visitors-core": "npm:0.21.1"
+  checksum: 10c0/edd8867b77a827996c8f7399bb438997d21393a95ea0381e868634905fb932e3a361cc39e9f1e1305293e4b7fe420b5243054dcde51cc28f1edc18a2b9f29277
+  languageName: node
+  linkType: hard
+
+"@kinobi-so/visitors-core@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@kinobi-so/visitors-core@npm:0.21.1"
+  dependencies:
+    "@kinobi-so/errors": "npm:0.21.1"
+    "@kinobi-so/nodes": "npm:0.21.1"
+    json-stable-stringify: "npm:^1.1.1"
+  checksum: 10c0/8a89fe73dfc125ac6199bd27f9ba51083d63e50c8e8ec8c6d53bffd81e7a518f8e19e09501c379681a72452f6db70ec2813ea54f548c9f4d66535a46b3a0f8c7
+  languageName: node
+  linkType: hard
+
+"@kinobi-so/visitors@npm:0.21.1":
+  version: 0.21.1
+  resolution: "@kinobi-so/visitors@npm:0.21.1"
+  dependencies:
+    "@kinobi-so/errors": "npm:0.21.1"
+    "@kinobi-so/nodes": "npm:0.21.1"
+    "@kinobi-so/visitors-core": "npm:0.21.1"
+  checksum: 10c0/cb62e870b1892aa30bfa5ecf976dba3d26ccc1598f58834cc1927dca2f312b475e28c70a5008eb65d0783b271c536927e468ab44b4309921911642b0c91c946b
   languageName: node
   linkType: hard
 
@@ -256,18 +319,6 @@ __metadata:
   version: 5.3.0
   resolution: "chalk@npm:5.3.0"
   checksum: 10c0/8297d436b2c0f95801103ff2ef67268d362021b8210daf8ddbe349695333eb3610a71122172ff3b0272f1ef2cf7cc2c41fdaa4715f52e49ffe04c56340feed09
-  languageName: node
-  linkType: hard
-
-"codama@npm:^1.1.0":
-  version: 1.1.0
-  resolution: "codama@npm:1.1.0"
-  dependencies:
-    "@codama/errors": "npm:1.1.0"
-    "@codama/nodes": "npm:1.1.0"
-    "@codama/validators": "npm:1.1.0"
-    "@codama/visitors": "npm:1.1.0"
-  checksum: 10c0/210a8e8e94183a53800e80eba59a71f8fdaa4889edd323d90ac9ce1b86b238456c89dd674b2f89435775558e1673d84fab5306cc409d3a8f85800db511d7e57e
   languageName: node
   linkType: hard
 
@@ -400,6 +451,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"hello-world-ncn@workspace:.":
+  version: 0.0.0-use.local
+  resolution: "hello-world-ncn@workspace:."
+  dependencies:
+    "@exo-tech-xyz/nodes-from-anchor": "npm:0.21.3"
+    "@exo-tech-xyz/renderers": "npm:0.21.4"
+    "@exo-tech-xyz/renderers-js-umi": "npm:0.21.7"
+    "@exo-tech-xyz/renderers-rust": "npm:0.21.8"
+    corepack: "npm:^0.29.3"
+    kinobi: "npm:0.21.1"
+    yarn: "npm:2.4.3"
+  languageName: unknown
+  linkType: soft
+
 "isarray@npm:^2.0.5":
   version: 2.0.5
   resolution: "isarray@npm:2.0.5"
@@ -427,24 +492,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kinobi@npm:0.21.1":
+  version: 0.21.1
+  resolution: "kinobi@npm:0.21.1"
+  dependencies:
+    "@kinobi-so/errors": "npm:0.21.1"
+    "@kinobi-so/nodes": "npm:0.21.1"
+    "@kinobi-so/validators": "npm:0.21.1"
+    "@kinobi-so/visitors": "npm:0.21.1"
+  checksum: 10c0/2f2541f20254b721713dd1dbf5a8249a0042a37e4ba74d4d205f54f7f0873ca8142a0c9714e6e9b70a8f0613d377d90ad68febcafd815f5e6f30e1b7fd2becea
+  languageName: node
+  linkType: hard
+
 "math-intrinsics@npm:^1.0.0":
   version: 1.0.0
   resolution: "math-intrinsics@npm:1.0.0"
   checksum: 10c0/470ee2f267b4b3698eb9faa7f0bcf88696d87e2eeab25bba867dc676c09ddbae9b6f2e8ac7a2c1f0c9c2c5299c2a89f4f1f6d0e70d682725e2e7fca7507eef9f
   languageName: node
   linkType: hard
-
-"ncn-portal-engine@workspace:.":
-  version: 0.0.0-use.local
-  resolution: "ncn-portal-engine@workspace:."
-  dependencies:
-    "@codama/nodes-from-anchor": "npm:^1.0.1"
-    "@codama/renderers": "npm:^1.0.4"
-    codama: "npm:^1.1.0"
-    corepack: "npm:^0.29.3"
-    yarn: "npm:2.4.3"
-  languageName: unknown
-  linkType: soft
 
 "nunjucks@npm:^3.2.4":
   version: 3.2.4
