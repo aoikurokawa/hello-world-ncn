@@ -72,4 +72,8 @@ impl OperatorVote {
     pub fn is_empty(&self) -> bool {
         self.vote_index() == u16::MAX
     }
+
+    pub fn message(&self) -> String {
+        String::from_utf8(self.message_data[..self.message_len as usize].to_vec()).unwrap()
+    }
 }

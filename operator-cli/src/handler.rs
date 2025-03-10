@@ -1,7 +1,10 @@
 use std::str::FromStr;
 
 use anyhow::Context;
-use hello_world_ncn_client::{accounts::Message, instructions::SubmitMessageBuilder};
+use hello_world_ncn_client::{
+    accounts::{BallotBox, Message},
+    instructions::SubmitMessageBuilder,
+};
 use jito_restaking_core::{
     ncn_operator_state::NcnOperatorState, ncn_vault_ticket::NcnVaultTicket,
     operator_vault_ticket::OperatorVaultTicket,
@@ -11,7 +14,10 @@ use jito_vault_core::{
 };
 use solana_rpc_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::{
-    commitment_config::CommitmentConfig, pubkey::Pubkey, signature::Keypair, signer::Signer,
+    commitment_config::CommitmentConfig,
+    pubkey::Pubkey,
+    signature::{Keypair, Signature},
+    signer::Signer,
     transaction::Transaction,
 };
 
@@ -84,10 +90,21 @@ impl<'a> Handler<'a> {
 
         let message_pubkey = self.get_message_pubkey(ncn, epoch);
 
-        let message_account = rpc_client.get_account(&message_pubkey).await.unwrap();
+        let message_account = rpc_client.get_account(&message_pubkey).await?;
         let message = Message::from_bytes(&message_account.data)?;
 
         Ok(message)
+    }
+
+    pub async fn get_ballot_box(&self, ncn: Pubkey, epoch: u64) -> anyhow::Result<BallotBox> {
+        let rpc_client = self.get_rpc_client();
+
+        let ballot_box_pubkey = self.get_ballot_box_pubkey(&ncn, epoch);
+
+        let ballot_box_account = rpc_client.get_account(&ballot_box_pubkey).await?;
+        let ballot_box = BallotBox::from_bytes(&ballot_box_account.data)?;
+
+        Ok(ballot_box)
     }
 
     pub async fn submit_message(
@@ -97,8 +114,18 @@ impl<'a> Handler<'a> {
         vault: &Pubkey,
         epoch: u64,
         message_data: String,
-    ) -> anyhow::Result<()> {
+    ) -> anyhow::Result<Option<Signature>> {
         let rpc_client = self.get_rpc_client();
+
+        let ballot_box = self.get_ballot_box(*ncn, epoch).await?;
+        for vote in ballot_box.operator_votes.iter() {
+            if vote.operator.eq(operator) {
+                let message =
+                    String::from_utf8(vote.message_data[..vote.message_len as usize].to_vec())?;
+                log::info!("You have submitted message already!: {}", message);
+                return Ok(None);
+            }
+        }
 
         let config_pubkey = self.get_config_pubkey(ncn);
         let message_pubkey = self.get_message_pubkey(*ncn, epoch);
@@ -156,11 +183,12 @@ impl<'a> Handler<'a> {
             &[self.payer],
             blockhash,
         );
-        rpc_client
+
+        let signature = rpc_client
             .send_and_confirm_transaction(&tx)
             .await
             .context("Failed to send and confirm transaction")?;
 
-        Ok(())
+        Ok(Some(signature))
     }
 }

@@ -202,10 +202,14 @@ async fn run_operator(
                     .submit_message(&ncn_pubkey, &operator_pubkey, &vault_pubkey, epoch, message)
                     .await
                 {
-                    Ok(_) => info!(
-                        "Operator '{}': Successfully submitted message",
-                        operator_config.name
-                    ),
+                    Ok(signature) => {
+                        if let Some(sig) = signature {
+                            info!(
+                                "Operator '{}': Successfully submitted message, Signature {sig}",
+                                operator_config.name
+                            );
+                        }
+                    }
                     Err(e) => error!(
                         "Operator '{}': Failed to submit message: {}",
                         operator_config.name, e
