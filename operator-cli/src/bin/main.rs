@@ -7,8 +7,8 @@ use std::{
 use anyhow::{anyhow, Context};
 use clap::Parser;
 use dotenv::dotenv;
+use hello_world_operator_cli::handler::Handler;
 use log::{error, info};
-use operator_cli::handler::Handler;
 use serde::{Deserialize, Serialize};
 use solana_rpc_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::{pubkey::Pubkey, signature::read_keypair_file};

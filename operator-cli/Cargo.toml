@@ -1,10 +1,10 @@
 [package]
-name = "operator-cli"
+name = "hello-world-operator-cli"
 version = "0.1.0"
 edition = "2021"
 
 [[bin]]
-name = "operator-cli"
+name = "hello-world-operator-cli"
 path = "src/bin/main.rs"
 
 [dependencies]

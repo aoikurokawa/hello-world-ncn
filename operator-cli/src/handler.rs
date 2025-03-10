@@ -1,7 +1,10 @@
 use std::str::FromStr;
 
 use hello_world_ncn_client::{accounts::Message, instructions::SubmitMessageBuilder};
-use jito_restaking_core::{ncn_operator_state::NcnOperatorState, ncn_vault_ticket::NcnVaultTicket};
+use jito_restaking_core::{
+    ncn_operator_state::NcnOperatorState, ncn_vault_ticket::NcnVaultTicket,
+    operator_vault_ticket::OperatorVaultTicket,
+};
 use jito_vault_core::{
     vault_ncn_ticket::VaultNcnTicket, vault_operator_delegation::VaultOperatorDelegation,
 };
@@ -116,6 +119,12 @@ impl<'a> Handler<'a> {
             operator,
         )
         .0;
+        let operator_vault_ticket_info = OperatorVaultTicket::find_program_address(
+            &jito_restaking_program::id(),
+            operator,
+            vault,
+        )
+        .0;
 
         let mut submit_message_ix_builder = SubmitMessageBuilder::new();
         submit_message_ix_builder
@@ -128,6 +137,7 @@ impl<'a> Handler<'a> {
             .ncn_vault_ticket_info(ncn_vault_ticket_info)
             .ncn_operator_state_info(ncn_operator_state_info)
             .vault_operator_delegation_info(vault_operator_delegation_info)
+            .operator_vault_ticket(operator_vault_ticket_info)
             .message_info(message_pubkey)
             .ballot_box_info(ballot_box_pubkey)
             .operator_voter_info(self.payer.pubkey())

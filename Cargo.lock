@@ -2103,6 +2103,28 @@ dependencies = [
 ]
 
 [[package]]
+name = "hello-world-operator-cli"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "clap",
+ "dotenv",
+ "env_logger 0.10.2",
+ "hello-world-ncn-client",
+ "jito-restaking-core",
+ "jito-restaking-program",
+ "jito-vault-core",
+ "jito-vault-program",
+ "log",
+ "serde",
+ "serde_json",
+ "solana-rpc-client",
+ "solana-rpc-client-api",
+ "solana-sdk",
+ "tokio",
+]
+
+[[package]]
 name = "hermit-abi"
 version = "0.1.19"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -3299,28 +3321,6 @@ dependencies = [
  "pin-project",
  "rand 0.8.5",
  "thiserror 1.0.69",
-]
-
-[[package]]
-name = "operator-cli"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "clap",
- "dotenv",
- "env_logger 0.10.2",
- "hello-world-ncn-client",
- "jito-restaking-core",
- "jito-restaking-program",
- "jito-vault-core",
- "jito-vault-program",
- "log",
- "serde",
- "serde_json",
- "solana-rpc-client",
- "solana-rpc-client-api",
- "solana-sdk",
- "tokio",
 ]
 
 [[package]]
