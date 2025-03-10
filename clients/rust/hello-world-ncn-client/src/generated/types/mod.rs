@@ -5,6 +5,7 @@
 //! <https://github.com/kinobi-so/kinobi>
 //!
 
-pub(crate) mod r#operator_vote;
+  pub(crate) mod r#operator_vote;
 
-pub use self::r#operator_vote::*;
+  pub use self::r#operator_vote::*;
+

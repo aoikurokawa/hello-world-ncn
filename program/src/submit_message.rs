@@ -4,6 +4,7 @@ use jito_jsm_core::loader::load_signer;
 use jito_restaking_core::{
     config::Config as RestakingConfig, ncn::Ncn, ncn_operator_state::NcnOperatorState,
     ncn_vault_ticket::NcnVaultTicket, operator::Operator,
+    operator_vault_ticket::OperatorVaultTicket,
 };
 use jito_vault_core::{
     vault::Vault, vault_ncn_ticket::VaultNcnTicket,
@@ -19,7 +20,7 @@ pub fn process_submit_message(
     accounts: &[AccountInfo],
     message: String,
 ) -> ProgramResult {
-    let [config_info, restaking_config_info, ncn_info, operator_info, vault_info, vault_ncn_ticket_info, ncn_vault_ticket_info, ncn_operator_state_info, vault_operator_delegation_info, message_info, ballot_box_info, operator_voter_info] =
+    let [config_info, restaking_config_info, ncn_info, operator_info, vault_info, vault_ncn_ticket_info, ncn_vault_ticket_info, ncn_operator_state_info, vault_operator_delegation_info, operator_vault_ticket_info, message_info, ballot_box_info, operator_voter_info] =
         accounts
     else {
         return Err(ProgramError::NotEnoughAccountKeys);
@@ -128,6 +129,14 @@ pub fn process_submit_message(
         );
         return Err(ProgramError::InvalidAccountData);
     }
+
+    OperatorVaultTicket::load(
+        &jito_restaking_program::id(),
+        operator_vault_ticket_info,
+        operator_info,
+        vault_info,
+        false,
+    )?;
 
     let mut message_data = message_info.try_borrow_mut_data()?;
     let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;

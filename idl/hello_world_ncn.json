@@ -161,6 +161,11 @@
           "isSigner": false
         },
         {
+          "name": "operatorVaultTicket",
+          "isMut": false,
+          "isSigner": false
+        },
+        {
           "name": "messageInfo",
           "isMut": false,
           "isSigner": false
