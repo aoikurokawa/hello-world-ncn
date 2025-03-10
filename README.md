@@ -43,5 +43,11 @@ cargo-build-sbf && SBF_OUT_DIR=$(pwd)/target/sbf-solana-solana/release cargo nex
 cargo b -p shank-cli && ./target/debug/shank-cli && yarn generate-clients && cargo b
 ```
 
+### Run Operator Client
+
+```bash
+cargo r -p hello-world-operator-cli -- --config-path ./operator-cli/operators_config.json
+```
+
 ## CLI
 
