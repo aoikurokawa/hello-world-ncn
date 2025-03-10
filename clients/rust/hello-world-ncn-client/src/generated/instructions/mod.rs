@@ -5,13 +5,12 @@
 //! <https://github.com/kinobi-so/kinobi>
 //!
 
-  pub(crate) mod r#initialize_ballot_box;
-  pub(crate) mod r#initialize_config;
-  pub(crate) mod r#request_message;
-  pub(crate) mod r#submit_message;
+pub(crate) mod r#initialize_ballot_box;
+pub(crate) mod r#initialize_config;
+pub(crate) mod r#request_message;
+pub(crate) mod r#submit_message;
 
-  pub use self::r#initialize_ballot_box::*;
-  pub use self::r#initialize_config::*;
-  pub use self::r#request_message::*;
-  pub use self::r#submit_message::*;
-
+pub use self::r#initialize_ballot_box::*;
+pub use self::r#initialize_config::*;
+pub use self::r#request_message::*;
+pub use self::r#submit_message::*;
