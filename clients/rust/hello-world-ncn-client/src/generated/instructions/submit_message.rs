@@ -28,6 +28,8 @@ pub struct SubmitMessage {
 
     pub vault_operator_delegation_info: solana_program::pubkey::Pubkey,
 
+    pub operator_vault_ticket: solana_program::pubkey::Pubkey,
+
     pub message_info: solana_program::pubkey::Pubkey,
 
     pub ballot_box_info: solana_program::pubkey::Pubkey,
@@ -48,7 +50,7 @@ impl SubmitMessage {
         args: SubmitMessageInstructionArgs,
         remaining_accounts: &[solana_program::instruction::AccountMeta],
     ) -> solana_program::instruction::Instruction {
-        let mut accounts = Vec::with_capacity(12 + remaining_accounts.len());
+        let mut accounts = Vec::with_capacity(13 + remaining_accounts.len());
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
             self.config_info,
             false,
@@ -83,6 +85,10 @@ impl SubmitMessage {
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
             self.vault_operator_delegation_info,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            self.operator_vault_ticket,
             false,
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
@@ -146,9 +152,10 @@ pub struct SubmitMessageInstructionArgs {
 ///   6. `[]` ncn_vault_ticket_info
 ///   7. `[]` ncn_operator_state_info
 ///   8. `[]` vault_operator_delegation_info
-///   9. `[]` message_info
-///   10. `[writable]` ballot_box_info
-///   11. `[writable, signer]` operator_voter_info
+///   9. `[]` operator_vault_ticket
+///   10. `[]` message_info
+///   11. `[writable]` ballot_box_info
+///   12. `[writable, signer]` operator_voter_info
 #[derive(Clone, Debug, Default)]
 pub struct SubmitMessageBuilder {
     config_info: Option<solana_program::pubkey::Pubkey>,
@@ -160,6 +167,7 @@ pub struct SubmitMessageBuilder {
     ncn_vault_ticket_info: Option<solana_program::pubkey::Pubkey>,
     ncn_operator_state_info: Option<solana_program::pubkey::Pubkey>,
     vault_operator_delegation_info: Option<solana_program::pubkey::Pubkey>,
+    operator_vault_ticket: Option<solana_program::pubkey::Pubkey>,
     message_info: Option<solana_program::pubkey::Pubkey>,
     ballot_box_info: Option<solana_program::pubkey::Pubkey>,
     operator_voter_info: Option<solana_program::pubkey::Pubkey>,
@@ -232,6 +240,14 @@ impl SubmitMessageBuilder {
         self
     }
     #[inline(always)]
+    pub fn operator_vault_ticket(
+        &mut self,
+        operator_vault_ticket: solana_program::pubkey::Pubkey,
+    ) -> &mut Self {
+        self.operator_vault_ticket = Some(operator_vault_ticket);
+        self
+    }
+    #[inline(always)]
     pub fn message_info(&mut self, message_info: solana_program::pubkey::Pubkey) -> &mut Self {
         self.message_info = Some(message_info);
         self
@@ -297,6 +313,9 @@ impl SubmitMessageBuilder {
             vault_operator_delegation_info: self
                 .vault_operator_delegation_info
                 .expect("vault_operator_delegation_info is not set"),
+            operator_vault_ticket: self
+                .operator_vault_ticket
+                .expect("operator_vault_ticket is not set"),
             message_info: self.message_info.expect("message_info is not set"),
             ballot_box_info: self.ballot_box_info.expect("ballot_box_info is not set"),
             operator_voter_info: self
@@ -331,6 +350,8 @@ pub struct SubmitMessageCpiAccounts<'a, 'b> {
 
     pub vault_operator_delegation_info: &'b solana_program::account_info::AccountInfo<'a>,
 
+    pub operator_vault_ticket: &'b solana_program::account_info::AccountInfo<'a>,
+
     pub message_info: &'b solana_program::account_info::AccountInfo<'a>,
 
     pub ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
@@ -361,6 +382,8 @@ pub struct SubmitMessageCpi<'a, 'b> {
 
     pub vault_operator_delegation_info: &'b solana_program::account_info::AccountInfo<'a>,
 
+    pub operator_vault_ticket: &'b solana_program::account_info::AccountInfo<'a>,
+
     pub message_info: &'b solana_program::account_info::AccountInfo<'a>,
 
     pub ballot_box_info: &'b solana_program::account_info::AccountInfo<'a>,
@@ -387,6 +410,7 @@ impl<'a, 'b> SubmitMessageCpi<'a, 'b> {
             ncn_vault_ticket_info: accounts.ncn_vault_ticket_info,
             ncn_operator_state_info: accounts.ncn_operator_state_info,
             vault_operator_delegation_info: accounts.vault_operator_delegation_info,
+            operator_vault_ticket: accounts.operator_vault_ticket,
             message_info: accounts.message_info,
             ballot_box_info: accounts.ballot_box_info,
             operator_voter_info: accounts.operator_voter_info,
@@ -426,7 +450,7 @@ impl<'a, 'b> SubmitMessageCpi<'a, 'b> {
             bool,
         )],
     ) -> solana_program::entrypoint::ProgramResult {
-        let mut accounts = Vec::with_capacity(12 + remaining_accounts.len());
+        let mut accounts = Vec::with_capacity(13 + remaining_accounts.len());
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
             *self.config_info.key,
             false,
@@ -464,6 +488,10 @@ impl<'a, 'b> SubmitMessageCpi<'a, 'b> {
             false,
         ));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
+            *self.operator_vault_ticket.key,
+            false,
+        ));
+        accounts.push(solana_program::instruction::AccountMeta::new_readonly(
             *self.message_info.key,
             false,
         ));
@@ -491,7 +519,7 @@ impl<'a, 'b> SubmitMessageCpi<'a, 'b> {
             accounts,
             data,
         };
-        let mut account_infos = Vec::with_capacity(12 + 1 + remaining_accounts.len());
+        let mut account_infos = Vec::with_capacity(13 + 1 + remaining_accounts.len());
         account_infos.push(self.__program.clone());
         account_infos.push(self.config_info.clone());
         account_infos.push(self.restaking_config_info.clone());
@@ -502,6 +530,7 @@ impl<'a, 'b> SubmitMessageCpi<'a, 'b> {
         account_infos.push(self.ncn_vault_ticket_info.clone());
         account_infos.push(self.ncn_operator_state_info.clone());
         account_infos.push(self.vault_operator_delegation_info.clone());
+        account_infos.push(self.operator_vault_ticket.clone());
         account_infos.push(self.message_info.clone());
         account_infos.push(self.ballot_box_info.clone());
         account_infos.push(self.operator_voter_info.clone());
@@ -530,9 +559,10 @@ impl<'a, 'b> SubmitMessageCpi<'a, 'b> {
 ///   6. `[]` ncn_vault_ticket_info
 ///   7. `[]` ncn_operator_state_info
 ///   8. `[]` vault_operator_delegation_info
-///   9. `[]` message_info
-///   10. `[writable]` ballot_box_info
-///   11. `[writable, signer]` operator_voter_info
+///   9. `[]` operator_vault_ticket
+///   10. `[]` message_info
+///   11. `[writable]` ballot_box_info
+///   12. `[writable, signer]` operator_voter_info
 #[derive(Clone, Debug)]
 pub struct SubmitMessageCpiBuilder<'a, 'b> {
     instruction: Box<SubmitMessageCpiBuilderInstruction<'a, 'b>>,
@@ -551,6 +581,7 @@ impl<'a, 'b> SubmitMessageCpiBuilder<'a, 'b> {
             ncn_vault_ticket_info: None,
             ncn_operator_state_info: None,
             vault_operator_delegation_info: None,
+            operator_vault_ticket: None,
             message_info: None,
             ballot_box_info: None,
             operator_voter_info: None,
@@ -629,6 +660,14 @@ impl<'a, 'b> SubmitMessageCpiBuilder<'a, 'b> {
         vault_operator_delegation_info: &'b solana_program::account_info::AccountInfo<'a>,
     ) -> &mut Self {
         self.instruction.vault_operator_delegation_info = Some(vault_operator_delegation_info);
+        self
+    }
+    #[inline(always)]
+    pub fn operator_vault_ticket(
+        &mut self,
+        operator_vault_ticket: &'b solana_program::account_info::AccountInfo<'a>,
+    ) -> &mut Self {
+        self.instruction.operator_vault_ticket = Some(operator_vault_ticket);
         self
     }
     #[inline(always)]
@@ -750,6 +789,11 @@ impl<'a, 'b> SubmitMessageCpiBuilder<'a, 'b> {
                 .vault_operator_delegation_info
                 .expect("vault_operator_delegation_info is not set"),
 
+            operator_vault_ticket: self
+                .instruction
+                .operator_vault_ticket
+                .expect("operator_vault_ticket is not set"),
+
             message_info: self
                 .instruction
                 .message_info
@@ -785,6 +829,7 @@ struct SubmitMessageCpiBuilderInstruction<'a, 'b> {
     ncn_vault_ticket_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ncn_operator_state_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     vault_operator_delegation_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
+    operator_vault_ticket: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     message_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     ballot_box_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
     operator_voter_info: Option<&'b solana_program::account_info::AccountInfo<'a>>,
