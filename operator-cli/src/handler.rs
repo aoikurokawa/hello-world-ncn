@@ -1,5 +1,6 @@
 use std::str::FromStr;
 
+use anyhow::Context;
 use hello_world_ncn_client::{accounts::Message, instructions::SubmitMessageBuilder};
 use jito_restaking_core::{
     ncn_operator_state::NcnOperatorState, ncn_vault_ticket::NcnVaultTicket,
@@ -145,14 +146,20 @@ impl<'a> Handler<'a> {
         let mut submit_message_ix = submit_message_ix_builder.instruction();
         submit_message_ix.program_id = self.program_id;
 
-        let blockhash = rpc_client.get_latest_blockhash().await.unwrap();
+        let blockhash = rpc_client
+            .get_latest_blockhash()
+            .await
+            .context("Failed to get latest blockhash")?;
         let tx = Transaction::new_signed_with_payer(
             &[submit_message_ix],
             Some(&self.payer.pubkey()),
             &[self.payer],
             blockhash,
         );
-        rpc_client.send_and_confirm_transaction(&tx).await.unwrap();
+        rpc_client
+            .send_and_confirm_transaction(&tx)
+            .await
+            .context("Failed to send and confirm transaction")?;
 
         Ok(())
     }

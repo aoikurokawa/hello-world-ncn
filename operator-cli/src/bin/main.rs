@@ -43,29 +43,6 @@ struct Args {
     rpc_url: Option<String>,
 }
 
-// impl std::fmt::Display for Args {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(
-//             f,
-//             "Operator Configuration:\n\
-//             -------------------------------\n\
-//             RPC URL: {}\n\
-//             Keypair Path: {:?}\n\
-//             Program ID: {}\n\
-//             Crank Interval: {} seconds\n\
-//             Metrics Interval: {} seconds\n\
-//             Priority Fees: {} microlamports\n\
-//             -------------------------------",
-//             self.rpc_url,
-//             self.keypair_path,
-//             self.program_id,
-//             self.crank_interval,
-//             self.metrics_interval,
-//             self.priority_fees,
-//         )
-//     }
-// }
-
 fn load_config<P: AsRef<Path>>(path: P) -> anyhow::Result<Config> {
     let config_str = std::fs::read_to_string(path).context("Failed to read configuration file")?;
 
