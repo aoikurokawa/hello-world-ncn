@@ -43,29 +43,6 @@ struct Args {
     rpc_url: Option<String>,
 }
 
-// impl std::fmt::Display for Args {
-//     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-//         write!(
-//             f,
-//             "Operator Configuration:\n\
-//             -------------------------------\n\
-//             RPC URL: {}\n\
-//             Keypair Path: {:?}\n\
-//             Program ID: {}\n\
-//             Crank Interval: {} seconds\n\
-//             Metrics Interval: {} seconds\n\
-//             Priority Fees: {} microlamports\n\
-//             -------------------------------",
-//             self.rpc_url,
-//             self.keypair_path,
-//             self.program_id,
-//             self.crank_interval,
-//             self.metrics_interval,
-//             self.priority_fees,
-//         )
-//     }
-// }
-
 fn load_config<P: AsRef<Path>>(path: P) -> anyhow::Result<Config> {
     let config_str = std::fs::read_to_string(path).context("Failed to read configuration file")?;
 
@@ -225,10 +202,14 @@ async fn run_operator(
                     .submit_message(&ncn_pubkey, &operator_pubkey, &vault_pubkey, epoch, message)
                     .await
                 {
-                    Ok(_) => info!(
-                        "Operator '{}': Successfully submitted message",
-                        operator_config.name
-                    ),
+                    Ok(signature) => {
+                        if let Some(sig) = signature {
+                            info!(
+                                "Operator '{}': Successfully submitted message, Signature {sig}",
+                                operator_config.name
+                            );
+                        }
+                    }
                     Err(e) => error!(
                         "Operator '{}': Failed to submit message: {}",
                         operator_config.name, e
