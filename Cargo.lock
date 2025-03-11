@@ -2118,6 +2118,7 @@ dependencies = [
  "log",
  "serde",
  "serde_json",
+ "solana-program",
  "solana-rpc-client",
  "solana-rpc-client-api",
  "solana-sdk",

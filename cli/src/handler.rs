@@ -5,6 +5,7 @@ use hello_world_ncn_client::instructions::{
     InitializeBallotBoxBuilder, InitializeConfigBuilder, RequestMessageBuilder,
 };
 use hello_world_ncn_core::{ballot_box::BallotBox, config::Config, message::Message};
+use jito_bytemuck::AccountDeserialize;
 use solana_rpc_client::nonblocking::rpc_client::RpcClient;
 use solana_sdk::{
     commitment_config::CommitmentConfig,
@@ -171,6 +172,12 @@ impl CliHandler {
                     epoch,
                 )
                 .0;
+
+                if let Ok(msg_data) = self.rpc_client().get_account(&message_info).await {
+                    let message = Message::try_from_slice_unchecked(&msg_data.data)?;
+                    println!("Already submitted message: {}", message.keyword());
+                    return Ok(());
+                }
 
                 let mut initialize_config_ix = RequestMessageBuilder::new()
                     .config_info(config_info)
