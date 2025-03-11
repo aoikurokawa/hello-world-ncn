@@ -160,7 +160,7 @@ pub fn process_submit_message(
         ballot_box.check_consensus_reached(current_slot);
 
         if ballot_box.is_consensus_reached() {
-            msg!("Consensus reached for epoch {} with ballot", current_epoch,);
+            msg!("Consensus reached for epoch {} with ballot", current_epoch);
         }
     }
 
