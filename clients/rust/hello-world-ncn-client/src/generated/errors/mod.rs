@@ -5,7 +5,6 @@
 //! <https://github.com/kinobi-so/kinobi>
 //!
 
-      pub(crate) mod hello_world_ncn;
-  
-      pub use self::hello_world_ncn::HelloWorldNcnError;
-  
+pub(crate) mod hello_world_ncn;
+
+pub use self::hello_world_ncn::HelloWorldNcnError;
