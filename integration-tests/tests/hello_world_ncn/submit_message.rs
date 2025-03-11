@@ -71,7 +71,7 @@ mod tests {
         let vault = &test_ncn.vaults[0];
 
         // Operator 1
-        let message_data = format!("{keyword} World");
+        let message_data = solana_program::hash::hash(keyword.as_bytes());
 
         hello_world_ncn_client
             .do_submit_message(
@@ -79,7 +79,7 @@ mod tests {
                 &test_ncn.operators[0],
                 vault,
                 epoch,
-                message_data.clone(),
+                message_data.to_string(),
             )
             .await
             .unwrap();
@@ -94,11 +94,14 @@ mod tests {
             .get_ballot_box(&ballot_box_pubkey)
             .await
             .unwrap();
-        assert_eq!(ballot_box.operator_votes[0].message_data(), message_data);
+        assert_eq!(
+            ballot_box.operator_votes[0].message_data(),
+            message_data.to_string()
+        );
         assert!(!ballot_box.is_consensus_reached());
 
         // Operator 2
-        let message_data = format!("{keyword} World");
+        let message_data = solana_program::hash::hash(keyword.as_bytes());
 
         hello_world_ncn_client
             .do_submit_message(
@@ -106,7 +109,7 @@ mod tests {
                 &test_ncn.operators[1],
                 vault,
                 epoch,
-                message_data.clone(),
+                message_data.to_string(),
             )
             .await
             .unwrap();
@@ -121,7 +124,10 @@ mod tests {
             .get_ballot_box(&ballot_box_pubkey)
             .await
             .unwrap();
-        assert_eq!(ballot_box.operator_votes[1].message_data(), message_data);
+        assert_eq!(
+            ballot_box.operator_votes[1].message_data(),
+            message_data.to_string()
+        );
         assert!(ballot_box.is_consensus_reached());
     }
 }

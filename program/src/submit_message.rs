@@ -1,3 +1,5 @@
+use std::str::FromStr;
+
 use hello_world_ncn_core::{ballot_box::BallotBox, config::Config as NcnConfig, message::Message};
 use jito_bytemuck::AccountDeserialize;
 use jito_jsm_core::loader::load_signer;
@@ -11,8 +13,14 @@ use jito_vault_core::{
     vault_operator_delegation::VaultOperatorDelegation,
 };
 use solana_program::{
-    account_info::AccountInfo, clock::Clock, entrypoint::ProgramResult, msg,
-    program_error::ProgramError, pubkey::Pubkey, sysvar::Sysvar,
+    account_info::AccountInfo,
+    clock::Clock,
+    entrypoint::ProgramResult,
+    hash::{hash, Hash},
+    msg,
+    program_error::ProgramError,
+    pubkey::Pubkey,
+    sysvar::Sysvar,
 };
 
 pub fn process_submit_message(
@@ -146,8 +154,10 @@ pub fn process_submit_message(
 
     load_signer(operator_voter_info, false)?;
 
-    if !message.starts_with(&message_acc.keyword()) {
-        return Err(ProgramError::InvalidAccountData);
+    let expect_value = hash(&message_acc.keyword[..message_acc.keyword_len as usize]);
+    let hash_value = Hash::from_str(&message).map_err(|_e| ProgramError::InvalidArgument)?;
+    if expect_value.ne(&hash_value) {
+        return Err(ProgramError::InvalidArgument);
     }
 
     let clock = Clock::get()?;
