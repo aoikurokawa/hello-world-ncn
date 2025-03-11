@@ -53,26 +53,32 @@ impl OperatorVote {
         }
     }
 
+    /// Get Operator's Pubkey
     pub const fn operator(&self) -> Pubkey {
         self.operator
     }
 
+    /// Get slot Operator voted
     pub fn slot_voted(&self) -> u64 {
         self.slot_voted.into()
     }
 
+    /// Get index of vote
     pub fn vote_index(&self) -> u16 {
         self.vote_index.into()
     }
 
+    /// Get the data of message
     pub fn message_data(&self) -> String {
         String::from_utf8(self.message_data[..self.message_len as usize].to_vec()).unwrap()
     }
 
+    /// Check vote is empty
     pub fn is_empty(&self) -> bool {
         self.vote_index() == u16::MAX
     }
 
+    /// Get message that operator voted for
     pub fn message(&self) -> String {
         String::from_utf8(self.message_data[..self.message_len as usize].to_vec()).unwrap()
     }

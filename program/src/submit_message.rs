@@ -154,6 +154,7 @@ pub fn process_submit_message(
 
     load_signer(operator_voter_info, false)?;
 
+    // Check the message is valid
     let expect_value = hash(&message_acc.keyword[..message_acc.keyword_len as usize]);
     let hash_value = Hash::from_str(&message).map_err(|_e| ProgramError::InvalidArgument)?;
     if expect_value.ne(&hash_value) {

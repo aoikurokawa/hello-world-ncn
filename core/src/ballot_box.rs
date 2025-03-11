@@ -109,56 +109,6 @@ impl BallotBox {
         self.operators_voted.into()
     }
 
-    /// Determines if an operator can still cast their vote.
-    /// Returns true when:
-    /// Consensus is not reached OR the voting window is still valid, assuming set_tie_breaker was not invoked
-    pub const fn is_voting_valid(&self, _current_slot: u64) -> Result<bool, HelloWorldNcnError> {
-        // if self.tie_breaker_set() {
-        //     return Ok(false);
-        // }
-
-        // if self.is_consensus_reached() {
-        //     let vote_window_valid = current_slot
-        //         <= self
-        //             .slot_consensus_reached()
-        //             .checked_add(valid_slots_after_consensus)
-        //             .ok_or(HelloWorldNcnError::ArithmeticOverflow)?;
-
-        //     return Ok(vote_window_valid);
-        // }
-
-        Ok(true)
-    }
-
-    // fn increment_or_create_ballot_tally(&mut self) -> Result<usize, TipRouterError> {
-    //     let result = self
-    //         .ballot_tallies
-    //         .iter()
-    //         .enumerate()
-    //         .find(|(_, t)| t.is_valid() && t.ballot.eq(ballot));
-
-    //     if let Some((tally_index, _)) = result {
-    //         self.ballot_tallies[tally_index].increment_tally(stake_weights)?;
-    //         return Ok(tally_index);
-    //     }
-
-    //     for (tally_index, tally) in self.ballot_tallies.iter_mut().enumerate() {
-    //         if !tally.is_valid() {
-    //             *tally = BallotTally::new(tally_index as u16, ballot, stake_weights);
-
-    //             self.unique_ballots = PodU64::from(
-    //                 self.unique_ballots()
-    //                     .checked_add(1)
-    //                     .ok_or(TipRouterError::ArithmeticOverflow)?,
-    //             );
-
-    //             return Ok(tally_index);
-    //         }
-    //     }
-
-    //     Err(TipRouterError::BallotTallyFull)
-    // }
-
     /// Operator cast vote with message
     pub fn cast_vote(
         &mut self,
@@ -166,46 +116,7 @@ impl BallotBox {
         message_data: &str,
         current_slot: u64,
     ) -> Result<(), HelloWorldNcnError> {
-        // if !self.is_voting_valid(current_slot)? {
-        //     return Err(TipRouterError::VotingNotValid);
-        // }
-
-        // if !ballot.is_valid() {
-        //     return Err(TipRouterError::BadBallot);
-        // }
-
-        // let ballot_index = self.increment_or_create_ballot_tally(ballot, stake_weights)?;
-
-        // let unique_ballots = self.unique_ballots();
-        // let consensus_reached = self.is_consensus_reached();
-
         for vote in self.operator_votes.iter_mut() {
-            // if vote.operator().eq(operator) {
-            //     if consensus_reached {
-            //         return Err(HelloWorldNcnError::ConsensusAlreadyReached);
-            //     }
-
-            //     // If the operator has already voted, we need to decrement their vote from the previous ballot
-            //     let prev_ballot_index = vote.vote_index();
-            //     // if let Some(prev_tally) = self.ballot_tallies.get_mut(prev_ballot_index as usize) {
-            //     // prev_tally.decrement_tally(vote.stake_weights())?;
-
-            //     // If no more operators voting for the previous ballot, wipe and decrement the unique ballots
-            //     // if prev_tally.tally() == 0 {
-            //     //     *prev_tally = BallotTally::default();
-            //     //     self.unique_ballots = PodU64::from(
-            //     //         unique_ballots
-            //     //             .checked_sub(1)
-            //     //             .ok_or(TipRouterError::ArithmeticOverflow)?,
-            //     //     );
-            //     // }
-            //     // }
-
-            //     let operator_vote = OperatorVote::new(*operator, current_slot, message_data);
-            //     *vote = operator_vote;
-            //     return Ok(());
-            // }
-
             if vote.is_empty() {
                 let operator_vote = OperatorVote::new(*operator, current_slot, message_data);
                 *vote = operator_vote;
