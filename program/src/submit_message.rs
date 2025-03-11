@@ -1,6 +1,6 @@
-use std::str::FromStr;
-
-use hello_world_ncn_core::{ballot_box::BallotBox, config::Config as NcnConfig, message::Message};
+use hello_world_ncn_core::{
+    ballot_box::BallotBox, config::Config as NcnConfig, message::Message, MAX_OPERATORS,
+};
 use jito_bytemuck::AccountDeserialize;
 use jito_jsm_core::loader::load_signer;
 use jito_restaking_core::{
@@ -13,14 +13,8 @@ use jito_vault_core::{
     vault_operator_delegation::VaultOperatorDelegation,
 };
 use solana_program::{
-    account_info::AccountInfo,
-    clock::Clock,
-    entrypoint::ProgramResult,
-    hash::{hash, Hash},
-    msg,
-    program_error::ProgramError,
-    pubkey::Pubkey,
-    sysvar::Sysvar,
+    account_info::AccountInfo, clock::Clock, entrypoint::ProgramResult, msg,
+    program_error::ProgramError, pubkey::Pubkey, sysvar::Sysvar,
 };
 
 pub fn process_submit_message(
@@ -147,28 +141,27 @@ pub fn process_submit_message(
     )?;
 
     let mut message_data = message_info.try_borrow_mut_data()?;
-    let message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
+    let _message_acc = Message::try_from_slice_unchecked_mut(&mut message_data)?;
 
     let mut ballot_box_data = ballot_box_info.try_borrow_mut_data()?;
     let ballot_box = BallotBox::try_from_slice_unchecked_mut(&mut ballot_box_data)?;
 
     load_signer(operator_voter_info, false)?;
 
-    // Check the message is valid
-    let expect_value = hash(&message_acc.keyword[..message_acc.keyword_len as usize]);
-    let hash_value = Hash::from_str(&message).map_err(|_e| ProgramError::InvalidArgument)?;
-    if expect_value.ne(&hash_value) {
-        return Err(ProgramError::InvalidArgument);
-    }
-
     let clock = Clock::get()?;
     let current_slot = clock.slot;
     let current_epoch = clock.slot;
 
+    msg!("Operator {} voted for {}", operator_info.key, message);
+
     ballot_box.cast_vote(operator_info.key, &message, current_slot)?;
 
-    if ballot_box.is_consensus_reached() {
-        msg!("Consensus reached for epoch {} with ballot", current_epoch,);
+    if ballot_box.operators_voted() == MAX_OPERATORS {
+        ballot_box.check_consensus_reached(current_slot);
+
+        if ballot_box.is_consensus_reached() {
+            msg!("Consensus reached for epoch {} with ballot", current_epoch);
+        }
     }
 
     Ok(())
