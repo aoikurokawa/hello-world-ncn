@@ -5,20 +5,21 @@
 //! <https://github.com/kinobi-so/kinobi>
 //!
 
-use solana_program::pubkey::Pubkey;
-use borsh::BorshSerialize;
 use borsh::BorshDeserialize;
+use borsh::BorshSerialize;
+use solana_program::pubkey::Pubkey;
 
 #[derive(BorshSerialize, BorshDeserialize, Clone, Debug, Eq, PartialEq)]
 #[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub struct OperatorVote {
-#[cfg_attr(feature = "serde", serde(with = "serde_with::As::<serde_with::DisplayFromStr>"))]
-pub operator: Pubkey,
-pub slot_voted: u64,
-pub vote_index: u16,
-pub message_len: u8,
-#[cfg_attr(feature = "serde", serde(with = "serde_with::As::<serde_with::Bytes>"))]
-pub message_data: [u8; 64],
+    #[cfg_attr(
+        feature = "serde",
+        serde(with = "serde_with::As::<serde_with::DisplayFromStr>")
+    )]
+    pub operator: Pubkey,
+    pub slot_voted: u64,
+    pub vote_index: u16,
+    pub message_len: u8,
+    #[cfg_attr(feature = "serde", serde(with = "serde_with::As::<serde_with::Bytes>"))]
+    pub message_data: [u8; 64],
 }
-
-
