@@ -41,3 +41,4 @@ impl solana_program::program_error::PrintProgramError for HelloWorldNcnError {
         solana_program::msg!(&self.to_string());
     }
 }
+

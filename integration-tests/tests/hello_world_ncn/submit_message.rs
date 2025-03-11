@@ -128,6 +128,38 @@ mod tests {
             ballot_box.operator_votes[1].message_data(),
             message_data.to_string()
         );
+
+        assert!(!ballot_box.is_consensus_reached());
+
+        // Operator 3
+        let message_data = solana_program::hash::hash(keyword.as_bytes());
+
+        hello_world_ncn_client
+            .do_submit_message(
+                &test_ncn.ncn_root.ncn_pubkey,
+                &test_ncn.operators[2],
+                vault,
+                epoch,
+                message_data.to_string(),
+            )
+            .await
+            .unwrap();
+
+        let ballot_box_pubkey = BallotBox::find_program_address(
+            &hello_world_ncn_program::id(),
+            &test_ncn.ncn_root.ncn_pubkey,
+            epoch,
+        )
+        .0;
+        let ballot_box = hello_world_ncn_client
+            .get_ballot_box(&ballot_box_pubkey)
+            .await
+            .unwrap();
+        assert_eq!(
+            ballot_box.operator_votes[2].message_data(),
+            message_data.to_string()
+        );
+
         assert!(ballot_box.is_consensus_reached());
     }
 }

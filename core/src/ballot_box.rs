@@ -1,3 +1,5 @@
+use std::collections::HashMap;
+
 use bytemuck::{Pod, Zeroable};
 use hello_world_ncn_sdk::error::HelloWorldNcnError;
 use jito_bytemuck::{types::PodU64, AccountDeserialize, Discriminator};
@@ -127,14 +129,25 @@ impl BallotBox {
                         .ok_or(HelloWorldNcnError::ArithmeticOverflow)?,
                 );
 
-                if self.operators_voted() > 1 {
-                    self.set_slot_consensus_reached(current_slot);
-                }
-
                 return Ok(());
             }
         }
 
         Err(HelloWorldNcnError::OperatorVotesFull)
+    }
+
+    /// Check Consensus reached
+    pub fn check_consensus_reached(&mut self, current_slot: u64) {
+        let mut vote_counts: HashMap<String, u8> = HashMap::new();
+
+        for vote in self.operator_votes.iter() {
+            let count = vote_counts.entry(vote.message()).or_insert(0);
+            *count = count.checked_add(1).unwrap();
+
+            if *count >= 2_u8 {
+                self.set_slot_consensus_reached(current_slot);
+                break;
+            }
+        }
     }
 }
