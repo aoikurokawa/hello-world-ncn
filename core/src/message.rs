@@ -15,10 +15,10 @@ pub struct Message {
     epoch: PodU64,
 
     /// The length of keyword
-    keyword_len: u8,
+    pub keyword_len: u8,
 
     /// Message Data
-    keyword: [u8; 64],
+    pub keyword: [u8; 64],
 }
 
 impl Message {

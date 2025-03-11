@@ -154,6 +154,9 @@ impl<'a> Handler<'a> {
         )
         .0;
 
+        // Do computation
+        let hash_value = solana_program::hash::hash(message_data.as_bytes());
+
         let mut submit_message_ix_builder = SubmitMessageBuilder::new();
         submit_message_ix_builder
             .config_info(config_pubkey)
@@ -169,7 +172,7 @@ impl<'a> Handler<'a> {
             .message_info(message_pubkey)
             .ballot_box_info(ballot_box_pubkey)
             .operator_voter_info(self.payer.pubkey())
-            .message(message_data);
+            .message(hash_value.to_string());
         let mut submit_message_ix = submit_message_ix_builder.instruction();
         submit_message_ix.program_id = self.program_id;
 
