@@ -5,3 +5,4 @@ pub mod message;
 pub mod operator_vote;
 
 pub const MAX_OPERATORS: u64 = 3;
+pub const CONSENSUS_THRESHOLD: u64 = 2;
