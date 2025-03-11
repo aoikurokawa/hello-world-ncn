@@ -95,10 +95,12 @@ impl Message {
         Ok(())
     }
 
+    // Get epoch
     pub fn epoch(&self) -> u64 {
         self.epoch.into()
     }
 
+    /// Get keyword in String
     pub fn keyword(&self) -> String {
         String::from_utf8(self.keyword[..self.keyword_len as usize].to_vec()).unwrap()
     }
