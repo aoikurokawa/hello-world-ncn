@@ -147,7 +147,6 @@ async fn run_operator(
         )
     })?;
 
-    // let operator_pubkey = operator_keypair.pubkey();
     let operator_pubkey = Pubkey::from_str(&operator_config.operator_pubkey).unwrap();
     info!(
         "Operator '{}' pubkey: {}",
@@ -197,9 +196,15 @@ async fn run_operator(
                     operator_config.name, keyword
                 );
 
-                let message = format!("{}, World from Operator {}", keyword, operator_config.name);
+                let message = solana_program::hash::hash(keyword.as_bytes());
                 match handler
-                    .submit_message(&ncn_pubkey, &operator_pubkey, &vault_pubkey, epoch, message)
+                    .submit_message(
+                        &ncn_pubkey,
+                        &operator_pubkey,
+                        &vault_pubkey,
+                        epoch,
+                        message.to_string(),
+                    )
                     .await
                 {
                     Ok(signature) => {
